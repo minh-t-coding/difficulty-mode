@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
-    public float playerSpeed;
+    public static PlayerScript Instance;
+    [SerializeField] protected float playerSpeed;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Awake() {
+        if (Instance == null) {
+            Instance = this;
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKey(KeyCode.W)) {
