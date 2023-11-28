@@ -4,27 +4,19 @@ using UnityEngine;
 
 public class PumpkinScript : MonoBehaviour
 {
-    public Transform player;
-    public float pumpkinSpeed;
-    public SpriteRenderer pumpkinSprite;
+    [SerializeField] protected float pumpkinSpeed;
+    [SerializeField] protected SpriteRenderer pumpkinSprite;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        var path = player.transform.position - transform.position;
+        Vector3 pathToPlayer = PlayerScript.Instance.transform.position - transform.position;
         
-        if (path.x < 0) {
+        if (pathToPlayer.x < 0) {
             pumpkinSprite.flipX = true;
         } else {
             pumpkinSprite.flipX = false;
         }
 
-        transform.Translate(pumpkinSpeed * Time.deltaTime * path/path.magnitude);
+        transform.Translate(pumpkinSpeed * Time.deltaTime * pathToPlayer/pathToPlayer.magnitude);
     }
 }
