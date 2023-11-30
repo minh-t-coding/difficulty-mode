@@ -2263,7 +2263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 2
-  destination: {fileID: 0}
+  destination: {fileID: 1566996607}
 --- !u!1001 &5866985410125325742
 PrefabInstance:
   m_ObjectHideFlags: 0
