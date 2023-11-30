@@ -6,6 +6,7 @@ public class PlayerScript : MonoBehaviour
 {
     public static PlayerScript Instance;
     [SerializeField] protected float playerSpeed;
+    [SerializeField] protected Transform destination;
 
     void Awake() {
         if (Instance == null) {
@@ -13,22 +14,28 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        destination.parent = null;
+    }
+
     void Update()
     {
-        if (Input.GetKey(KeyCode.W)) {
-            transform.Translate(0, (playerSpeed * Time.deltaTime), 0);
-        }
+        // Move Player to destination point
+        transform.position = Vector3.MoveTowards(transform.position, destination.position, playerSpeed * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.A)) {
-            transform.Translate((-playerSpeed * Time.deltaTime), 0, 0);
-        }
+        if (Vector3.Distance(transform.position, destination.position) <= .05f)
+        {
 
-        if (Input.GetKey(KeyCode.S)) {
-            transform.Translate(0, (-playerSpeed * Time.deltaTime), 0);
-        }
+            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+            {
+                destination.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+            }
 
-        if (Input.GetKey(KeyCode.D)) {
-            transform.Translate((playerSpeed * Time.deltaTime), 0, 0);
+            if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
+            {
+                destination.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+            }
         }
     }
 }
