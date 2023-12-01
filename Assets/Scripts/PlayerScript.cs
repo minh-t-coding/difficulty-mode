@@ -8,6 +8,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected EnemyManagerScript enemyManager;
 
     void Awake() {
         if (Instance == null) {
@@ -18,6 +19,7 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         destination.parent = null;
+        enemyManager = GameObject.Find("Enemy Manager").GetComponent<EnemyManagerScript>();
     }
 
     void Update()
@@ -33,6 +35,7 @@ public class PlayerScript : MonoBehaviour
                 if (!Physics2D.OverlapCircle(destination.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), .1f, collisionMask)) // Check if new destination position will overlap with collisionMask
                 {
                     destination.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                    enemyManager.EnemyTurn();
                 }
             }
 
@@ -41,9 +44,15 @@ public class PlayerScript : MonoBehaviour
                 if (!Physics2D.OverlapCircle(destination.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), .1f, collisionMask))
                 {
                     destination.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                    enemyManager.EnemyTurn();
                 }
               
             }
         }
+    }
+
+    // Move Point getter method
+    public Transform getMovePoint() {
+        return destination;
     }
 }
