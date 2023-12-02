@@ -15,6 +15,10 @@ public class BeatManager : MonoBehaviour
 
     [SerializeField] private GameObject indy;
 
+    [SerializeField] private GameObject hitPrefab;
+
+    [SerializeField] private Transform mapParent;
+
     public static BeatManager Instance;
 
     protected Beatmap myMap;
@@ -29,6 +33,7 @@ public class BeatManager : MonoBehaviour
     protected float inputWindow = 0.2f; // in beats
     protected float inputLag = 0.45f;
     protected float universalOffset = 0f;
+    protected float mapScrollSpeed = 2f;
 
     protected int myCurrBeat=0;
     protected int numHitBeats=0;
@@ -37,12 +42,64 @@ public class BeatManager : MonoBehaviour
     protected List<float> aboves;
     protected List<float> belows;
 
+    protected Vector3 mapInitPos;
+
+    protected List<BeatmapHit> beatmapHits;
+
+    protected KeyCode[] keyOrder = new KeyCode[6] {KeyCode.A,KeyCode.W ,KeyCode.S ,KeyCode.D, KeyCode.Space, KeyCode.Return  };
+
     void Awake() {
         if (Instance==null) {
             Instance = this;
             indy.SetActive(false);
             songStarted = false;
+            mapInitPos = mapParent.transform.position;
         }
+    }
+
+    public void constructBeatmap(Beatmap map) {
+        float[] hits = map.getHits();
+        KeyCode[] keys = map.getKeys();
+        beatmapHits = new List<BeatmapHit>();
+        int i=0;
+        foreach(float hit in hits) {
+            GameObject newHit = Instantiate(hitPrefab);
+            newHit.transform.SetParent(mapParent);
+            newHit.transform.localPosition = new Vector3 (getHitHoriPos(keys[i]),hit*mapScrollSpeed,0f);
+            BeatmapHit hitComp = newHit.GetComponent<BeatmapHit>();
+            hitComp.setKey(keys[i].ToString());
+            beatmapHits.Add(hitComp);
+            i++;
+        }
+    }
+
+    protected float getHitHoriPos(KeyCode key) {
+        float spacing = 1f;
+        float offset = -4f;
+        for (int i=0;i<keyOrder.Length;i++) {
+            if (keyOrder[i] == key) {
+                return offset+spacing*i;
+            }
+        }
+
+        return offset-spacing;
+
+    }
+
+    public int getConcurrentHits(Beatmap map,int curr) {
+        float[] hits = map.getHits();
+        List<KeyCode> concurrentHits = new List<KeyCode>();
+        KeyCode[] keys = map.getKeys();
+        float currBeat = hits[curr];
+        for(int i=curr;i<hits.Length;i++) {
+            if (hits[i]==hits[curr]) {
+                concurrentHits.Add(keys[i]);
+            } else {
+                break;
+            }
+        }
+        return concurrentHits.Count;
+
     }
 
     private void Update() {
@@ -55,38 +112,52 @@ public class BeatManager : MonoBehaviour
             if (myCurrBeat<myMap.getHits().Length) {
                 float nextHit = myMap.getHits()[myCurrBeat] +inputLag + universalOffset;
                 float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f)));
+                mapParent.transform.position = mapInitPos + new Vector3(0,-(sampledTime-inputLag)*mapScrollSpeed,0);
                 float diff = Mathf.Abs(nextHit-sampledTime);
                 float unOffseted =  Mathf.Abs(myMap.getHits()[myCurrBeat]-sampledTime);
+                int numHits = getConcurrentHits(myMap,myCurrBeat);
                 if (!readyForInput && diff<=inputWindow) {
                     readyForInput = true;
                 } 
+                if (readyForInput &&  numHits>0) {
+                    bool pressedAllHits = true;
+                    for (int i=0;i<numHits;i++) {
+                        pressedAllHits = pressedAllHits && Input.GetKey(myMap.getKeys()[myCurrBeat+i]);
+                    }
+                    
+                    if (pressedAllHits) {
+                        Debug.Log("HIT!");
+                        if (nextHit>=sampledTime) {
+                            aboves.Add(diff);
+                        } else {
+                            belows.Add(-diff);
 
-                if (readyForInput && Input.GetKey(myMap.getKeys()[myCurrBeat])) {
-                    Debug.Log("HIT!");
-                    if (nextHit>=sampledTime) {
-                        aboves.Add(diff);
-                    } else {
-                        belows.Add(-diff);
-
-                    } 
-
-                    hitNote=true;
-                    numHitBeats++;
+                        } 
+                        for (int i=0;i<numHits;i++) {
+                            beatmapHits[myCurrBeat+i].CreateHitEffect();
+                        }
+                        
+                        hitNote=true;
+                        numHitBeats++;
+                    }
                 }
 
                 if (readyForInput && diff>inputWindow) {
                     noteExpired = true;
+                    for (int i=0;i<numHits;i++) {
+                        beatmapHits[myCurrBeat+i].CreateMissEffect();
+                    }
                     numMissedBeats++;
                     //Debug.Log("MISS! :(");
                 }
          
                 if (!hasPlayedTick &&  (unOffseted <= tolerance ||  sampledTime>=myMap.getHits()[myCurrBeat])) {
                     hasPlayedTick = true;
-                    playTick( diff);
+                    //playTick( diff);
                 }
-
+ 
                 if (hitNote || noteExpired) {
-                    myCurrBeat++;
+                    myCurrBeat+=numHits;
                     hitNote = false;
                     noteExpired = false;
                     readyForInput = false;
@@ -126,9 +197,12 @@ public class BeatManager : MonoBehaviour
     
 
     public void triggerOnBeats(Beatmap map) {
-        audioSource.Play();
-        myCurrBeat=0;
         myMap = map;
+        constructBeatmap(map);
+        audioSource.Play();
+        
+        myCurrBeat=0;
+        
         belows = new List<float>();
         aboves = new List<float>();
         songStarted = true;
