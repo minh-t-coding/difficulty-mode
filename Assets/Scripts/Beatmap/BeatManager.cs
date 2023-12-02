@@ -31,9 +31,11 @@ public class BeatManager : MonoBehaviour
 
     protected float tolerance = 0.053f;
     protected float inputWindow = 0.2f; // in beats
-    protected float inputLag = 0.45f;
+    protected float inputLag = 0.45f; // tuned to 160f
     protected float universalOffset = 0f;
     protected float mapScrollSpeed = 2f;
+    
+    protected float tunedInputLag;
 
     protected int myCurrBeat=0;
     protected int numHitBeats=0;
@@ -41,6 +43,7 @@ public class BeatManager : MonoBehaviour
 
     protected List<float> aboves;
     protected List<float> belows;
+    
 
     protected Vector3 mapInitPos;
 
@@ -110,9 +113,9 @@ public class BeatManager : MonoBehaviour
 
         if (songStarted) {
             if (myCurrBeat<myMap.getHits().Length) {
-                float nextHit = myMap.getHits()[myCurrBeat] +inputLag + universalOffset;
+                float nextHit = myMap.getHits()[myCurrBeat] +tunedInputLag + universalOffset;
                 float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f)));
-                mapParent.transform.position = mapInitPos + new Vector3(0,-(sampledTime-inputLag)*mapScrollSpeed,0);
+                mapParent.transform.position = mapInitPos + new Vector3(0,-(sampledTime-tunedInputLag)*mapScrollSpeed,0);
                 float diff = Mathf.Abs(nextHit-sampledTime);
                 float unOffseted =  Mathf.Abs(myMap.getHits()[myCurrBeat]-sampledTime);
                 int numHits = getConcurrentHits(myMap,myCurrBeat);
@@ -200,9 +203,8 @@ public class BeatManager : MonoBehaviour
         myMap = map;
         constructBeatmap(map);
         audioSource.Play();
-        
         myCurrBeat=0;
-        
+        tunedInputLag = (bpm/160f) * inputLag;
         belows = new List<float>();
         aboves = new List<float>();
         songStarted = true;
