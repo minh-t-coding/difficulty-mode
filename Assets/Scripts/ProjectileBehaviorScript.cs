@@ -5,21 +5,40 @@ using UnityEngine;
 public class ProjectileBehaviorScript : MonoBehaviour {
 
     [SerializeField] protected float projectileSpeed;
-    private Rigidbody2D rb;
+    [SerializeField] protected float projectileDistance;
+    [SerializeField] protected Transform projectileDestination;
+    private int direction = 0;
 
     // Start is called before the first frame update
     void Start() {
-        rb = GetComponent<Rigidbody2D>();
-        rb.velocity = transform.right * projectileSpeed;
-        Destroy(this.gameObject, 2f);
+        projectileDestination.parent = null;
+        Destroy(this.gameObject, 10);
     }
 
-    void FixedUpdate() {
-        rb.velocity = transform.up * projectileSpeed;
+    void Update() {
+       transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        Destroy(this.gameObject, 2f);
+    public void ProjectileMove() {
+        switch (direction) {
+            case 0:
+                projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
+                break;
+            case 1:
+                projectileDestination.position += new Vector3(0f, -projectileDistance, 0f);
+                break;
+            case 2:
+                projectileDestination.position += new Vector3(-projectileDistance, 0f, 0f);
+                break;
+            case 3:
+                projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
+                break;
+        }
+
+        
+    }
+
+    public void setDirection(int newDirection) {
+        this.direction = newDirection;
     }
 }

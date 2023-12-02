@@ -41,6 +41,7 @@ public class PlayerScript : MonoBehaviour {
             
             if (playerMoved) {
                 EnemyManagerScript.Instance.GetComponent<EnemyManagerScript>().EnemyTurn();
+                ProjectileManagerScript.Instance.GetComponent<ProjectileManagerScript>().ProjectileTurn();
             }
         }
     }
