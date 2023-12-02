@@ -130,4 +130,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootingPoint: {fileID: 5933339033223079798}
-  projectilePrefab: {fileID: 1935206967942099077, guid: 6e7ef096301848c408b437c925d705fd, type: 3}
+  projectileManager: {fileID: 0}
+  projectilePrefab: {fileID: 1935206967942099077, guid: 2d0c6a853bd4dfd45b3da8fd0f36924e, type: 3}
