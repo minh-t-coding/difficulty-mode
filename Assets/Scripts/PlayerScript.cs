@@ -73,7 +73,12 @@ public class PlayerScript : MonoBehaviour {
         if (frameCnt>=diagonalTolerance || movementlockedIn) { // Player has diagonalTolerance # of frames to change their input to a diagonal
             if (movingHori || movingVert) {
                 destination.position = targetPos;
-                EnemyManagerScript.Instance.EnemyTurn();
+                if (EnemyManagerScript.Instance!=null) {
+                    EnemyManagerScript.Instance.EnemyTurn();
+                }
+                if (ProjectileManagerScript.Instance!=null) {
+                    ProjectileManagerScript.Instance.ProjectileTurn();
+                }
             }
             movingHori = false;
             movingVert = false;
