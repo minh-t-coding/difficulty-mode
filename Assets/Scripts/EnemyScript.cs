@@ -4,11 +4,12 @@ using Toolbox;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnemyScript : MonoBehaviour {
+public class EnemyScript : MonoBehaviour, IEnemyBehavior {
     [SerializeField] protected float enemySpeed;
     [SerializeField] protected Transform enemyDestination;
-    [SerializeField] protected Transform playerPosition;
-    [SerializeField] protected Tilemap tileMap;
+
+    private Tilemap tileMap;
+    private Transform playerPosition;
     private List<Vector3> nextMoves;
 
     void Start() {
