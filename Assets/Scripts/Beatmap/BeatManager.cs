@@ -113,7 +113,7 @@ public class BeatManager : MonoBehaviour
         //    interval.CheckForNewInterval(sampledTime);
         //}
 
-        if (songStarted) {
+        if (songStarted && audioSource.isPlaying) {
             if (myCurrBeat<myMap.getHits().Length) {
                 float nextHit = myMap.getHits()[myCurrBeat] +tunedInputLag + universalOffset;
                 float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f))) - myMap.getDelay();

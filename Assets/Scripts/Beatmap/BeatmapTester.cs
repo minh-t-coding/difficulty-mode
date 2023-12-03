@@ -22,7 +22,8 @@ public class BeatmapTester : MonoBehaviour
     {
         hasStarted=true;
         myBeatmap = new Beatmap(hits, keys,delay);
-        Timing.RunCoroutine(SongTransitioner.transitionLoopIntoSong(loop, song, myBeatmap).CancelWith(gameObject),this.gameObject.GetInstanceID());
+        SongTransitionerController.Instance.startTransition();
+        BeatManager.Instance.triggerOnBeats(myBeatmap);
         text.SetActive(false);
     }
 
