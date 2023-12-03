@@ -12,9 +12,6 @@ public class BeatmapTester : MonoBehaviour
 
     [SerializeField] protected GameObject text;
 
-    [SerializeField] protected AudioSource loop;
-
-    [SerializeField] protected AudioSource song;
     protected Beatmap myBeatmap;
 
     protected bool hasStarted;
@@ -22,8 +19,7 @@ public class BeatmapTester : MonoBehaviour
     {
         hasStarted=true;
         myBeatmap = new Beatmap(hits, keys,delay);
-        SongTransitionerController.Instance.startTransition();
-        BeatManager.Instance.triggerOnBeats(myBeatmap);
+        SongTransitionerController.Instance.startTransition(myBeatmap);
         text.SetActive(false);
     }
 
