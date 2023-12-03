@@ -12,7 +12,7 @@ public class SongTransitioner : MonoBehaviour
         while(songToStop.isPlaying) {
             yield return 0f;
         }
-        BeatManager.Instance.triggerOnBeats(bm);
         songToPlay.Play();
+        BeatManager.Instance.triggerOnBeats(bm);
     }
 }
