@@ -8,10 +8,14 @@ public class Beatmap
 
     protected KeyCode[] keys;
 
-    public Beatmap(float[] h, KeyCode[] k ) {
+    protected float delay;
+
+    
+
+    public Beatmap(float[] h, KeyCode[] k, float d = 0f ) {
         hits = h;
         keys = k;
-
+        delay = d;
     }
 
     public float[] getHits() {
@@ -20,6 +24,10 @@ public class Beatmap
 
     public KeyCode[] getKeys() {
         return keys;
+    }
+
+    public float getDelay() {
+        return delay;
     }
 
 

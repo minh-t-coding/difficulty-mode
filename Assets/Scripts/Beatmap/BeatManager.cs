@@ -31,7 +31,7 @@ public class BeatManager : MonoBehaviour
 
     protected float tolerance = 0.053f;
     protected float inputWindow = 0.2f; // in beats
-    protected float inputLag = 0.45f; // tuned to 160f
+    protected float inputLag = 0.29f; // tuned to 130f
     protected float universalOffset = 0f;
     protected float mapScrollSpeed = 2f;
     
@@ -65,6 +65,7 @@ public class BeatManager : MonoBehaviour
         KeyCode[] keys = map.getKeys();
         beatmapHits = new List<BeatmapHit>();
         int i=0;
+         mapParent.transform.position = mapInitPos + new Vector3(0,-(-myMap.getDelay()-tunedInputLag)*mapScrollSpeed,0) ;
         foreach(float hit in hits) {
             GameObject newHit = Instantiate(hitPrefab);
             newHit.transform.SetParent(mapParent);
@@ -74,6 +75,7 @@ public class BeatManager : MonoBehaviour
             beatmapHits.Add(hitComp);
             i++;
         }
+       
     }
 
     protected float getHitHoriPos(KeyCode key) {
@@ -114,8 +116,8 @@ public class BeatManager : MonoBehaviour
         if (songStarted) {
             if (myCurrBeat<myMap.getHits().Length) {
                 float nextHit = myMap.getHits()[myCurrBeat] +tunedInputLag + universalOffset;
-                float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f)));
-                mapParent.transform.position = mapInitPos + new Vector3(0,-(sampledTime-tunedInputLag)*mapScrollSpeed,0);
+                float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f))) - myMap.getDelay();
+                mapParent.transform.position = mapInitPos + new Vector3(0,-(sampledTime-tunedInputLag)*mapScrollSpeed,0) ;
                 float diff = Mathf.Abs(nextHit-sampledTime);
                 float unOffseted =  Mathf.Abs(myMap.getHits()[myCurrBeat]-sampledTime);
                 int numHits = getConcurrentHits(myMap,myCurrBeat);
@@ -202,9 +204,9 @@ public class BeatManager : MonoBehaviour
     public void triggerOnBeats(Beatmap map) {
         myMap = map;
         constructBeatmap(map);
-        audioSource.Play();
+        //audioSource.Play();
         myCurrBeat=0;
-        tunedInputLag = (bpm/160f) * inputLag;
+        tunedInputLag = (bpm/130f) * inputLag;
         belows = new List<float>();
         aboves = new List<float>();
         songStarted = true;
