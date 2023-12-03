@@ -14,7 +14,7 @@ public class EnemyManagerScript : MonoBehaviour {
     public void EnemyTurn() {
         foreach(Transform enemy in transform) {
             if (enemy != null) {
-                IEnemyBehavior enemyBehavior = enemy.GetComponent<IEnemyBehavior>();
+                BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
                 if (enemyBehavior != null) {
                     enemyBehavior.EnemyMove();
                 }

@@ -6,29 +6,15 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-public class RangedEnemyBehaviorScript : MonoBehaviour, IEnemyBehavior {
+public class RangedEnemyBehaviorScript : BaseEnemy {
     // Gun Variables
     [SerializeField] protected Transform shootingPoint;
     [SerializeField] protected Transform projectileManager;
     [SerializeField] protected GameObject projectilePrefab;
-    [SerializeField] protected float enemySpeed;
     [SerializeField] protected float movementRange;
-    [SerializeField] protected Transform enemyDestination;
-    private Transform playerPosition;
-    private Tilemap tileMap;
-    private List<Vector3> nextMoves;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        enemyDestination.parent = null;
-        playerPosition = PlayerScript.Instance.getMovePoint();
-        tileMap = GameObject.Find("Top").GetComponent<Tilemap>();
-        nextMoves = new List<Vector3>();
-    }
 
     // Update is called once per frame
-    void Update() {
+    protected override void Update() {
         GameObject projectile;
         if (Input.GetKeyDown(KeyCode.I)) { // Up
             projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, 0)), projectileManager);
@@ -46,11 +32,11 @@ public class RangedEnemyBehaviorScript : MonoBehaviour, IEnemyBehavior {
             projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, -90)), projectileManager);
             projectile.GetComponent<ProjectileBehaviorScript>().setDirection(3);
         }
-
-        transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
+        
+        base.Update();
     }
 
-    public void EnemyMove() {
+    public override void EnemyMove() {
         // check if enemy is already in range
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         if (distanceFromPlayer.magnitude < movementRange) { 
@@ -75,20 +61,6 @@ public class RangedEnemyBehaviorScript : MonoBehaviour, IEnemyBehavior {
             return;
         }
         
-        // Find shortest path to player's new position
-        nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
-
-        if(nextMoves.Count > 1) {
-            // FindPathClosest returns current position as first element of the list
-            Vector3 nextMove = nextMoves[1];
-            Vector3 pathToPlayer = nextMove - enemyDestination.position;
-
-            // Enemy only moves one unit in eight cardinal directions
-            if (pathToPlayer.x != 0) {
-                enemyDestination.position += pathToPlayer / Mathf.Abs(pathToPlayer.x);
-            } else if (pathToPlayer.y != 0) {
-                enemyDestination.position += pathToPlayer / Mathf.Abs(pathToPlayer.y);
-            }
-        }
+        base.EnemyMove();
     }
 }
