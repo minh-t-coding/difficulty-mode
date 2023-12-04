@@ -33,8 +33,10 @@ public class PlayerScript : MonoBehaviour {
     }
 
     void Update() {
-        // Move Player to destination point
-        transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
+        // Move Player to destination point after input window closes
+        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
+            transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
+        }
 
         Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
