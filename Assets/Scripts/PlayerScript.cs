@@ -7,6 +7,7 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
     [SerializeField] protected float dashTiming = 0.4f;
     
@@ -17,7 +18,7 @@ public class PlayerScript : MonoBehaviour {
 
     private float lastInitialDirectionalInputTime;
     private bool playerInAction = false;
-    private Vector3 currentMoveDir;
+    private Vector3 currMoveDir;
     private bool hasDashed = false;
 
     void Awake() {
@@ -35,29 +36,52 @@ public class PlayerScript : MonoBehaviour {
         // Move Player to destination point
         transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
 
-        // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKey instead of GetKeyDown
+        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
-        // Check if a second input has been inputted while player is mid move within the dash timing window
-        // Dash can only be performed once per action
-        if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
-            if ((Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f && !isVerticalAxisInUse)) {
-                isHorizontalAxisInUse = Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f;
-                isVerticalAxisInUse = Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f;
-                Vector3 dashDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
-                if (dashDir == currentMoveDir) {
-                    hasDashed = true;
-                    if (!Physics2D.OverlapCircle(destination.position + dashDir, 0.1f, collisionMask)) {
-                        Debug.Log("dashing! " + currentMoveDir);
-                        destination.position += dashDir;
-                        currentSpeed = dashSpeed;
+        // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
+
+        // Check if an input for a diagonal move was made
+        // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
+        if (Time.time - lastInitialDirectionalInputTime < multiInputWindow) {
+            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+                if(Mathf.Abs(currInputDir.x) == 1f && Mathf.Abs(currInputDir.y) == 1f) {
+                    if (playerInAction) {   
+                        // if original action was valid and had already been initiated
+                        if (!willHitWall(destination.position + currInputDir - currMoveDir)) {
+                            destination.position += currInputDir - currMoveDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
+                            currMoveDir = currInputDir;
+                        } else {
+                            destination.position -= currMoveDir;    // undo initiated action if new destination is invalid
+                        }
+                    } else {    
+                        // if original action was invalid and had never started
+                        if (!willHitWall(destination.position + currInputDir)) {
+                            destination.position += currInputDir;
+                            currMoveDir = currInputDir;
+                            playerInAction = true;
+                        }
                     }
                 }
             }
-            if (Input.GetAxisRaw("Horizontal") == 0) {
-                isHorizontalAxisInUse = false;
-            }
-            if (Input.GetAxisRaw("Vertical") == 0) {
-                isVerticalAxisInUse = false;
+        }
+
+        // Check if a second identical input has been inputted while player is mid move within the dash timing window
+        // Dash can only be performed once per action
+        if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
+            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+
+                // Ensure player doesn't move into wall
+                if (currInputDir == currMoveDir) {
+                    hasDashed = true;
+                    if (!willHitWall(destination.position + currInputDir)) {
+                        destination.position += currInputDir;
+                        currentSpeed = dashSpeed;
+                    }
+                }
             }
         }
 
@@ -66,40 +90,43 @@ public class PlayerScript : MonoBehaviour {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
-                Debug.Log("arrived!");
-
-                EnemyManagerScript.Instance.GetComponent<EnemyManagerScript>().EnemyTurn();
-                ProjectileManagerScript.Instance.GetComponent<ProjectileManagerScript>().ProjectileTurn();
+                EnemyManagerScript.Instance.EnemyTurn();
+                ProjectileManagerScript.Instance.ProjectileTurn();
 
                 lastInitialDirectionalInputTime = 0f;
-                Debug.Log("lastInitialDirectionalIinputTime: " + lastInitialDirectionalInputTime);
                 playerInAction = false;
-                currentMoveDir = Vector3.zero;
+                currMoveDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
             }
 
-            if ((Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f && !isVerticalAxisInUse)) {
-                isHorizontalAxisInUse = Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f;
-                isVerticalAxisInUse = Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f;
-                Vector3 moveDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
-                // Ensure player doesn't move into wall
-                if (!Physics2D.OverlapCircle(destination.position + moveDir, 0.1f, collisionMask)) {
-                    destination.position += moveDir;
-                    lastInitialDirectionalInputTime = Time.time;
-                    Debug.Log("lastInitialDirectionalIinputTime: " + lastInitialDirectionalInputTime);
+            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+                lastInitialDirectionalInputTime = Time.time;
+                currMoveDir = currInputDir;
+
+                if (!willHitWall(destination.position + currInputDir)) {
+                    destination.position += currInputDir;
                     playerInAction = true;
-                    currentMoveDir = moveDir;
                 }
-            }
-            if (Input.GetAxisRaw("Horizontal") == 0) {
-                isHorizontalAxisInUse = false;
-            }
-            if (Input.GetAxisRaw("Vertical") == 0) {
-                isVerticalAxisInUse = false;
             }
         }
 
+        if (currInputDir.x == 0) {
+            isHorizontalAxisInUse = false;
+        }
+        if (currInputDir.y == 0) {
+            isVerticalAxisInUse = false;
+        }
+    }
+
+    /// <summary>
+    /// Checks if a position is inside a wall
+    /// </summary>
+    /// <param name="position"></param>
+    private bool willHitWall(Vector3 position) {
+        return Physics2D.OverlapCircle(position, 0.1f, collisionMask);
     }
 
     // Move Point getter method
