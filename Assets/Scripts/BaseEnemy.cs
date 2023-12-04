@@ -23,6 +23,8 @@ public class BaseEnemy : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
     }
 
+    public virtual void EnemyAttack() {}
+
     public virtual void EnemyMove() {
         // Find shortest path to player's new position
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);

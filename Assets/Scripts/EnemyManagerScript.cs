@@ -17,6 +17,7 @@ public class EnemyManagerScript : MonoBehaviour {
                 BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
                 if (enemyBehavior != null) {
                     enemyBehavior.EnemyMove();
+                    enemyBehavior.EnemyAttack();
                 }
             }
         }
