@@ -8,6 +8,8 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected SpriteRenderer playerSpriteRenderer;
+    [SerializeField] protected Sprite[] playerSpriteArray;
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
     [SerializeField] protected float dashTiming = 0.4f;
@@ -64,7 +66,7 @@ public class PlayerScript : MonoBehaviour {
                         if (!willHitWall(destination.position + currInputDir)) {
                             destination.position += currInputDir;
                             currMoveDir = currInputDir;
-                            playerInAction = true;
+                            initiateAction();
                         }
                     }
                 }
@@ -116,7 +118,7 @@ public class PlayerScript : MonoBehaviour {
 
                 if (!willHitWall(destination.position + currInputDir)) {
                     destination.position += currInputDir;
-                    playerInAction = true;
+                    initiateAction();
                 }
             }
         }
@@ -143,6 +145,22 @@ public class PlayerScript : MonoBehaviour {
     /// <param name="input"></param>
     private bool newInputReceived(Vector3 input) {
         return Mathf.Abs(input.x) == 1f && !isHorizontalAxisInUse || Mathf.Abs(input.y) == 1f && !isVerticalAxisInUse;
+    }
+
+    /// <summary>
+    /// Sets the state of the player to be moving and updates the sprite
+    /// </summary>
+    private void initiateAction() {
+        playerInAction = true;
+        if (currMoveDir.y == -1f) {
+            playerSpriteRenderer.sprite = playerSpriteArray[0];
+        } else if (currMoveDir.y == 1f) {
+            playerSpriteRenderer.sprite = playerSpriteArray[3];
+        } else if (currMoveDir.x == 1f) {
+            playerSpriteRenderer.sprite = playerSpriteArray[1];
+        } else if (currMoveDir.x == -1f) {
+            playerSpriteRenderer.sprite = playerSpriteArray[2];
+        }
     }
 
     // Move Point getter method
