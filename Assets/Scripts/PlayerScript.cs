@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,7 +46,7 @@ public class PlayerScript : MonoBehaviour {
         // Check if an input for a diagonal move was made
         // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
         if (Time.time - lastInitialDirectionalInputTime < multiInputWindow) {
-            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+            if (newInputReceived(currInputDir)) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 if(Mathf.Abs(currInputDir.x) == 1f && Mathf.Abs(currInputDir.y) == 1f) {
@@ -72,7 +73,7 @@ public class PlayerScript : MonoBehaviour {
         // Check if a second identical input has been inputted while player is mid move within the dash timing window
         // Dash can only be performed once per action
         if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
-            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+            if (newInputReceived(currInputDir)) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
 
@@ -106,7 +107,7 @@ public class PlayerScript : MonoBehaviour {
                 currentSpeed = playerSpeed;
             }
 
-            if ((Mathf.Abs(currInputDir.x) == 1f && !isHorizontalAxisInUse) || (Mathf.Abs(currInputDir.y) == 1f && !isVerticalAxisInUse)) {
+            if (newInputReceived(currInputDir)) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
@@ -133,6 +134,14 @@ public class PlayerScript : MonoBehaviour {
     /// <param name="position"></param>
     private bool willHitWall(Vector3 position) {
         return Physics2D.OverlapCircle(position, 0.1f, collisionMask);
+    }
+
+    /// <summary>
+    /// Checks whether an input is currently being given by the player
+    /// </summary>
+    /// <param name="input"></param>
+    private bool newInputReceived(Vector3 input) {
+        return Mathf.Abs(input.x) == 1f && !isHorizontalAxisInUse || Mathf.Abs(input.y) == 1f && !isVerticalAxisInUse;
     }
 
     // Move Point getter method
