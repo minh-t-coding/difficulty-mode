@@ -92,8 +92,12 @@ public class PlayerScript : MonoBehaviour {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
-                EnemyManagerScript.Instance.EnemyTurn();
-                ProjectileManagerScript.Instance.ProjectileTurn();
+                if (EnemyManagerScript.Instance!=null) {
+                    EnemyManagerScript.Instance.EnemyTurn();
+                }
+                if (ProjectileManagerScript.Instance!=null) {
+                    ProjectileManagerScript.Instance.ProjectileTurn();
+                }
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
