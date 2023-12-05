@@ -1,4 +1,4 @@
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +8,19 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected float multiInputWindow = 0.05f;
+    [SerializeField] protected float dashSpeed;
+    [SerializeField] protected float dashTiming = 0.4f;
+    
+    private float currentSpeed;
+
+    private bool isHorizontalAxisInUse = false;
+    private bool isVerticalAxisInUse = false;
+
+    private float lastInitialDirectionalInputTime;
+    private bool playerInAction = false;
+    private Vector3 currMoveDir;
+    private bool hasDashed = false;
 
     void Awake() {
         if (Instance == null) {
@@ -15,81 +28,121 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    int frameCnt;
-
-    int diagonalTolerance = 5; //in frames
-
-    bool movingHori,movingVert;
-
-    bool movementlockedIn;
-
     void Start() {
         destination.parent = null;
-        movingHori = false;
-        movingVert = false;
-        movementlockedIn = false;
-        targetPos = destination.position;
-        frameCnt = diagonalTolerance;
+        currentSpeed = playerSpeed;
     }
 
-    Vector3 targetPos;
-    public bool wallAtPos(Vector3 pos) {
-        return Physics2D.OverlapCircle(pos, .1f, collisionMask);
-    }
     void Update() {
-        // Move Player to destination point
-        transform.position = Vector3.MoveTowards(transform.position, destination.position, playerSpeed * Time.deltaTime);
+        // Move Player to destination point after input window closes
+        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
+            transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
+        }
 
-        if ( Vector3.Distance(transform.position, destination.position) <= .05f || frameCnt<diagonalTolerance) {   // Check if Player is near destination or 
-            if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f) {
-                if (!wallAtPos(targetPos + new Vector3(Input.GetAxisRaw("Horizontal"),0,0)) && !movingHori) { // Check if new destination position will overlap with collisionMask
-                    Vector3 horiDir =  new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                    movingHori = true;
-                    if (movingVert) {
-                        targetPos += horiDir;
-                        movementlockedIn = true;
-                    } else {
-                        targetPos = destination.position + horiDir;
-                    }
-                    frameCnt = 0;
-                } 
-            }
+        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
-            if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f) {
-                if (!wallAtPos(targetPos + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f)) && !movingVert) {
-                    Vector3 vertDir = new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                    movingVert = true;
-                    if (movingHori) {
-                        targetPos += vertDir;
-                        movementlockedIn = true;
-                    } else {
-                        targetPos = destination.position + vertDir;
+        // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
+
+        // Check if an input for a diagonal move was made
+        // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
+        if (Time.time - lastInitialDirectionalInputTime < multiInputWindow) {
+            if (newInputReceived(currInputDir)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+                if(Mathf.Abs(currInputDir.x) == 1f && Mathf.Abs(currInputDir.y) == 1f) {
+                    if (playerInAction) {   
+                        // if original action was valid and had already been initiated
+                        if (!willHitWall(destination.position + currInputDir - currMoveDir)) {
+                            destination.position += currInputDir - currMoveDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
+                            currMoveDir = currInputDir;
+                        } else {
+                            destination.position -= currMoveDir;    // undo initiated action if new destination is invalid
+                        }
+                    } else {    
+                        // if original action was invalid and had never started
+                        if (!willHitWall(destination.position + currInputDir)) {
+                            destination.position += currInputDir;
+                            currMoveDir = currInputDir;
+                            playerInAction = true;
+                        }
                     }
-                    frameCnt = 0;
-                } 
+                }
             }
         }
 
-        if (frameCnt>=diagonalTolerance || movementlockedIn) { // Player has diagonalTolerance # of frames to change their input to a diagonal
-            if (movingHori || movingVert) {
-                destination.position = targetPos;
+        // Check if a second identical input has been inputted while player is mid move within the dash timing window
+        // Dash can only be performed once per action
+        if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
+            if (newInputReceived(currInputDir)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+
+                // Ensure player doesn't move into wall
+                if (currInputDir == currMoveDir) {
+                    hasDashed = true;
+                    if (!willHitWall(destination.position + currInputDir)) {
+                        destination.position += currInputDir;
+                        currentSpeed = dashSpeed;
+                    }
+                }
+            }
+        }
+
+        // Check for new input if Player is close enough to destination
+        if (Vector3.Distance(transform.position, destination.position) <= .05f) {
+            // Player character has finished performing action
+            // NPCs take turns, reset everything to listen for new move input
+            if (playerInAction) {
                 if (EnemyManagerScript.Instance!=null) {
                     EnemyManagerScript.Instance.EnemyTurn();
                 }
                 if (ProjectileManagerScript.Instance!=null) {
                     ProjectileManagerScript.Instance.ProjectileTurn();
                 }
+
+                lastInitialDirectionalInputTime = 0f;
+                playerInAction = false;
+                currMoveDir = Vector3.zero;
+                hasDashed = false;
+                currentSpeed = playerSpeed;
             }
-            movingHori = false;
-            movingVert = false;
-            frameCnt = diagonalTolerance;
-            movementlockedIn = false;
-        } else {
-            frameCnt++;
+
+            if (newInputReceived(currInputDir)) {
+                isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
+                isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
+                lastInitialDirectionalInputTime = Time.time;
+                currMoveDir = currInputDir;
+
+                if (!willHitWall(destination.position + currInputDir)) {
+                    destination.position += currInputDir;
+                    playerInAction = true;
+                }
+            }
+        }
+
+        if (currInputDir.x == 0) {
+            isHorizontalAxisInUse = false;
+        }
+        if (currInputDir.y == 0) {
+            isVerticalAxisInUse = false;
         }
     }
 
-    
+    /// <summary>
+    /// Checks if a position is inside a wall
+    /// </summary>
+    /// <param name="position"></param>
+    private bool willHitWall(Vector3 position) {
+        return Physics2D.OverlapCircle(position, 0.1f, collisionMask);
+    }
+
+    /// <summary>
+    /// Checks whether an input is currently being given by the player
+    /// </summary>
+    /// <param name="input"></param>
+    private bool newInputReceived(Vector3 input) {
+        return Mathf.Abs(input.x) == 1f && !isHorizontalAxisInUse || Mathf.Abs(input.y) == 1f && !isVerticalAxisInUse;
+    }
 
     // Move Point getter method
     public Transform getMovePoint() {
