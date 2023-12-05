@@ -14,26 +14,55 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
     [SerializeField] protected float movementRange;
 
     // Update is called once per frame
-    protected override void Update() {
-        GameObject projectile;
-        if (Input.GetKeyDown(KeyCode.I)) { // Up
-            projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, 0)), projectileManager);
-            projectile.GetComponent<ProjectileBehaviorScript>().setDirection(0);
-        }
-        if (Input.GetKeyDown(KeyCode.K)) { // Down
-            projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, 180)), projectileManager);
-            projectile.GetComponent<ProjectileBehaviorScript>().setDirection(1);
-        }
-        if (Input.GetKeyDown(KeyCode.J)) { // Left
-            projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, 90)), projectileManager);
-            projectile.GetComponent<ProjectileBehaviorScript>().setDirection(2);
-        }
-        if (Input.GetKeyDown(KeyCode.L)) { // Right
-            projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, 0, -90)), projectileManager);
-            projectile.GetComponent<ProjectileBehaviorScript>().setDirection(3);
-        }
-        
+    protected override void Update() {        
         base.Update();
+    }
+
+    public override bool EnemyInRange() {
+        Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
+        
+        // only shoot if in range and in line with player
+        if ((distanceFromPlayer.magnitude <= movementRange) && (distanceFromPlayer.x == 0 || distanceFromPlayer.y == 0)) {   
+            
+            // don't shoot if a wall is in the way
+            if (Physics2D.Linecast(enemyDestination.position, playerPosition.position, collisionMask))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public override void EnemyAttack() {
+        Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
+        
+        Vector3 prefabDirection;
+        int scriptDirection;
+
+        // set prefab and script directions based on position relative to player
+        if (distanceFromPlayer.x == 0) {
+            if (distanceFromPlayer.y > 0) {
+                prefabDirection = new Vector3(0, 0, 0);
+                scriptDirection = 0;
+            } else {
+                prefabDirection = new Vector3(0, 0, 180);
+                scriptDirection = 1;
+            }
+        } else {
+            if (distanceFromPlayer.x < 0) {
+                prefabDirection = new Vector3(0, 0, 90);
+                scriptDirection = 2;
+            } else {
+                prefabDirection = new Vector3(0, 0, -90);
+                scriptDirection = 3;
+            }
+        }
+
+        GameObject projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(prefabDirection), projectileManager);
+        projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
     }
 
     public override void EnemyMove() {

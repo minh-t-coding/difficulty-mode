@@ -7,6 +7,7 @@ public class BaseEnemy : MonoBehaviour
 {
     [SerializeField] protected float enemySpeed;
     [SerializeField] protected Transform enemyDestination;
+    [SerializeField] protected LayerMask collisionMask;
 
     protected Tilemap tileMap;
     protected Transform playerPosition;
@@ -22,6 +23,12 @@ public class BaseEnemy : MonoBehaviour
     protected virtual void Update() {
         transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
     }
+
+    public virtual bool EnemyInRange() {
+        return false;
+    }
+    
+    public virtual void EnemyAttack() {}
 
     public virtual void EnemyMove() {
         // Find shortest path to player's new position

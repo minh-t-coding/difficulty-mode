@@ -3895,6 +3895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e8f0d8204ed92048953d7bf62821220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackAndMoveSameTurn: 0
 --- !u!4 &2051059816
 Transform:
   m_ObjectHideFlags: 0
@@ -3983,6 +3984,10 @@ PrefabInstance:
       propertyPath: projectileManager
       value: 
       objectReference: {fileID: 1557828023}
+    - target: {fileID: 8638868875372368813, guid: b4183b37c63007042868b35e255c18f0, type: 3}
+      propertyPath: collisionMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

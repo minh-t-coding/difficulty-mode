@@ -103,6 +103,8 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
+  dashSpeed: 8
+  dashTiming: 0.4
 --- !u!1 &5512135267080885028
 GameObject:
   m_ObjectHideFlags: 0
