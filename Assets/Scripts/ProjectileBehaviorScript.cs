@@ -7,12 +7,14 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     [SerializeField] protected float projectileDistance;
     [SerializeField] protected Transform projectileDestination;
     [SerializeField] protected LayerMask collisionMask;
+    protected Transform playerPosition;
     private int direction = 0;
     private GameObject projectileMovePoint;
 
     // Start is called before the first frame update
     void Start() {
         this.projectileMovePoint = projectileDestination.gameObject;
+        playerPosition = PlayerScript.Instance.getMovePoint();
         projectileDestination.parent = null;
 
         // will destroy the projectile by default after 20 seconds
@@ -21,8 +23,13 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     }
 
     void Update() {
+        if (Vector3.Distance(transform.position, playerPosition.position) < .1f) {
+            Destroy(gameObject);
+            Destroy(projectileMovePoint);
+        }
+
         transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime);
-        
+
         if (Physics2D.OverlapCircle(transform.position, .1f, collisionMask)) { // Check if projectile position will overlap with collisionMask
             Destroy(this.gameObject);
             Destroy(this.projectileMovePoint);
@@ -30,7 +37,7 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     }
 
     public void ProjectileMove() {
-        switch (direction) {
+        switch (this.direction) {
             case 0:
                 projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
                 break;
