@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManagerScript : MonoBehaviour {
+    [SerializeField] protected bool attackAndMoveSameTurn = false;
+    
     public static EnemyManagerScript Instance;
 
     void Awake() {
@@ -16,8 +18,19 @@ public class EnemyManagerScript : MonoBehaviour {
             if (enemy != null) {
                 BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
                 if (enemyBehavior != null) {
-                    enemyBehavior.EnemyMove();
-                    enemyBehavior.EnemyAttack();
+                    if (attackAndMoveSameTurn) {
+                        enemyBehavior.EnemyMove();
+                        if (enemyBehavior.EnemyInRange()) {
+                            enemyBehavior.EnemyAttack();    
+                        }
+                    }
+                    else {
+                        if (enemyBehavior.EnemyInRange()) {
+                            enemyBehavior.EnemyAttack();
+                        } else {
+                            enemyBehavior.EnemyMove();
+                        }
+                    }
                 }
             }
         }
