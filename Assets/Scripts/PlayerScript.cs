@@ -57,6 +57,7 @@ public class PlayerScript : MonoBehaviour {
                             currMoveDir = currInputDir;
                         } else {
                             destination.position -= currMoveDir;    // undo initiated action if new destination is invalid
+                            playerInAction = false;
                         }
                     } else {    
                         // if original action was invalid and had never started
