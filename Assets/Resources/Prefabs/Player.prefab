@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 277876741, guid: b84a9a739e2751747b98ea721938fcc3, type: 3}
+  m_Sprite: {fileID: -1620593540, guid: ad01b71ff711657479971093a5e004bd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -105,10 +105,10 @@ MonoBehaviour:
     m_Bits: 256
   playerSpriteRenderer: {fileID: 1536874982425427583}
   playerSpriteArray:
-  - {fileID: 277876741, guid: b84a9a739e2751747b98ea721938fcc3, type: 3}
-  - {fileID: -1158059948, guid: b84a9a739e2751747b98ea721938fcc3, type: 3}
-  - {fileID: 466568040, guid: b84a9a739e2751747b98ea721938fcc3, type: 3}
-  - {fileID: 1371813788, guid: b84a9a739e2751747b98ea721938fcc3, type: 3}
+  - {fileID: -1620593540, guid: ad01b71ff711657479971093a5e004bd, type: 3}
+  - {fileID: 354689465, guid: ad01b71ff711657479971093a5e004bd, type: 3}
+  - {fileID: 825806528, guid: ad01b71ff711657479971093a5e004bd, type: 3}
+  - {fileID: 145985838, guid: ad01b71ff711657479971093a5e004bd, type: 3}
   multiInputWindow: 0.05
   dashSpeed: 8
   dashTiming: 0.4

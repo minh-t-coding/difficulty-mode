@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b84a9a739e2751747b98ea721938fcc3
+guid: ad01b71ff711657479971093a5e004bd
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f043b802920315540bac1a54faa767ad
-      internalID: 277876741
+      spriteID: b0da73c0550f2e043ae2333518641691
+      internalID: -1620593540
       vertices: []
       indices: 
       edges: []
@@ -145,8 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 672ab9b9037a9ce41af3581df36ba283
-      internalID: -1158059948
+      spriteID: 73b71a752a5a6094f9ac44c5bf45660f
+      internalID: 354689465
       vertices: []
       indices: 
       edges: []
@@ -166,8 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 414bb039b6e85a7498920ea6ac0daac4
-      internalID: 466568040
+      spriteID: 6c91aa2377f4702489468134956185a4
+      internalID: 825806528
       vertices: []
       indices: 
       edges: []
@@ -187,8 +187,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2a57aab954ee4a443b16004ecd124ca5
-      internalID: 1371813788
+      spriteID: 57ea07e3816df8345bd593abec3f7480
+      internalID: 145985838
       vertices: []
       indices: 
       edges: []
@@ -204,10 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      old_man_sprites_0: 277876741
-      old_man_sprites_1: -1158059948
-      old_man_sprites_2: 466568040
-      old_man_sprites_3: 1371813788
+      old_man_sprites_0: -1620593540
+      old_man_sprites_1: 354689465
+      old_man_sprites_2: 825806528
+      old_man_sprites_3: 145985838
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
