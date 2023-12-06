@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
@@ -148,5 +145,10 @@ public class PlayerScript : MonoBehaviour {
     // Move Point getter method
     public Transform getMovePoint() {
         return destination;
+    }
+
+    public void killPlayer() {
+        Debug.Log("Player died. Press 'Esc' to restart.");
+        this.gameObject.SetActive(false);
     }
 }

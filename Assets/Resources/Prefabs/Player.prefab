@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3461794471396766846}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,11 +98,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2489688000fdea46a8648e1798d87d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerSpeed: 2
+  playerSpeed: 4
   destination: {fileID: 4770247714014625593}
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
+  multiInputWindow: 0.05
   dashSpeed: 8
   dashTiming: 0.4
 --- !u!1 &5512135267080885028
