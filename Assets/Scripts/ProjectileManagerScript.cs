@@ -18,6 +18,10 @@ public class ProjectileManagerScript : MonoBehaviour
     void Update() {
         int notMovingProjectileCount = 0; 
 
+        if (transform.childCount.Equals(0)) {
+            this.areProjectilesInAction = false;
+        }
+
         foreach(Transform projectile in transform) {
             if (projectile != null) {
                 ProjectileBehaviorScript projectileBehaviorScript = projectile.GetComponent<ProjectileBehaviorScript>();
