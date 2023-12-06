@@ -34,7 +34,6 @@ public class ProjectileManagerScript : MonoBehaviour
                 }
             }
         }
-        notMovingProjectileCount = 0;
     }
 
     public bool getAreProjectilesInAction() {
