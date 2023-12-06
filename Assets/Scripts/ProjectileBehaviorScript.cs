@@ -23,17 +23,24 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     }
 
     void Update() {
-        if (Vector3.Distance(transform.position, playerPosition.position) < .1f) {
-            Destroy(gameObject);
-            Destroy(projectileMovePoint);
-        }
-
+        // Move Projectile
         transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime);
 
-        if (Physics2D.OverlapCircle(transform.position, .1f, collisionMask)) { // Check if projectile position will overlap with collisionMask
-            Destroy(this.gameObject);
-            Destroy(this.projectileMovePoint);
+        // Check if projectile position will overlap with collisionMask
+        if (Physics2D.OverlapCircle(transform.position, .1f, collisionMask)) {
+            DestroyProjectile();
         }
+
+         // Check if projectile position touches Player
+        if (Vector3.Distance(transform.position, playerPosition.position) < .05f) {
+            DestroyProjectile();
+            PlayerScript.Instance.killPlayer();
+        }
+    }
+
+    private void DestroyProjectile() {
+        Destroy(this.gameObject);
+        Destroy(this.projectileMovePoint);
     }
 
     public void ProjectileMove() {
