@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class BaseEnemy : MonoBehaviour
 {
+    [SerializeField] protected float enemyHealth;
     [SerializeField] protected float enemySpeed;
     [SerializeField] protected Transform enemyDestination;
     [SerializeField] protected LayerMask collisionMask;
@@ -26,6 +27,15 @@ public class BaseEnemy : MonoBehaviour
 
     public virtual bool EnemyInRange() {
         return false;
+    }
+
+    public virtual void EnemyAttacked(float damage) {
+        enemyHealth -= damage;
+
+        if (enemyHealth <= 0) {
+            Debug.Log("enemy killed!");
+            this.gameObject.SetActive(false);
+        }
     }
     
     public virtual void EnemyAttack() {}
