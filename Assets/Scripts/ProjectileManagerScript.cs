@@ -7,7 +7,7 @@ public class ProjectileManagerScript : MonoBehaviour
 {
     public static ProjectileManagerScript Instance;
 
-    private bool areProjectilesInAction;
+    private bool areProjectilesInAction = false;
 
     void Awake() {
         if (Instance == null) {
@@ -16,14 +16,25 @@ public class ProjectileManagerScript : MonoBehaviour
     }
 
     void Update() {
+        int projectileCount = transform.childCount; 
+        int notMovingProjectileCount = 0; 
+
         foreach(Transform projectile in transform) {
             if (projectile != null) {
                 ProjectileBehaviorScript projectileBehaviorScript = projectile.GetComponent<ProjectileBehaviorScript>();
                 if (projectileBehaviorScript != null) {
-                    this.areProjectilesInAction = projectileBehaviorScript.getIsProjectileMoving();
+                    if (!projectileBehaviorScript.getIsProjectileMoving()) {
+                        notMovingProjectileCount++;
+                    }
+                    this.areProjectilesInAction =  this.areProjectilesInAction || projectileBehaviorScript.getIsProjectileMoving();
+
+                    if (notMovingProjectileCount.Equals(projectileCount)) {
+                        this.areProjectilesInAction = false;
+                    }
                 }
             }
         }
+        notMovingProjectileCount = 0;
     }
 
     public bool getAreProjectilesInAction() {
