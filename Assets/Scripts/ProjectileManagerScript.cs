@@ -16,7 +16,6 @@ public class ProjectileManagerScript : MonoBehaviour
     }
 
     void Update() {
-        int projectileCount = transform.childCount; 
         int notMovingProjectileCount = 0; 
 
         foreach(Transform projectile in transform) {
@@ -28,7 +27,8 @@ public class ProjectileManagerScript : MonoBehaviour
                     }
                     this.areProjectilesInAction =  this.areProjectilesInAction || projectileBehaviorScript.getIsProjectileMoving();
 
-                    if (notMovingProjectileCount.Equals(projectileCount)) {
+                    // if all projectiles are not moving, reset the flag
+                    if (notMovingProjectileCount.Equals(transform.childCount)) {
                         this.areProjectilesInAction = false;
                     }
                 }
