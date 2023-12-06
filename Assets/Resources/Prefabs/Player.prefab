@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 102973406492315956}
   - component: {fileID: 1536874982425427583}
   - component: {fileID: 3461794471396766846}
+  - component: {fileID: 6760571740585487748}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1620593540, guid: ad01b71ff711657479971093a5e004bd, type: 3}
+  m_Sprite: {fileID: 611260996, guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,15 +104,31 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
-  playerSpriteRenderer: {fileID: 1536874982425427583}
-  playerSpriteArray:
-  - {fileID: -1620593540, guid: ad01b71ff711657479971093a5e004bd, type: 3}
-  - {fileID: 354689465, guid: ad01b71ff711657479971093a5e004bd, type: 3}
-  - {fileID: 825806528, guid: ad01b71ff711657479971093a5e004bd, type: 3}
-  - {fileID: 145985838, guid: ad01b71ff711657479971093a5e004bd, type: 3}
+  playerSpriteAnimator: {fileID: 6760571740585487748}
   multiInputWindow: 0.05
   dashSpeed: 8
   dashTiming: 0.4
+--- !u!95 &6760571740585487748
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36804104135212837}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b5446e9000c2e5468298184cbe5ebdb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5512135267080885028
 GameObject:
   m_ObjectHideFlags: 0

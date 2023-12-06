@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ad01b71ff711657479971093a5e004bd
+guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b0da73c0550f2e043ae2333518641691
-      internalID: -1620593540
+      spriteID: d8b833f65d65d724a9c04163a9421d74
+      internalID: 611260996
       vertices: []
       indices: 
       edges: []
@@ -145,8 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73b71a752a5a6094f9ac44c5bf45660f
-      internalID: 354689465
+      spriteID: 72af3842965657247bd878926472ba4b
+      internalID: 732769407
       vertices: []
       indices: 
       edges: []
@@ -166,8 +166,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c91aa2377f4702489468134956185a4
-      internalID: 825806528
+      spriteID: 3978eb32b3b909148ac65363b8bf81a9
+      internalID: -94090001
       vertices: []
       indices: 
       edges: []
@@ -187,8 +187,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 57ea07e3816df8345bd593abec3f7480
-      internalID: 145985838
+      spriteID: 8f8415564eb357841a144490e29a2f91
+      internalID: 336577703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: old_man_sprites_4
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2488
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe1df45ca4b47ae4c8c4f720d5d9f100
+      internalID: -204132136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: old_man_sprites_5
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 2488
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4be23d9f82cfe341b801828c9babba2
+      internalID: 289310872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: old_man_sprites_6
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 2488
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d28e658225149445b796e18ef3f6bcf
+      internalID: 205741354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: old_man_sprites_7
+      rect:
+        serializedVersion: 2
+        x: 1792
+        y: 2488
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39f7c3c95fa90134baa02e5e619fd0e8
+      internalID: 1424398955
       vertices: []
       indices: 
       edges: []
@@ -204,10 +288,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      old_man_sprites_0: -1620593540
-      old_man_sprites_1: 354689465
-      old_man_sprites_2: 825806528
-      old_man_sprites_3: 145985838
+      old_man_sprites_0: 611260996
+      old_man_sprites_1: 732769407
+      old_man_sprites_2: -94090001
+      old_man_sprites_3: 336577703
+      old_man_sprites_4: -204132136
+      old_man_sprites_5: 289310872
+      old_man_sprites_6: 205741354
+      old_man_sprites_7: 1424398955
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
