@@ -85,9 +85,9 @@ public class PlayerScript : MonoBehaviour {
                 }
             }
         }
-
-        // Check for new input if Player is close enough to destination
-        if (Vector3.Distance(transform.position, destination.position) <= .05f) {
+        
+        // Check for new input if Player is close enough to destination AND nothing is moving
+        if (Vector3.Distance(transform.position, destination.position) <= Mathf.Epsilon && !ProjectileManagerScript.Instance.getAreProjectilesInAction()) {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
