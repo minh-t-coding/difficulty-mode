@@ -23,6 +23,17 @@ public class PlayerScript : MonoBehaviour {
     private Vector3 currMoveDir;
     private bool hasDashed = false;
 
+    public enum Direction {
+        Down,
+        DownLeft,
+        Left,
+        UpLeft,
+        Up,
+        UpRight,
+        Right,
+        DownRight
+    }
+
     void Awake() {
         if (Instance == null) {
             Instance = this;
@@ -39,22 +50,34 @@ public class PlayerScript : MonoBehaviour {
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
 
-            if (currMoveDir.x == 0f && currMoveDir.y == -1f) {
-                playerSpriteAnimator.SetInteger("Direction", 0);
-            } else if (currMoveDir.x == -1f && currMoveDir.y == -1f) {
-                playerSpriteAnimator.SetInteger("Direction", 1);
-            } else if (currMoveDir.x == -1f && currMoveDir.y == 0f) {
-                playerSpriteAnimator.SetInteger("Direction", 2);
-            } else if (currMoveDir.x == -1f && currMoveDir.y == 1f) {
-                playerSpriteAnimator.SetInteger("Direction", 3);
-            } else if (currMoveDir.x == 0f && currMoveDir.y == 1f) {
-                playerSpriteAnimator.SetInteger("Direction", 4);
-            } else if (currMoveDir.x == 1f && currMoveDir.y == 1f) {
-                playerSpriteAnimator.SetInteger("Direction", 5);
-            } else if (currMoveDir.x == 1f && currMoveDir.y == 0f) {
-                playerSpriteAnimator.SetInteger("Direction", 6);
-            } else if (currMoveDir.x == 1f && currMoveDir.y == -1f) {
-                playerSpriteAnimator.SetInteger("Direction", 7);
+            if (playerInAction) {
+                // update sprite direction
+                switch (Vector3.SignedAngle(currMoveDir, new Vector3(0, -1, 0), new Vector3(0, 0, 1))) {
+                    case 0f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Down);
+                        break;
+                    case 45f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.DownLeft);
+                        break;
+                    case 90f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Left);
+                        break;
+                    case 135f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.UpLeft);
+                        break;
+                    case 180f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Up);
+                        break;
+                    case -135f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.UpRight);
+                        break;
+                    case -90f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Right);
+                        break;
+                    case -45f:
+                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.DownRight);
+                        break;
+                }
             }
         }
 
