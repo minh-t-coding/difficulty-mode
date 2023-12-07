@@ -1,8 +1,10 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
     public static PlayerScript Instance;
     [SerializeField] protected float playerSpeed;
+    [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
     [SerializeField] protected float multiInputWindow = 0.05f;
@@ -16,7 +18,7 @@ public class PlayerScript : MonoBehaviour {
 
     private float lastInitialDirectionalInputTime;
     private bool playerInAction = false;
-    private Vector3 currMoveDir;
+    private Vector3 currActionDir;
     private bool hasDashed = false;
 
     void Awake() {
@@ -35,10 +37,18 @@ public class PlayerScript : MonoBehaviour {
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
         }
+        
+        processPlayerInput();
+    }
 
-        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
+    private void playerAttack(Vector3 enemyPosition) {
+        Debug.Log("attacking");
+        EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+    }
 
+    private void processPlayerInput() {
         // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
+        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
         // Check if an input for a diagonal move was made
         // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
@@ -49,18 +59,18 @@ public class PlayerScript : MonoBehaviour {
                 if(Mathf.Abs(currInputDir.x) == 1f && Mathf.Abs(currInputDir.y) == 1f) {
                     if (playerInAction) {   
                         // if original action was valid and had already been initiated
-                        if (!willHitWall(destination.position + currInputDir - currMoveDir)) {
-                            destination.position += currInputDir - currMoveDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
-                            currMoveDir = currInputDir;
+                        if (!willHitWall(destination.position + currInputDir - currActionDir)) {
+                            destination.position += currInputDir - currActionDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
+                            currActionDir = currInputDir;
                         } else {
-                            destination.position -= currMoveDir;    // undo initiated action if new destination is invalid
+                            destination.position -= currActionDir;    // undo initiated action if new destination is invalid
                             playerInAction = false;
                         }
                     } else {    
                         // if original action was invalid and had never started
                         if (!willHitWall(destination.position + currInputDir)) {
                             destination.position += currInputDir;
-                            currMoveDir = currInputDir;
+                            currActionDir = currInputDir;
                             playerInAction = true;
                         }
                     }
@@ -71,12 +81,23 @@ public class PlayerScript : MonoBehaviour {
         // Check if a second identical input has been inputted while player is mid move within the dash timing window
         // Dash can only be performed once per action
         if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
-            if (newInputReceived(currInputDir)) {
+            // Check if player has pressed the attack button and is not a diagonal input
+            if (Input.GetKey(KeyCode.Return) && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
+                playerAttack(destination.position);
+
+                // undo motion
+                destination.position -= currActionDir;
+                playerInAction = false;
+
+                processEnemyTurn();
+            } 
+
+            else if (newInputReceived(currInputDir)) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
 
                 // Ensure player doesn't move into wall
-                if (currInputDir == currMoveDir) {
+                if (currInputDir == currActionDir) {
                     hasDashed = true;
                     if (!willHitWall(destination.position + currInputDir)) {
                         destination.position += currInputDir;
@@ -91,16 +112,11 @@ public class PlayerScript : MonoBehaviour {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
-                if (EnemyManagerScript.Instance!=null) {
-                    EnemyManagerScript.Instance.EnemyTurn();
-                }
-                if (ProjectileManagerScript.Instance!=null) {
-                    ProjectileManagerScript.Instance.ProjectileTurn();
-                }
+                processEnemyTurn();
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
-                currMoveDir = Vector3.zero;
+                currActionDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
             }
@@ -109,7 +125,7 @@ public class PlayerScript : MonoBehaviour {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
-                currMoveDir = currInputDir;
+                currActionDir = currInputDir;
 
                 if (!willHitWall(destination.position + currInputDir)) {
                     destination.position += currInputDir;
@@ -117,12 +133,22 @@ public class PlayerScript : MonoBehaviour {
                 }
             }
         }
+        
 
         if (currInputDir.x == 0) {
             isHorizontalAxisInUse = false;
         }
         if (currInputDir.y == 0) {
             isVerticalAxisInUse = false;
+        }
+    }
+
+    private void processEnemyTurn() {
+        if (EnemyManagerScript.Instance != null) {
+            EnemyManagerScript.Instance.EnemyTurn();
+        }
+        if (ProjectileManagerScript.Instance != null) {
+            ProjectileManagerScript.Instance.ProjectileTurn();
         }
     }
 

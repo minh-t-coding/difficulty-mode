@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da9938235f031f479b736433bbbf324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHealth: 10
   enemySpeed: 4
   enemyDestination: {fileID: 7542183354432158663}
   collisionMask:

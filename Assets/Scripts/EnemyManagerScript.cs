@@ -25,6 +25,19 @@ public class EnemyManagerScript : MonoBehaviour {
         return this.enemyMovepoints;
     }
 
+    public void EnemyAttacked(Vector3 enemyPosition, float damage) {
+        foreach(Transform enemy in transform) {
+            if (enemy != null) {
+                BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
+
+                if (enemyBehavior.transform.position == enemyPosition) {
+                    enemyBehavior.EnemyAttacked(damage);
+                    return;
+                }
+            }
+        }
+    }
+
     public void EnemyTurn() {
         List<Transform> enemies = new List<Transform>();
 
@@ -42,7 +55,7 @@ public class EnemyManagerScript : MonoBehaviour {
 
         foreach(Transform enemy in enemies) {
             BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
-            if (enemyBehavior != null) {
+            if (enemyBehavior != null && enemyBehavior.isActiveAndEnabled) {
                 if (attackAndMoveSameTurn) {
                     enemyBehavior.EnemyMove();
                     if (enemyBehavior.EnemyInRange()) {
@@ -52,7 +65,8 @@ public class EnemyManagerScript : MonoBehaviour {
                 else {
                     if (enemyBehavior.EnemyInRange()) {
                         enemyBehavior.EnemyAttack();
-                    } else {
+                    } 
+                    else {
                         enemyBehavior.EnemyMove();
                     }
                 }
