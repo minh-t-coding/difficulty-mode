@@ -44,7 +44,7 @@ public class BaseEnemy : MonoBehaviour
     
     public virtual void EnemyAttack() {}
 
-    public virtual void EnemyMove() {        
+    public virtual void EnemyMove() {
         // Find shortest path to player's new position
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
         HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
