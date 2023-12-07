@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Toolbox;
 using UnityEngine;
@@ -30,9 +31,14 @@ public class BaseEnemy : MonoBehaviour
     
     public virtual void EnemyAttack() {}
 
-    public virtual void EnemyMove() {
+    public virtual void EnemyMove() {        
         // Find shortest path to player's new position
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
+        HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
+        HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
+        foreach (GameObject movepoint in enemyMovepoints) {
+            movepointPositions.Add(movepoint.transform.position);
+        }
 
         if(nextMoves.Count > 1) {
             // FindPathClosest returns current position as first element of the list
@@ -41,9 +47,14 @@ public class BaseEnemy : MonoBehaviour
 
             // Enemy only moves one unit in eight cardinal directions
             if (pathToPlayer.x != 0) {
-                enemyDestination.position += pathToPlayer / Mathf.Abs(pathToPlayer.x);
+                pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.x);
             } else if (pathToPlayer.y != 0) {
-                enemyDestination.position += pathToPlayer / Mathf.Abs(pathToPlayer.y);
+                pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.y);
+            }
+            
+            // Only move if next move is not on another enemy
+            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer)) {
+                enemyDestination.position += pathToPlayer;
             }
         }
     }
