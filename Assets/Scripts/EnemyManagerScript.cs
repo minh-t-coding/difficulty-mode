@@ -13,11 +13,24 @@ public class EnemyManagerScript : MonoBehaviour {
         }
     }
 
+    public void EnemyAttacked(Vector3 enemyPosition, float damage) {
+        foreach(Transform enemy in transform) {
+            if (enemy != null) {
+                BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
+
+                if (enemyBehavior.transform.position == enemyPosition) {
+                    enemyBehavior.EnemyAttacked(damage);
+                    return;
+                }
+            }
+        }
+    }
+
     public void EnemyTurn() {
         foreach(Transform enemy in transform) {
             if (enemy != null) {
                 BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
-                if (enemyBehavior != null) {
+                if (enemyBehavior != null && enemyBehavior.isActiveAndEnabled) {
                     if (attackAndMoveSameTurn) {
                         enemyBehavior.EnemyMove();
                         if (enemyBehavior.EnemyInRange()) {

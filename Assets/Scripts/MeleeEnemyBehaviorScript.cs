@@ -4,4 +4,4 @@ using Toolbox;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnemyScript : BaseEnemy {}
+public class MeleeEnemyBehaviorScript : BaseEnemy {}
