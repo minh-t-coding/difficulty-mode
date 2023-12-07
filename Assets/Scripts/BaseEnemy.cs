@@ -50,7 +50,9 @@ public class BaseEnemy : MonoBehaviour
         HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
         HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
         foreach (GameObject movepoint in enemyMovepoints) {
-            movepointPositions.Add(movepoint.transform.position);
+            if (movepoint.activeSelf) {
+                movepointPositions.Add(movepoint.transform.position);
+            }
         }
 
         if(nextMoves.Count > 1) {
