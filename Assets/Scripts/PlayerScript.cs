@@ -20,7 +20,19 @@ public class PlayerScript : MonoBehaviour {
     private float lastInitialDirectionalInputTime;
     private bool playerInAction = false;
     private Vector3 currActionDir;
+    private Vector3 lastActionDir;
     private bool hasDashed = false;
+    private bool isDead = false;
+
+
+    // Animation state variables
+    private string currentState;
+    const string PLAYER_IDLE = "PlayerIdle";
+    const string PLAYER_MOVE = "PlayerMove";
+    const string PLAYER_DASH = "PlayerDash";
+    const string PLAYER_ATTACK = "PlayerAttack";
+    const string PLAYER_DEFLECT = "PlayerDeflect";
+    const string PLAYER_DIE = "PlayerDie";
 
     public enum Direction {
         Down,
@@ -46,36 +58,14 @@ public class PlayerScript : MonoBehaviour {
 
     void Update() {
         // Move Player to destination point after input window closes
-        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
+        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow && !isDead) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
 
             if (playerInAction) {
-                // update sprite direction
-                switch (Vector3.SignedAngle(currActionDir, new Vector3(0, -1, 0), new Vector3(0, 0, 1))) {
-                    case 0f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Down);
-                        break;
-                    case 45f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.DownLeft);
-                        break;
-                    case 90f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Left);
-                        break;
-                    case 135f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.UpLeft);
-                        break;
-                    case 180f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Up);
-                        break;
-                    case -135f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.UpRight);
-                        break;
-                    case -90f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.Right);
-                        break;
-                    case -45f:
-                        playerSpriteAnimator.SetInteger("Direction", (int) Direction.DownRight);
-                        break;
+                if (hasDashed) {
+                    changePlayerAnimationState(PLAYER_DASH);
+                } else {
+                    changePlayerAnimationState(PLAYER_MOVE);
                 }
             }
         }
@@ -84,11 +74,13 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
-        Debug.Log("attacking");
+        changePlayerAnimationState(PLAYER_ATTACK);
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
     }
 
     private void processPlayerInput() {
+        if (isDead) return;
+
         // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
         Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
@@ -158,6 +150,7 @@ public class PlayerScript : MonoBehaviour {
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
+                changePlayerAnimationState(PLAYER_IDLE);
                 currActionDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
@@ -210,13 +203,27 @@ public class PlayerScript : MonoBehaviour {
         return Mathf.Abs(input.x) == 1f && !isHorizontalAxisInUse || Mathf.Abs(input.y) == 1f && !isVerticalAxisInUse;
     }
 
+    /// <summary>
+    /// Updates the player sprite
+    /// </summary>
+    /// <param name="newState"></param>
+    private void changePlayerAnimationState(string newState) {
+        if (currentState == newState) return;
+        lastActionDir = currActionDir;
+        playerSpriteAnimator.SetFloat("MovementX", lastActionDir.x);
+        playerSpriteAnimator.SetFloat("MovementY", lastActionDir.y);
+        playerSpriteAnimator.Play(newState);
+        currentState = newState;
+    }
+
     // Move Point getter method
     public Transform getMovePoint() {
         return destination;
     }
 
     public void killPlayer() {
+        changePlayerAnimationState(PLAYER_DIE);
+        isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
-        this.gameObject.SetActive(false);
     }
 }
