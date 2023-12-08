@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2493073316288574987}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy Move Point
   m_TagString: Untagged
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 7230610697769886573}
   - component: {fileID: 3183933255708590688}
   - component: {fileID: 4706153877866141455}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877f84d48014177418ed5b0ac1bc0709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHealth: 0
   enemySpeed: 4
   enemyDestination: {fileID: 2493073316288574987}
   collisionMask:
