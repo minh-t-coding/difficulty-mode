@@ -8,14 +8,14 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     [SerializeField] protected Transform projectileDestination;
     [SerializeField] protected LayerMask collisionMask;
     protected Transform playerPosition;
-    private int direction = (int) PlayerScript.Direction.Up;
+    private int direction = (int) PlayerBehaviorScript.Direction.Up;
     private bool isProjectileMoving;
     private GameObject projectileMovePoint;
     
     // Start is called before the first frame update
     void Start() {
         this.projectileMovePoint = projectileDestination.gameObject;
-        playerPosition = PlayerScript.Instance.getMovePoint();
+        playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
         projectileDestination.parent = null;
 
         // will destroy the projectile by default after 20 seconds
@@ -39,7 +39,7 @@ public class ProjectileBehaviorScript : MonoBehaviour {
         // Check if projectile position touches Player
         if (Vector3.Distance(transform.position, playerPosition.position) < .05f) {
             DestroyProjectile();
-            PlayerScript.Instance.killPlayer();
+            PlayerBehaviorScript.Instance.killPlayer();
         }
     }
 
@@ -48,18 +48,22 @@ public class ProjectileBehaviorScript : MonoBehaviour {
         Destroy(this.projectileMovePoint);
     }
 
+    public virtual void MoveDestination(Vector3 direction) {
+        this.projectileDestination.position += direction;
+    }
+
     public void ProjectileMove() {
         switch (direction) {
-            case (int) PlayerScript.Direction.Up:
+            case (int) PlayerBehaviorScript.Direction.Up:
                 projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Down:
+            case (int) PlayerBehaviorScript.Direction.Down:
                 projectileDestination.position += new Vector3(0f, -projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Left:
+            case (int) PlayerBehaviorScript.Direction.Left:
                 projectileDestination.position += new Vector3(-projectileDistance, 0f, 0f);
                 break;
-            case (int) PlayerScript.Direction.Right:
+            case (int) PlayerBehaviorScript.Direction.Right:
                 projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
                 break;
         }

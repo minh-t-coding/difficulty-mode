@@ -6,6 +6,6 @@ public class CameraScript : MonoBehaviour
 {
     void LateUpdate()
     {
-        transform.position = PlayerScript.Instance.transform.position + new Vector3(0, 0, -10);
+        transform.position = PlayerBehaviorScript.Instance.transform.position + new Vector3(0, 0, -10);
     }
 }

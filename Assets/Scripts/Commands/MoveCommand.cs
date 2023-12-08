@@ -1,16 +1,17 @@
+using UnityEditor.UI;
 using UnityEngine;
 
 public class MoveCommand : CommandManager.ICommand
 {
-    public MoveCommand() {
-
+    protected Vector3 movementDir;
+    protected Vector3 prevOrientation;
+    
+    public MoveCommand(Vector3 movementDir, Vector3 prevOrientation) {
+        this.movementDir = movementDir;
+        this.prevOrientation = prevOrientation;
     }
 
-    public void Execute() {
-
-    }
-
-    public void Undo() {
+    public virtual void Undo() {
         
     }
 }

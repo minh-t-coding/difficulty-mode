@@ -1,8 +1,11 @@
+// using System.Numerics;
+using System.Collections.Generic;
+using System.Windows.Input;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour {
-    public static PlayerScript Instance;
+public class PlayerBehaviorScript : MonoBehaviour {
+    public static PlayerBehaviorScript Instance;
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
@@ -73,9 +76,26 @@ public class PlayerScript : MonoBehaviour {
         processPlayerInput();
     }
 
+    public void Spawn(Vector3 position, Vector3 orientation) {
+        // TODO: implement
+    }
+
+    public void MoveDestination(Vector3 direction) {
+        this.destination.position += direction;
+
+        if (direction != Vector3.zero) {
+            playerInAction = true;
+        }
+    }
+
     private void playerAttack(Vector3 enemyPosition) {
         changePlayerAnimationState(PLAYER_ATTACK);
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+    }
+
+    public void undoPlayerAttack(Vector3 attackPosition) {
+        // TODO: animation stuff
+        EnemyManagerScript.Instance.EnemyAttacked(destination.position + attackPosition, -1 * playerAttackDamage);
     }
 
     private void processPlayerInput() {
@@ -147,6 +167,13 @@ public class PlayerScript : MonoBehaviour {
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
                 processEnemyTurn();
+
+                // add movement command
+                List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+                {
+                    new PlayerMoveCommand(currActionDir, new Vector3(0, 0, 0), this)
+                };
+                CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
