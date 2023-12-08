@@ -46,18 +46,18 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         if (distanceFromPlayer.x == 0) {
             if (distanceFromPlayer.y > 0) {
                 prefabDirection = new Vector3(0, 0, 0);
-                scriptDirection = 0;
+                scriptDirection = (int) PlayerScript.Direction.Up;
             } else {
                 prefabDirection = new Vector3(0, 0, 180);
-                scriptDirection = 1;
+                scriptDirection = (int) PlayerScript.Direction.Down;
             }
         } else {
             if (distanceFromPlayer.x < 0) {
                 prefabDirection = new Vector3(0, 0, 90);
-                scriptDirection = 2;
+                scriptDirection = (int) PlayerScript.Direction.Left;
             } else {
                 prefabDirection = new Vector3(0, 0, -90);
-                scriptDirection = 3;
+                scriptDirection = (int) PlayerScript.Direction.Right;
             }
         }
 

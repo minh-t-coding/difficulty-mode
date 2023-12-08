@@ -8,7 +8,7 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     [SerializeField] protected Transform projectileDestination;
     [SerializeField] protected LayerMask collisionMask;
     protected Transform playerPosition;
-    private int direction = 0;
+    private int direction = (int) PlayerScript.Direction.Up;
     private bool isProjectileMoving;
     private GameObject projectileMovePoint;
     
@@ -49,17 +49,17 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     }
 
     public void ProjectileMove() {
-        switch (this.direction) {
-            case 0:
+        switch (direction) {
+            case (int) PlayerScript.Direction.Up:
                 projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
                 break;
-            case 1:
+            case (int) PlayerScript.Direction.Down:
                 projectileDestination.position += new Vector3(0f, -projectileDistance, 0f);
                 break;
-            case 2:
+            case (int) PlayerScript.Direction.Left:
                 projectileDestination.position += new Vector3(-projectileDistance, 0f, 0f);
                 break;
-            case 3:
+            case (int) PlayerScript.Direction.Right:
                 projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
                 break;
         }
