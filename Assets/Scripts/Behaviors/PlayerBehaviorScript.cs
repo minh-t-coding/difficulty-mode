@@ -91,6 +91,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     private void playerAttack(Vector3 enemyPosition) {
         changePlayerAnimationState(PLAYER_ATTACK);
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+        ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition);
     }
 
     public void undoPlayerAttack(Vector3 attackPosition) {
@@ -245,7 +246,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     // Move Point getter method
     public Transform getMovePoint() {
-        return destination;
+        return transform;
     }
 
     public void killPlayer() {

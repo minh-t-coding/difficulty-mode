@@ -11,7 +11,12 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     private int direction = (int) PlayerBehaviorScript.Direction.Up;
     private bool isProjectileMoving;
     private GameObject projectileMovePoint;
-    
+    private Dictionary<int , int> opposites = new Dictionary<int, int> {
+        { (int) PlayerBehaviorScript.Direction.Up, (int) PlayerBehaviorScript.Direction.Down },
+        { (int) PlayerBehaviorScript.Direction.Down, (int) PlayerBehaviorScript.Direction.Up },
+        { (int) PlayerBehaviorScript.Direction.Left, (int) PlayerBehaviorScript.Direction.Right },
+        { (int) PlayerBehaviorScript.Direction.Right, (int) PlayerBehaviorScript.Direction.Left }
+    };
     // Start is called before the first frame update
     void Start() {
         this.projectileMovePoint = projectileDestination.gameObject;
@@ -67,6 +72,11 @@ public class ProjectileBehaviorScript : MonoBehaviour {
                 projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
                 break;
         }
+    }
+
+    public void projectileReflected() {
+        Debug.Log("projectile reflected");
+        this.setDirection(opposites[direction]);
     }
 
     public bool getIsProjectileMoving() {
