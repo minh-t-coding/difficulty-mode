@@ -8,6 +8,7 @@ public class PlayerScript : MonoBehaviour {
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
     [SerializeField] protected Animator playerSpriteAnimator;
+    [SerializeField] protected GameObject deadPlayer;
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
     [SerializeField] protected float dashTiming = 0.4f;
@@ -20,10 +21,7 @@ public class PlayerScript : MonoBehaviour {
     private float lastInitialDirectionalInputTime;
     private bool playerInAction = false;
     private Vector3 currActionDir;
-    private Vector3 lastActionDir;
     private bool hasDashed = false;
-    private bool isDead = false;
-
 
     // Animation state variables
     private string currentState;
@@ -58,14 +56,14 @@ public class PlayerScript : MonoBehaviour {
 
     void Update() {
         // Move Player to destination point after input window closes
-        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow && !isDead) {
+        if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
 
             if (playerInAction) {
                 if (hasDashed) {
-                    changePlayerAnimationState(PLAYER_DASH);
+                    ChangePlayerAnimationState(PLAYER_DASH);
                 } else {
-                    changePlayerAnimationState(PLAYER_MOVE);
+                    ChangePlayerAnimationState(PLAYER_MOVE);
                 }
             }
         }
@@ -74,13 +72,11 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
-        changePlayerAnimationState(PLAYER_ATTACK);
+        ChangePlayerAnimationState(PLAYER_ATTACK);
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
     }
 
     private void processPlayerInput() {
-        if (isDead) return;
-
         // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
         Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
 
@@ -150,7 +146,7 @@ public class PlayerScript : MonoBehaviour {
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
-                changePlayerAnimationState(PLAYER_IDLE);
+                ChangePlayerAnimationState(PLAYER_IDLE);
                 currActionDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
@@ -207,11 +203,10 @@ public class PlayerScript : MonoBehaviour {
     /// Updates the player sprite
     /// </summary>
     /// <param name="newState"></param>
-    private void changePlayerAnimationState(string newState) {
+    private void ChangePlayerAnimationState(string newState) {
         if (currentState == newState) return;
-        lastActionDir = currActionDir;
-        playerSpriteAnimator.SetFloat("MovementX", lastActionDir.x);
-        playerSpriteAnimator.SetFloat("MovementY", lastActionDir.y);
+        playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
+        playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
         playerSpriteAnimator.Play(newState);
         currentState = newState;
     }
@@ -222,8 +217,8 @@ public class PlayerScript : MonoBehaviour {
     }
 
     public void killPlayer() {
-        changePlayerAnimationState(PLAYER_DIE);
-        isDead = true;
+        Instantiate(deadPlayer, gameObject.transform.position, Quaternion.identity);
+        this.gameObject.SetActive(false);
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
 }
