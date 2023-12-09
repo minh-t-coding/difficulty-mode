@@ -6,8 +6,8 @@ public class PlayerDeathCommand : DeathCommand
 {   
     PlayerBehaviorScript playerScript;
 
-    public PlayerDeathCommand(Vector3 position, Vector3 orientation, GameObject player) : base(position, orientation) {
-        playerScript = player.GetComponent<PlayerBehaviorScript>();
+    public PlayerDeathCommand(Vector3 position, Vector3 orientation, PlayerBehaviorScript playerScript) : base(position, orientation) {
+        this.playerScript = playerScript;
     }
 
     public override void Undo() {

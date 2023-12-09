@@ -91,6 +91,13 @@ public class PlayerBehaviorScript : MonoBehaviour {
     private void playerAttack(Vector3 enemyPosition) {
         changePlayerAnimationState(PLAYER_ATTACK);
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+
+        // add player attack command
+        List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+        {
+            new PlayerAttackCommand(destination.position - currActionDir, this)
+        };
+        CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
     }
 
     public void undoPlayerAttack(Vector3 attackPosition) {
@@ -171,7 +178,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 // add movement command
                 List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
                 {
-                    new PlayerMoveCommand(currActionDir, new Vector3(0, 0, 0), this)
+                    new PlayerMoveCommand(hasDashed ? 2 * currActionDir : currActionDir, new Vector3(0, 0, 0), this)
                 };
                 CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
 
@@ -252,5 +259,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
         changePlayerAnimationState(PLAYER_DIE);
         isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
+
+        // add player death command
+        List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+        {
+            new PlayerDeathCommand(destination.position, Vector3.zero, this)
+        };
+        CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
     }
 }

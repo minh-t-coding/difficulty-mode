@@ -8,8 +8,9 @@ public class PlayerAttackCommand : CommandManager.ICommand
     Vector3 attackDirection;
     PlayerBehaviorScript playerScript;
 
-    public PlayerAttackCommand(Vector3 attackDirection, GameObject player) {
-        playerScript = player.GetComponent<PlayerBehaviorScript>();
+    public PlayerAttackCommand(Vector3 attackDirection, PlayerBehaviorScript playerScript) {
+        this.attackDirection = attackDirection;
+        this.playerScript = playerScript;
     }
 
     public void Undo() {
