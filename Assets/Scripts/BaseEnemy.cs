@@ -15,12 +15,15 @@ public class BaseEnemy : MonoBehaviour
     protected Tilemap tileMap;
     protected Transform playerPosition;
     protected List<Vector3> nextMoves;
+
+    protected ActionIndicator myActionIndicator;
     
     protected virtual void Start() {
         movePoint = enemyDestination.gameObject;
         enemyDestination.parent = null;
         playerPosition = PlayerScript.Instance.getMovePoint();
         tileMap = GameObject.Find("Top").GetComponent<Tilemap>();
+        myActionIndicator = ActionIndicator.Create(transform);
         nextMoves = new List<Vector3>();
     }
 
@@ -32,6 +35,19 @@ public class BaseEnemy : MonoBehaviour
         return false;
     }
 
+    public virtual void UpdateIndicator() {
+        if (EnemyInRange()) {
+            myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Attack, GetAttackDirection());
+        } else {
+            myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Move, GetAttackDirection());
+        }
+    }
+    public virtual Vector3 GetAttackDirection() {
+        Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
+        return distanceFromPlayer.normalized;
+    }
+
+
     public virtual void EnemyAttacked(float damage) {
         enemyHealth -= damage;
 
@@ -39,6 +55,7 @@ public class BaseEnemy : MonoBehaviour
             Debug.Log("enemy killed!");
             this.gameObject.SetActive(false);
             movePoint.SetActive(false);
+            myActionIndicator.gameObject.SetActive(false);
         }
     }
     

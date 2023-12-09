@@ -70,6 +70,7 @@ public class EnemyManagerScript : MonoBehaviour {
                         enemyBehavior.EnemyMove();
                     }
                 }
+                enemyBehavior.UpdateIndicator();
             }
         }
     }
