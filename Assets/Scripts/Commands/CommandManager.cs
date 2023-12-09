@@ -18,6 +18,13 @@ public class CommandManager : MonoBehaviour {
         }
     }
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.LeftBracket)) {
+            Undo();
+        }
+    }
+
+
     public void AddCommand(int instanceId, List<ICommand> command) {
         Debug.Log("adding command for " + instanceId);
         Debug.Log(command);
