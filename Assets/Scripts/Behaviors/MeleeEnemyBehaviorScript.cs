@@ -6,39 +6,41 @@ using UnityEngine.Tilemaps;
 
 public class MeleeEnemyBehaviorScript : BaseEnemyBehavior {
     public override void EnemyMove() {
-        // Find shortest path to player's new position
-        nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
-        HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
-        HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
-        foreach (GameObject movepoint in enemyMovepoints) {
-            if (movepoint.activeSelf) {
-                movepointPositions.Add(movepoint.transform.position);
-            }
+        base.EnemyMove();
+
+        if (isMoving) {
+            // add movement command
+            List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+            {
+                new MeleeEnemyMoveCommand(movePath, new Vector3(0, 0, 0), this)
+            };
+            CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
         }
+    }
 
-        if(nextMoves.Count > 1) {
-            // FindPathClosest returns current position as first element of the list
-            Vector3 nextMove = nextMoves[1];
-            Vector3 pathToPlayer = nextMove - enemyDestination.position;
+    public override void EnemyAttacked(float damage)
+    {
+        base.EnemyAttacked(damage);
 
-            // Enemy only moves one unit in eight cardinal directions
-            if (pathToPlayer.x != 0) {
-                pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.x);
-            } else if (pathToPlayer.y != 0) {
-                pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.y);
-            }
-            
-            // Only move if next move is not on another enemy
-            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer)) {
-                // add movement command
-                List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
-                {
-                    new MeleeEnemyMoveCommand(pathToPlayer, new Vector3(0, 0, 0), this)
-                };
-                CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
-
-                enemyDestination.position += pathToPlayer;
-            }
+        // add melee enemy death command
+        if (enemyHealth <= 0) {
+            List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+            {
+                new MeleeEnemyDeathCommand(enemyDestination.position, Vector3.zero, this)
+            };
+            CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
         }
+    }
+
+    public override void EnemyAttack()
+    {
+        base.EnemyAttack();
+
+        // add player attack command
+        List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+        {
+            new MeleeEnemyAttackCommand(new Vector3(0, 0, 0), this)
+        };
+        CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
     }
 }

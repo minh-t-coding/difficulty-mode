@@ -6,8 +6,8 @@ public class MeleeEnemyDeathCommand : DeathCommand
 {   
     MeleeEnemyBehaviorScript enemyScript;
 
-    public MeleeEnemyDeathCommand(Vector3 position, Vector3 orientation, GameObject enemy) : base(position, orientation) {
-        enemyScript = enemy.GetComponent<MeleeEnemyBehaviorScript>();
+    public MeleeEnemyDeathCommand(Vector3 position, Vector3 orientation, MeleeEnemyBehaviorScript enemyScript) : base(position, orientation) {
+        this.enemyScript = enemyScript;
     }
 
     public override void Undo() {

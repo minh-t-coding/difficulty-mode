@@ -17,6 +17,8 @@ public class BaseEnemyBehavior : MonoBehaviour
     protected Tilemap tileMap;
     protected Transform playerPosition;
     protected List<Vector3> nextMoves;
+    protected Vector3 movePath;
+    protected bool isMoving;
     
     protected virtual void Start() {
         movePoint = enemyDestination.gameObject;
@@ -56,5 +58,38 @@ public class BaseEnemyBehavior : MonoBehaviour
 
     public virtual void EnemyUndoAttack(Vector3 attackDir) {}
 
-    public virtual void EnemyMove() {}
+    public virtual void EnemyMove() {
+        // reset isMoving flag
+        isMoving = false;
+
+        // Find shortest path to player's new position
+        nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
+        HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
+        HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
+        foreach (GameObject movepoint in enemyMovepoints) {
+            if (movepoint.activeSelf) {
+                movepointPositions.Add(movepoint.transform.position);
+            }
+        }
+
+        if(nextMoves.Count > 1) {
+            // FindPathClosest returns current position as first element of the list
+            Vector3 nextMove = nextMoves[1];
+           movePath = nextMove - enemyDestination.position;
+
+            // Enemy only moves one unit in eight cardinal directions
+            if (movePath.x != 0) {
+                movePath = movePath / Mathf.Abs(movePath.x);
+            } else if (movePath.y != 0) {
+                movePath = movePath / Mathf.Abs(movePath.y);
+            }
+            
+            // Only move if next move is not on another enemy
+            if (!movepointPositions.Contains(enemyDestination.position + movePath)) {
+                
+                isMoving = true;
+                enemyDestination.position += movePath;
+            }
+        }
+    }
 }
