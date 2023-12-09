@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Toolbox;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 
@@ -36,6 +37,20 @@ public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
         return false;
     }
 
+    public override void EnemyAttacked(float damage)
+    {
+        base.EnemyAttacked(damage);
+
+        // add ranged enemy death command if dead
+        if (enemyHealth <= 0) {
+            List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+            {
+                new RangedEnemyDeathCommand(enemyDestination.position, Vector3.zero, this)
+            };
+            CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
+        }
+    }
+
     public override void EnemyAttack() {
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         
@@ -63,9 +78,19 @@ public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
 
         GameObject projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(prefabDirection), projectileManager);
         projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
+
+        // add player attack command
+        List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+        {
+            new RangedEnemyAttackCommand(distanceFromPlayer / distanceFromPlayer.magnitude, this)
+        };
+        CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
     }
 
     public override void EnemyMove() {
+        // reset move flag
+        isMoving = false;
+        
         // check if enemy is already in range
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         if (distanceFromPlayer.magnitude < movementRange) { 
@@ -84,12 +109,21 @@ public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
 
             // only alter path if there is no collision
             if (tileMap.IsCellEmpty(newPosition)) {
+                isMoving = true;
+                movePath = newPosition - enemyDestination.position;
                 enemyDestination.position = newPosition;
             }
-
-            return;
+        } else {
+            base.EnemyMove();
         }
         
-        base.EnemyMove();
+        // add movement command if enemy has moved
+        if (isMoving) {
+            List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>
+            {
+                new RangedEnemyMoveCommand(movePath, new Vector3(0, 0, 0), this)
+            };
+            CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
+        }
     }
 }

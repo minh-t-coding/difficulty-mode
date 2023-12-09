@@ -7,9 +7,9 @@ public class RangedEnemyAttackCommand : CommandManager.ICommand
     Vector3 attackDirection;
     RangedEnemyBehaviorScript enemyScript;
 
-    public RangedEnemyAttackCommand(Vector3 attackDirection, GameObject enemy) {
+    public RangedEnemyAttackCommand(Vector3 attackDirection, RangedEnemyBehaviorScript enemyScript) {
         this.attackDirection = attackDirection;
-        enemyScript = enemy.GetComponent<RangedEnemyBehaviorScript>();
+        this.enemyScript = enemyScript;
     }
 
     public virtual void Undo() {

@@ -6,8 +6,8 @@ public class RangedEnemyMoveCommand : MoveCommand
 {   
     RangedEnemyBehaviorScript enemyScript;
 
-    public RangedEnemyMoveCommand(Vector3 movementDir, Vector3 prevOrientation, GameObject enemy) : base(movementDir, prevOrientation) {
-        enemyScript = enemy.GetComponent<RangedEnemyBehaviorScript>();
+    public RangedEnemyMoveCommand(Vector3 movementDir, Vector3 prevOrientation, RangedEnemyBehaviorScript enemyScript) : base(movementDir, prevOrientation) {
+        this.enemyScript = enemyScript;
     }
 
     public override void Undo() {
