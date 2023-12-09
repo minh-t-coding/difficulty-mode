@@ -10,7 +10,6 @@ using UnityEngine.Tilemaps;
 public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
     // Gun Variables
     [SerializeField] protected Transform shootingPoint;
-    [SerializeField] protected Transform projectileManager;
     [SerializeField] protected GameObject projectilePrefab;
     [SerializeField] protected float movementRange;
 
@@ -76,8 +75,10 @@ public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
             }
         }
 
-        GameObject projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(prefabDirection), projectileManager);
-        projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
+        GameObject projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(prefabDirection), ProjectileManagerScript.Instance.transform);
+        ProjectileBehaviorScript projectileScript = projectile.GetComponent<ProjectileBehaviorScript>();
+        projectileScript.setDirection(scriptDirection);
+        projectileScript.SetPrefab(projectilePrefab);
 
         // add player attack command
         List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>

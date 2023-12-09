@@ -6,8 +6,8 @@ public class ProjectileMoveCommand : MoveCommand
 {   
     ProjectileBehaviorScript projectileScript;
 
-    public ProjectileMoveCommand(Vector3 movementDir, Vector3 prevOrientation, GameObject projectile) : base(movementDir, prevOrientation) {
-        this.projectileScript = projectile.GetComponent<ProjectileBehaviorScript>();
+    public ProjectileMoveCommand(Vector3 movementDir, Vector3 prevOrientation, ProjectileBehaviorScript projectileScript) : base(movementDir, prevOrientation) {
+        this.projectileScript = projectileScript;
     }
 
     public override void Undo() {

@@ -19,6 +19,9 @@ public class CommandManager : MonoBehaviour {
     }
 
     public void AddCommand(int instanceId, List<ICommand> command) {
+        Debug.Log("adding command for " + instanceId);
+        Debug.Log(command);
+        
         if (stackDict.ContainsKey(instanceId)) {
             stackDict[instanceId].Push(command);
         } else {

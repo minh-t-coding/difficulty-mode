@@ -5,11 +5,9 @@ using UnityEngine;
 public class ProjectileDeathCommand : DeathCommand
 {   
     GameObject projectilePrefab;
-    Transform projectileManager;
 
-    public ProjectileDeathCommand(Vector3 position, Vector3 orientation, GameObject projectilePrefab, Transform projectileManager) : base(position, orientation) {
+    public ProjectileDeathCommand(Vector3 position, Vector3 orientation, GameObject projectilePrefab) : base(position, orientation) {
         this.projectilePrefab = projectilePrefab;
-        this.projectileManager = projectileManager;
     }
 
     public override void Undo() {
@@ -25,7 +23,7 @@ public class ProjectileDeathCommand : DeathCommand
             scriptDirection = (int) PlayerBehaviorScript.Direction.Right;
         }
         
-        GameObject projectile = UnityEngine.Object.Instantiate(projectilePrefab, position, Quaternion.Euler(orientation), projectileManager);
+        GameObject projectile = UnityEngine.Object.Instantiate(projectilePrefab, position, Quaternion.Euler(orientation), ProjectileManagerScript.Instance.transform);
         projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
     }
 }
