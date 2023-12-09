@@ -208,7 +208,7 @@ public class PlayerScript : MonoBehaviour {
     /// </summary>
     /// <param name="newState"></param>
     private void changePlayerAnimationState(string newState) {
-        if (currentState == newState) return;
+        if (currentState == newState || isDead) return;
         lastActionDir = currActionDir;
         playerSpriteAnimator.SetFloat("MovementX", lastActionDir.x);
         playerSpriteAnimator.SetFloat("MovementY", lastActionDir.y);
