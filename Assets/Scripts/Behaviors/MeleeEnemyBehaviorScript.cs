@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class MeleeEnemyBehaviorScript : BaseEnemyBehavior {
+    public override void EnemyAttacked(float damage)
+    {
+        EnemyManagerScript.Instance.subtractMeleeEnemyCount();
+        base.EnemyAttacked(damage);
+    }
+
     public override void EnemyMove() {
         // Find shortest path to player's new position
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);

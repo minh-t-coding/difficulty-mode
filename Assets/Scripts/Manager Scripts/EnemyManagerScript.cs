@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class EnemyManagerScript : MonoBehaviour {
     public static EnemyManagerScript Instance;
 
     private HashSet<GameObject> enemyMovepoints = new HashSet<GameObject>();
+    private int meleeEnemyCount;
+    private int rangedEnemyCount;
 
     void Awake() {
         if (Instance == null) {
@@ -16,9 +19,26 @@ public class EnemyManagerScript : MonoBehaviour {
 
         // Save References of all enemy movepoints
         foreach(Transform enemy in transform) {
+            if (enemy.CompareTag("MeleeEnemy")) {
+                meleeEnemyCount++;
+            } else if (enemy.CompareTag("RangedEnemy")) {
+                rangedEnemyCount++;
+            }
             GameObject movePoint = enemy.GetChild(0).gameObject; // Getting first child, maybe better way to do this?
             enemyMovepoints.Add(movePoint);
         }
+    }
+
+    public void subtractMeleeEnemyCount() {
+        meleeEnemyCount--;
+    }
+
+    public void subtractRangedEnemyCount() {
+        rangedEnemyCount--;
+    }
+
+    public Tuple<int, int> getEnemyCounts() {
+        return new Tuple <int, int>(meleeEnemyCount, rangedEnemyCount);
     }
 
     public HashSet<GameObject> getEnemyMovepoints() {

@@ -36,6 +36,12 @@ public class RangedEnemyBehaviorScript : BaseEnemyBehavior {
         return false;
     }
 
+    public override void EnemyAttacked(float damage)
+    {
+        EnemyManagerScript.Instance.subtractRangedEnemyCount();
+        base.EnemyAttacked(damage);
+    }
+
     public override void EnemyAttack() {
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         
