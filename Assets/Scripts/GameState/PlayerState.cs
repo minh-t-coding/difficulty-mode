@@ -14,7 +14,6 @@ public class PlayerState {
         Debug.Log("direction " + d);
         pos = p;
         direction = d;
-        // action = a;
         isDead = false;
     }
 

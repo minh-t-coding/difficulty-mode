@@ -27,9 +27,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     protected Vector3 lastPos;
     protected Vector3 lastDir;
-    protected string lastAction;
-
-
 
     // Animation state variables
     private string currentState;
@@ -62,10 +59,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
         currentSpeed = playerSpeed;
         lastPos = transform.position;
         lastDir = new Vector3(0, -1, 0);
-        lastAction = PLAYER_IDLE;
     }
     public PlayerState GetPlayerState() {
-        // return new PlayerState(lastPos, lastAction);
         return new PlayerState(lastPos, lastDir);
     }
     void Update() {
@@ -205,7 +200,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
         isDead = false;
         currActionDir = p.getDirection();
         ChangePlayerAnimationStateForce(PLAYER_IDLE);
-        // ChangePlayerAnimationState(p.getAction());
     }
 
     private void processEnemyTurn(bool captureState) {
@@ -219,7 +213,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
         lastPos = transform.position;
-        // lastAction = currentState;
     }
 
     /// <summary>
