@@ -84,7 +84,13 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
+        
         ChangePlayerAnimationState(PLAYER_ATTACK);
+        
+        if (GameStateManager.Instance!=null) {
+            GameStateManager.Instance.captureGameState();
+        }
+
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
     }
 
@@ -131,7 +137,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 destination.position -= currActionDir;
                 playerInAction = false;
 
-                processEnemyTurn();
+                processEnemyTurn(false);
             } 
 
             else if (newInputReceived(currInputDir)) {
@@ -154,7 +160,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
-                processEnemyTurn();
+                processEnemyTurn(true);
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
@@ -197,8 +203,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
         ChangePlayerAnimationState(p.getAction());
     }
 
-    private void processEnemyTurn() {
-        if (GameStateManager.Instance!=null) {
+    private void processEnemyTurn(bool captureState) {
+        if (GameStateManager.Instance!=null && captureState) {
             GameStateManager.Instance.captureGameState();
         }
         if (EnemyManagerScript.Instance != null) {
@@ -250,7 +256,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         }
         deadSpr.transform.position = transform.position;
         deadSpr.SetActive(true);
-        //this.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
 }

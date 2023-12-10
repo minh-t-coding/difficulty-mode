@@ -64,6 +64,7 @@ public class GameStateManager : MonoBehaviour {
             unloadCurrState();
             Debug.Log("LOADING STATE" + turn);
             GameState state = gameStates[turn];
+            PlayerBehaviorScript.Instance.gameObject.SetActive(true);
             PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {

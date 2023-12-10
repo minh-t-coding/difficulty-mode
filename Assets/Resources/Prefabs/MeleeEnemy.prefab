@@ -99,8 +99,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyHealth: 4
   enemySpeed: 8
+  enemyType: 
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
+  enemyAnimator: {fileID: 0}
+  deadEnemy: {fileID: 7702694606017096423, guid: 12f27e08a18d7fd45accf9e4e2554bba, type: 3}
   movementRange: 2
   attackRange: 1
