@@ -17,6 +17,7 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public void captureGameState() {
+        isBusy = true;
         clearGameState(currTurn);
         GameObject newStateParent = new GameObject("GameState" + currTurn);
         newStateParent.transform.parent = transform;
@@ -39,6 +40,7 @@ public class GameStateManager : MonoBehaviour {
         newState.setGameObjects(savedObjects);
         gameStates.Add(newState);
         currTurn++;
+        isBusy=false;
     }
 
     public void clearGameState(int turn) {
@@ -57,8 +59,11 @@ public class GameStateManager : MonoBehaviour {
             Destroy(entity.gameObject);
         }
     }
+    protected bool isBusy;
+
 
     public void loadGameState(int turn) {
+        isBusy = true;
         if (gameStates.Count > turn && turn >= 1) {
 
             unloadCurrState();
@@ -76,11 +81,11 @@ public class GameStateManager : MonoBehaviour {
             }
             currTurn = turn;
             if (turn == 0) {
-                captureGameState();
+                //captureGameState();
             }
 
         }
-
+        isBusy = false;
     }
 
 
@@ -91,7 +96,7 @@ public class GameStateManager : MonoBehaviour {
             savedInitState = true;
             captureGameState();
         }
-        if (Input.GetKeyDown(KeyCode.Backspace)) {
+        if (Input.GetKeyDown(KeyCode.Backspace) && !isBusy) {
             loadGameState(currTurn - 1);
         }
     }

@@ -68,6 +68,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
         return new PlayerState(lastPos, lastAction);
     }
     void Update() {
+        if (isDead) {
+            return;
+        }
         // Move Player to destination point after input window closes
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
@@ -239,7 +242,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     /// </summary>
     /// <param name="newState"></param>
     private void ChangePlayerAnimationState(string newState) {
-        if (currentState == newState || isDead) return;
+        if (currentState == newState) return;
         playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
         playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
         playerSpriteAnimator.Play(newState);
@@ -257,7 +260,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
         }
         deadSpr.transform.position = transform.position;
         deadSpr.SetActive(true);
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
+        isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
 }

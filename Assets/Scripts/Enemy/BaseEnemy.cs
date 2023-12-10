@@ -69,7 +69,6 @@ public class BaseEnemy : StateEntity
 
     public override void DestroyAssociates() {
         EnemyManagerScript.Instance.removeEnemy(this);
-        Debug.Log("DESTROY ENEMY");
         Destroy(movePoint);
         if (myActionIndicator!=null) {
             Destroy(myActionIndicator.gameObject);
