@@ -4,11 +4,11 @@ using Toolbox;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BaseEnemy : MonoBehaviour
+public class BaseEnemy : StateEntity
 {
     [SerializeField] protected float enemyHealth;
     [SerializeField] protected float enemySpeed;
-    [SerializeField] protected Transform enemyDestination;
+    protected Transform enemyDestination;
     [SerializeField] protected LayerMask collisionMask;
 
     protected GameObject movePoint;
@@ -17,18 +17,49 @@ public class BaseEnemy : MonoBehaviour
     protected List<Vector3> nextMoves;
 
     protected ActionIndicator myActionIndicator;
+
     
     protected virtual void Start() {
-        movePoint = enemyDestination.gameObject;
-        enemyDestination.parent = null;
-        playerPosition = PlayerScript.Instance.getMovePoint();
-        tileMap = GameObject.Find("Top").GetComponent<Tilemap>();
-        myActionIndicator = ActionIndicator.Create(transform);
-        nextMoves = new List<Vector3>();
+        if (!createdAssociates) {
+            CreateAssociates();
+        }
+    }
+
+    public GameObject getMovePoint() {
+        return movePoint;
     }
 
     protected virtual void Update() {
         transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
+    }
+
+    public override void CreateAssociates() {
+        tileMap = GameObject.Find("Top").GetComponent<Tilemap>();
+        EnemyManagerScript.Instance.addEnemy(this);
+        transform.parent = EnemyManagerScript.Instance.transform;
+        movePoint = new GameObject("MovePoint"+gameObject.name);
+        movePoint.transform.parent = null;
+        movePoint.transform.position = transform.position;
+        enemyDestination = movePoint.transform;
+        enemyDestination.parent = null; 
+        //myActionIndicator = ActionIndicator.Create(transform);
+        playerPosition = PlayerScript.Instance.getMovePoint();
+        
+        nextMoves = new List<Vector3>();
+    }
+
+    public override void DestroyAssociates() {
+        EnemyManagerScript.Instance.removeEnemy(this);
+        Debug.Log("DESTROY ENEMY");
+        Destroy(movePoint);
+        if (myActionIndicator!=null) {
+            Destroy(myActionIndicator.gameObject);
+        }
+    }
+
+    public override void OnStateLoad() {
+        createdAssociates = true;
+        CreateAssociates();
     }
 
     public virtual bool EnemyInRange() {
@@ -36,10 +67,12 @@ public class BaseEnemy : MonoBehaviour
     }
 
     public virtual void UpdateIndicator() {
-        if (EnemyInRange()) {
-            myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Attack, GetAttackDirection());
-        } else {
-            myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Move, GetAttackDirection());
+        if (myActionIndicator!=null ) {
+            if (EnemyInRange()) {
+                myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Attack, GetAttackDirection());
+            } else {
+                myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Move, GetAttackDirection());
+            }
         }
     }
     public virtual Vector3 GetAttackDirection() {

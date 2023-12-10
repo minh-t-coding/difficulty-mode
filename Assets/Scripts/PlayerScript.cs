@@ -24,6 +24,10 @@ public class PlayerScript : MonoBehaviour {
     private bool hasDashed = false;
     private bool isDead = false;
 
+    protected Vector3 lastPos;
+
+    protected string lastAction;
+
 
     // Animation state variables
     private string currentState;
@@ -54,8 +58,12 @@ public class PlayerScript : MonoBehaviour {
     void Start() {
         destination.parent = null;
         currentSpeed = playerSpeed;
+        lastPos = transform.position;
+        lastAction = PLAYER_IDLE;
     }
-
+    public PlayerState GetPlayerState() {
+        return new PlayerState(lastPos, lastAction);
+    }
     void Update() {
         // Move Player to destination point after input window closes
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow && !isDead) {
@@ -178,13 +186,26 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
+    public void LoadPlayerState(PlayerState p) {
+        transform.position = p.getPos();
+        lastPos = p.getPos();
+        destination.position = transform.position;
+        isDead = false;
+        changePlayerAnimationState(p.getAction());
+    }
+
     private void processEnemyTurn() {
+        if (GameStateManager.Instance!=null) {
+            GameStateManager.Instance.captureGameState();
+        }
         if (EnemyManagerScript.Instance != null) {
             EnemyManagerScript.Instance.EnemyTurn();
         }
         if (ProjectileManagerScript.Instance != null) {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
+        lastPos = transform.position;
+        lastAction = currentState;
     }
 
     /// <summary>
