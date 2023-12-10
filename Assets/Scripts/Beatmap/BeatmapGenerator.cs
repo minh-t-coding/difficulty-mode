@@ -9,9 +9,6 @@ public class BeatmapGenerator : MonoBehaviour
     
     protected Beatmap beatmap;
 
-    void Update() {
-    }
-
     private KeyCode getDirectionKey(Vector3 direction) {
         if (direction == new Vector3(1, 1)) {
             return KeyCode.E;
