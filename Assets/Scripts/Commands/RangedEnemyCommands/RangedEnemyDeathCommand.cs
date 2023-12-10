@@ -6,6 +6,8 @@ public class RangedEnemyDeathCommand : DeathCommand
 {   
     RangedEnemyBehaviorScript enemyScript;
 
+    public override string GetEntityType() { return "RangedEnemy"; }
+    
     public RangedEnemyDeathCommand(Vector3 position, Vector3 orientation, RangedEnemyBehaviorScript enemyScript) : base(position, orientation) {
         this.enemyScript = enemyScript;
     }

@@ -6,6 +6,8 @@ public class PlayerMoveCommand : MoveCommand
 {   
     PlayerBehaviorScript playerScript;
 
+    public override string GetEntityType() { return "Player"; }
+    
     public PlayerMoveCommand(Vector3 movementDir, Vector3 prevOrientation, PlayerBehaviorScript playerScript) : base(movementDir, prevOrientation) {
         this.playerScript = playerScript;
     }

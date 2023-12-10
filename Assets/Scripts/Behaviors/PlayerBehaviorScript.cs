@@ -73,7 +73,11 @@ public class PlayerBehaviorScript : MonoBehaviour {
             }
         }
         
-        processPlayerInput();
+        if (Input.GetKeyDown(KeyCode.LeftBracket)) {
+            CommandManager.Instance.Undo();
+        } else {
+            processPlayerInput();
+        }
     }
 
     public void Spawn(Vector3 position, Vector3 orientation) {
@@ -83,9 +87,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
     public void MoveDestination(Vector3 direction) {
         this.destination.position += direction;
 
-        if (direction != Vector3.zero) {
-            playerInAction = true;
-        }
+        // if (direction != Vector3.zero) {
+        //     playerInAction = true;
+        // }
     }
 
     private void playerAttack(Vector3 enemyPosition) {

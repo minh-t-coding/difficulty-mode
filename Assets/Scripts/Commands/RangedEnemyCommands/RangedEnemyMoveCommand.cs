@@ -6,6 +6,8 @@ public class RangedEnemyMoveCommand : MoveCommand
 {   
     RangedEnemyBehaviorScript enemyScript;
 
+    public override string GetEntityType() { return "RangedEnemy"; }
+    
     public RangedEnemyMoveCommand(Vector3 movementDir, Vector3 prevOrientation, RangedEnemyBehaviorScript enemyScript) : base(movementDir, prevOrientation) {
         this.enemyScript = enemyScript;
     }

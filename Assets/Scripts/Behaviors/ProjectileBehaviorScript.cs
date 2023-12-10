@@ -9,6 +9,7 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     [SerializeField] protected Transform projectileDestination;
     [SerializeField] protected LayerMask collisionMask;
     
+    private bool spawnCommandSent = false;
     protected Transform playerPosition;
     private int direction = (int) PlayerBehaviorScript.Direction.Up;
     private bool isProjectileMoving;
@@ -19,11 +20,6 @@ public class ProjectileBehaviorScript : MonoBehaviour {
         this.projectileMovePoint = projectileDestination.gameObject;
         playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
         projectileDestination.parent = null;
-
-        // create spawn command
-        List<CommandManager.ICommand> commandList = new List<CommandManager.ICommand>();
-        commandList.Add(new ProjectileSpawnCommand(this.gameObject, this.projectileMovePoint));
-        CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
 
         // will destroy the projectile by default after 20 seconds
         // Destroy(this.gameObject, 20);
@@ -54,8 +50,14 @@ public class ProjectileBehaviorScript : MonoBehaviour {
         }
 
         // only add commands if we have commands to add
-        if (commandList.Count > 0) {
+        if (commandList != null && commandList.Count > 0) {
+            if (!spawnCommandSent) {
+                commandList.Add(new ProjectileSpawnCommand(this.gameObject, this.projectileMovePoint));
+                spawnCommandSent = true;
+            }
+
             CommandManager.Instance.AddCommand(this.GetInstanceID(), commandList);
+            commandList.Clear();
         }
     }
 

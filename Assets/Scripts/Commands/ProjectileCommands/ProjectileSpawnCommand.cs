@@ -7,6 +7,8 @@ public class ProjectileSpawnCommand : CommandManager.ICommand
     GameObject projectile;
     GameObject projectileMovePoint;
 
+    public string GetEntityType() { return "Projectile"; }
+    
     public ProjectileSpawnCommand(GameObject projectile, GameObject projectileMovePoint) {
         this.projectile = projectile;
         this.projectileMovePoint = projectileMovePoint;

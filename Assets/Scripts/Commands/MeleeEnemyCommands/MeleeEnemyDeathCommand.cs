@@ -6,6 +6,8 @@ public class MeleeEnemyDeathCommand : DeathCommand
 {   
     MeleeEnemyBehaviorScript enemyScript;
 
+    public override string GetEntityType() { return "MeleeEnemy"; }
+
     public MeleeEnemyDeathCommand(Vector3 position, Vector3 orientation, MeleeEnemyBehaviorScript enemyScript) : base(position, orientation) {
         this.enemyScript = enemyScript;
     }

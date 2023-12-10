@@ -7,6 +7,8 @@ public class MeleeEnemyMoveCommand : MoveCommand
     // TODO: see if we can change this to MeleeEnemyBehavior instead of BaseEnemyBehavior
     MeleeEnemyBehaviorScript enemyScript;
 
+    public override string GetEntityType() { return "MeleeEnemy"; }
+    
     public MeleeEnemyMoveCommand(Vector3 movementDir, Vector3 prevOrientation, MeleeEnemyBehaviorScript enemyScript) : base(movementDir, prevOrientation) {
         this.enemyScript = enemyScript;
     }

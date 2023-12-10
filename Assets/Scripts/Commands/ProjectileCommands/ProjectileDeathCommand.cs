@@ -6,6 +6,8 @@ public class ProjectileDeathCommand : DeathCommand
 {   
     GameObject projectilePrefab;
 
+    public override string GetEntityType() { return "Projectile"; }
+    
     public ProjectileDeathCommand(Vector3 position, Vector3 orientation, GameObject projectilePrefab) : base(position, orientation) {
         this.projectilePrefab = projectilePrefab;
     }

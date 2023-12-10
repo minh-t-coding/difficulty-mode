@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CommandManager : MonoBehaviour {
     public interface ICommand {
+        string GetEntityType();
         void Undo();
     }
 
@@ -19,21 +21,24 @@ public class CommandManager : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.LeftBracket)) {
-            Undo();
-        }
     }
 
 
-    public void AddCommand(int instanceId, List<ICommand> command) {
-        Debug.Log("adding command for " + instanceId);
-        Debug.Log(command);
+    public void AddCommand(int instanceId, List<ICommand> commands) {
+        Debug.Log("Adding command.");
+        
+        foreach(ICommand command in commands) {
+            if (command.GetEntityType() == "Projectile") {
+                Debug.Log(instanceId);
+                Debug.Log(command);
+            }
+        }
         
         if (stackDict.ContainsKey(instanceId)) {
-            stackDict[instanceId].Push(command);
+            stackDict[instanceId].Push(commands);
         } else {
             Stack<List<ICommand>> newStack = new Stack<List<ICommand>>();
-            newStack.Push(command);
+            newStack.Push(commands);
             stackDict.Add(instanceId, newStack);
         }
 
@@ -41,6 +46,10 @@ public class CommandManager : MonoBehaviour {
     }
 
     public void Undo() {
+        if (maxStackCount == 0) {
+            return;
+        }
+        
         // go through all of keys and pop if length is max stack count
         foreach (KeyValuePair<int, Stack<List<ICommand>>> pair in stackDict)
         {
