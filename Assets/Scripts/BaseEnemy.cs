@@ -20,7 +20,7 @@ public class BaseEnemy : MonoBehaviour
     protected Transform playerPosition;
     protected List<Vector3> nextMoves;
     protected bool isEnemyDead = false;
-    protected bool isAttacking = true;
+    protected bool isAttacking = false;
 
     // Animation state variables
     private string currentState;
