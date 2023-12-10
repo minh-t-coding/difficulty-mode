@@ -2,25 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileBehaviorScript : MonoBehaviour {
+public class ProjectileBehaviorScript : StateEntity {
     [SerializeField] protected float projectileSpeed;
     [SerializeField] protected float projectileDistance;
-    [SerializeField] protected Transform projectileDestination;
+    protected Transform projectileDestination;
     [SerializeField] protected LayerMask collisionMask;
     protected Transform playerPosition;
-    private int direction = (int) PlayerScript.Direction.Up;
+    private int direction;
     private bool isProjectileMoving;
     private GameObject projectileMovePoint;
     
     // Start is called before the first frame update
-    void Start() {
-        this.projectileMovePoint = projectileDestination.gameObject;
-        playerPosition = PlayerScript.Instance.getMovePoint();
-        projectileDestination.parent = null;
+    public virtual void Start() {
+        if (!createdAssociates) {
+            CreateAssociates();
+        }
+    }
 
-        // will destroy the projectile by default after 20 seconds
-        // Destroy(this.gameObject, 20);
-        // Destroy(this.projectileMovePoint, 20);
+    public void copyDir(ProjectileBehaviorScript p) {
+        p.setDirection(direction);
+    }
+
+    public override void OnStateLoad() {
+        createdAssociates = true;
+        CreateAssociates();
+    }
+
+    public override void CreateAssociates() {
+        transform.parent = ProjectileManagerScript.Instance.transform;
+        projectileDestination = new GameObject("MovePoint"+gameObject.name).transform;
+        projectileDestination.parent = null;
+        projectileDestination.position = transform.position;
+        //myActionIndicator = ActionIndicator.Create(transform);
+        playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
+    }
+
+    public override void DestroyAssociates() { 
+
+        Destroy(projectileDestination.gameObject);
     }
 
     void Update() {
@@ -39,7 +58,7 @@ public class ProjectileBehaviorScript : MonoBehaviour {
         // Check if projectile position touches Player
         if (Vector3.Distance(transform.position, playerPosition.position) < .05f) {
             DestroyProjectile();
-            PlayerScript.Instance.killPlayer();
+            PlayerBehaviorScript.Instance.killPlayer();
         }
     }
 
@@ -49,17 +68,18 @@ public class ProjectileBehaviorScript : MonoBehaviour {
     }
 
     public void ProjectileMove() {
+        Debug.Log("PROJ MOVE");
         switch (direction) {
-            case (int) PlayerScript.Direction.Up:
+            case (int) PlayerBehaviorScript.Direction.Up:
                 projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Down:
+            case (int) PlayerBehaviorScript.Direction.Down:
                 projectileDestination.position += new Vector3(0f, -projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Left:
+            case (int) PlayerBehaviorScript.Direction.Left:
                 projectileDestination.position += new Vector3(-projectileDistance, 0f, 0f);
                 break;
-            case (int) PlayerScript.Direction.Right:
+            case (int) PlayerBehaviorScript.Direction.Right:
                 projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
                 break;
         }

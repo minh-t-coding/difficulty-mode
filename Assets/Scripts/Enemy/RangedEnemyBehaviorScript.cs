@@ -8,7 +8,6 @@ using UnityEngine.Tilemaps;
 
 public class RangedEnemyBehaviorScript : BaseEnemy {
     // Gun Variables
-    [SerializeField] protected Transform shootingPoint;
     [SerializeField] protected GameObject projectilePrefab;
     [SerializeField] protected float movementRange;
 
@@ -45,22 +44,23 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         if (distanceFromPlayer.x == 0) {
             if (distanceFromPlayer.y > 0) {
                 prefabDirection = new Vector3(0, 0, 0);
-                scriptDirection = (int) PlayerScript.Direction.Up;
+                scriptDirection = (int) PlayerBehaviorScript.Direction.Up;
             } else {
                 prefabDirection = new Vector3(0, 0, 180);
-                scriptDirection = (int) PlayerScript.Direction.Down;
+                scriptDirection = (int) PlayerBehaviorScript.Direction.Down;
             }
         } else {
             if (distanceFromPlayer.x < 0) {
                 prefabDirection = new Vector3(0, 0, 90);
-                scriptDirection = (int) PlayerScript.Direction.Left;
+                scriptDirection = (int) PlayerBehaviorScript.Direction.Left;
             } else {
                 prefabDirection = new Vector3(0, 0, -90);
-                scriptDirection = (int) PlayerScript.Direction.Right;
+                scriptDirection = (int) PlayerBehaviorScript.Direction.Right;
             }
         }
 
-        GameObject projectile = Instantiate(projectilePrefab, shootingPoint.position, Quaternion.Euler(prefabDirection), ProjectileManagerScript.Instance.transform);
+        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(prefabDirection), ProjectileManagerScript.Instance.transform);
+        projectile.GetComponent<ProjectileBehaviorScript>().OnStateLoad();
         projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
         ChangeEnemyAnimationState(enemyType + ENEMY_ATTACK, distanceFromPlayer.normalized);
         base.EnemyAttack();

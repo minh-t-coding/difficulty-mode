@@ -1,8 +1,9 @@
+
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour {
-    public static PlayerScript Instance;
+public class PlayerBehaviorScript : MonoBehaviour {
+    public static PlayerBehaviorScript Instance;
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
@@ -22,6 +23,13 @@ public class PlayerScript : MonoBehaviour {
     private bool playerInAction = false;
     private Vector3 currActionDir;
     private bool hasDashed = false;
+    private bool isDead = false;
+
+    protected Vector3 lastPos;
+
+    protected string lastAction;
+
+
 
     // Animation state variables
     private string currentState;
@@ -52,9 +60,16 @@ public class PlayerScript : MonoBehaviour {
     void Start() {
         destination.parent = null;
         currentSpeed = playerSpeed;
+        lastPos = transform.position;
+        lastAction = PLAYER_IDLE;
     }
-
+    public PlayerState GetPlayerState() {
+        return new PlayerState(lastPos, lastAction);
+    }
     void Update() {
+        if (isDead) {
+            return;
+        }
         // Move Player to destination point after input window closes
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
             transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
@@ -72,8 +87,14 @@ public class PlayerScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
+        if (GameStateManager.Instance!=null) {
+            GameStateManager.Instance.captureGameState();
+        }
+        Debug.Log("ATTACK");
         ChangePlayerAnimationState(PLAYER_ATTACK);
+
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+
     }
 
     private void processPlayerInput() {
@@ -119,7 +140,7 @@ public class PlayerScript : MonoBehaviour {
                 destination.position -= currActionDir;
                 playerInAction = false;
 
-                processEnemyTurn();
+                processEnemyTurn(false);
             } 
 
             else if (newInputReceived(currInputDir)) {
@@ -142,7 +163,7 @@ public class PlayerScript : MonoBehaviour {
             // Player character has finished performing action
             // NPCs take turns, reset everything to listen for new move input
             if (playerInAction) {
-                processEnemyTurn();
+                processEnemyTurn(true);
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
@@ -174,13 +195,26 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    private void processEnemyTurn() {
+    public void LoadPlayerState(PlayerState p) {
+        transform.position = p.getPos();
+        lastPos = p.getPos();
+        destination.position = transform.position;
+        isDead = false;
+        ChangePlayerAnimationState(p.getAction());
+    }
+
+    private void processEnemyTurn(bool captureState) {
+        if (GameStateManager.Instance!=null && captureState) {
+            GameStateManager.Instance.captureGameState();
+        }
         if (EnemyManagerScript.Instance != null) {
             EnemyManagerScript.Instance.EnemyTurn();
         }
         if (ProjectileManagerScript.Instance != null) {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
+        lastPos = transform.position;
+        lastAction = currentState;
     }
 
     /// <summary>
@@ -217,8 +251,7 @@ public class PlayerScript : MonoBehaviour {
     }
 
     public void killPlayer() {
-        Instantiate(deadPlayer, gameObject.transform.position, Quaternion.identity);
-        this.gameObject.SetActive(false);
+        isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
 }

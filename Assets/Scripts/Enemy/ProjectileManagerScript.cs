@@ -9,6 +9,8 @@ public class ProjectileManagerScript : MonoBehaviour
 
     private bool areProjectilesInAction = false;
 
+    
+
     void Awake() {
         if (Instance == null) {
             Instance = this;

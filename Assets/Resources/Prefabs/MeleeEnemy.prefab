@@ -30,8 +30,7 @@ Transform:
   m_LocalPosition: {x: -4.5, y: 0.5, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
-  m_Children:
-  - {fileID: 7542183354432158663}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7184150023267812268
@@ -100,40 +99,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyHealth: 4
   enemySpeed: 8
-  enemyDestination: {fileID: 7542183354432158663}
+  enemyType: 
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
+  enemyAnimator: {fileID: 0}
+  deadEnemy: {fileID: 7702694606017096423, guid: 12f27e08a18d7fd45accf9e4e2554bba, type: 3}
   movementRange: 2
   attackRange: 1
---- !u!1 &8332402527263293754
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7542183354432158663}
-  m_Layer: 0
-  m_Name: MovePoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 3306451490063965843, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7542183354432158663
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8332402527263293754}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8385933309737984723}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

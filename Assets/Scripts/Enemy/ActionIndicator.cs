@@ -22,7 +22,7 @@ public class ActionIndicator : MonoBehaviour {
         GameObject indy = Instantiate(Resources.Load("Prefabs/ActionIndicator") as GameObject);
         ActionIndicator actionIndy = indy.GetComponent<ActionIndicator>();
         actionIndy.setAttachTo(t);
-        actionIndy.SetIdleAction(new Vector3(0,0,0));
+        actionIndy.SetIdleAction(new Vector3(0, 0, 0));
         return actionIndy;
 
     }

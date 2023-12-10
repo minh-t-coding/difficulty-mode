@@ -9,20 +9,38 @@ public class EnemyManagerScript : MonoBehaviour {
 
     private HashSet<GameObject> enemyMovepoints = new HashSet<GameObject>();
 
+    protected List<BaseEnemy> currEnemies;
+
+    
+
     void Awake() {
         if (Instance == null) {
             Instance = this;
         }
-
+        currEnemies = new List<BaseEnemy>();
         // Save References of all enemy movepoints
-        foreach(Transform enemy in transform) {
-            GameObject movePoint = enemy.GetChild(0).gameObject; // Getting first child, maybe better way to do this?
-            enemyMovepoints.Add(movePoint);
-        }
     }
 
+    
+
+    public void addEnemy(BaseEnemy e) {
+        currEnemies.Add(e);
+    }
+
+    public void removeEnemy(BaseEnemy e) {
+        currEnemies.Remove(e);
+    }
+
+    
+
     public HashSet<GameObject> getEnemyMovepoints() {
-        return this.enemyMovepoints;
+        HashSet<GameObject> e = new HashSet<GameObject>();
+        foreach(BaseEnemy enemy in currEnemies) {
+            if (enemy!=null) {
+            e.Add(enemy.getMovePoint());
+           } // Getting first child, maybe better way to do this?
+        }
+        return e;
     }
 
     public void EnemyAttacked(Vector3 enemyPosition, float damage) {
@@ -50,8 +68,8 @@ public class EnemyManagerScript : MonoBehaviour {
 
         // Sort the list based on distance to the player
         enemies.Sort((a, b) =>
-            Vector3.Distance(a.position, PlayerScript.Instance.getMovePoint().position)
-                .CompareTo(Vector3.Distance(b.position, PlayerScript.Instance.getMovePoint().position)));
+            Vector3.Distance(a.position, PlayerBehaviorScript.Instance.getMovePoint().position)
+                .CompareTo(Vector3.Distance(b.position, PlayerBehaviorScript.Instance.getMovePoint().position)));
 
         foreach(Transform enemy in enemies) {
             BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
@@ -73,5 +91,6 @@ public class EnemyManagerScript : MonoBehaviour {
                 enemyBehavior.UpdateIndicator();
             }
         }
+        
     }
 }
