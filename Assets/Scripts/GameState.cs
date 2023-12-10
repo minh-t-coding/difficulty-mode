@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameState
-{
+public class GameState {
     // Start is called before the first frame update
 
     protected List<GameObject> gameObjects;
@@ -33,10 +32,10 @@ public class GameState
     }
 
     public void setStateParent(GameObject g) {
-         stateParent = g;
+        stateParent = g;
     }
 
-    
+
 
 
 }

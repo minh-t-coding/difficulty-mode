@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateEntity : MonoBehaviour
-{
+public class StateEntity : MonoBehaviour {
 
     protected bool createdAssociates;
     public virtual void OnStateLoad() {
-        
+
     }
 
     public virtual void CreateAssociates() {
-        
+
     }
 
 
