@@ -26,7 +26,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     private bool isDead = false;
 
     protected Vector3 lastPos;
-
+    protected Vector3 lastDir;
     protected string lastAction;
 
 
@@ -61,10 +61,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
         destination.parent = null;
         currentSpeed = playerSpeed;
         lastPos = transform.position;
+        lastDir = new Vector3(0, -1, 0);
         lastAction = PLAYER_IDLE;
     }
     public PlayerState GetPlayerState() {
-        return new PlayerState(lastPos, lastAction);
+        // return new PlayerState(lastPos, lastAction);
+        return new PlayerState(lastPos, lastDir);
     }
     void Update() {
         if (isDead) {
@@ -167,7 +169,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
-                ChangePlayerAnimationState(PLAYER_IDLE);
+                if (!isDead) ChangePlayerAnimationState(PLAYER_IDLE);
+                lastDir = currActionDir;
                 currActionDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
@@ -200,7 +203,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
         lastPos = p.getPos();
         destination.position = transform.position;
         isDead = false;
-        ChangePlayerAnimationState(p.getAction());
+        currActionDir = p.getDirection();
+        ChangePlayerAnimationStateForce(PLAYER_IDLE);
+        // ChangePlayerAnimationState(p.getAction());
     }
 
     private void processEnemyTurn(bool captureState) {
@@ -214,7 +219,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
         lastPos = transform.position;
-        lastAction = currentState;
+        // lastAction = currentState;
     }
 
     /// <summary>
@@ -241,6 +246,18 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (currentState == newState) return;
         playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
         playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
+        Debug.Log(newState);
+        playerSpriteAnimator.Play(newState);
+        currentState = newState;
+    }
+
+    /// <summary>
+    /// Force sprite to change even if state is the same
+    /// </summary>
+    /// <param name="newState"></param>
+    private void ChangePlayerAnimationStateForce(string newState) {
+        playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
+        playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
         playerSpriteAnimator.Play(newState);
         currentState = newState;
     }
@@ -251,6 +268,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     public void killPlayer() {
+        ChangePlayerAnimationState(PLAYER_DIE);
         isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
