@@ -6,13 +6,19 @@ public class PlayerState {
     protected Vector3 pos;
 
     protected string action;
+    protected Vector3 direction;
 
     protected bool isDead;
 
-    public PlayerState(Vector3 p, string a) {
+    public PlayerState(Vector3 p, Vector3 d) {
+        Debug.Log("direction " + d);
         pos = p;
-        action = a;
+        direction = d;
         isDead = false;
+    }
+
+    public Vector3 getDirection() {
+        return direction;
     }
 
     public string getAction() {
