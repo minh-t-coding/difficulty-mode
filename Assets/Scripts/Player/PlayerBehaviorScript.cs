@@ -28,6 +28,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     protected string lastAction;
 
+    protected GameObject deadSpr;
+
 
     // Animation state variables
     private string currentState;
@@ -189,6 +191,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
         lastPos = p.getPos();
         destination.position = transform.position;
         isDead = false;
+        if (deadSpr!=null) {
+            deadSpr.SetActive(false);
+        }
         ChangePlayerAnimationState(p.getAction());
     }
 
@@ -240,8 +245,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     public void killPlayer() {
-        Instantiate(deadPlayer, gameObject.transform.position, Quaternion.identity);
-        this.gameObject.SetActive(false);
+        if (deadSpr==null) {
+            deadSpr = Instantiate(deadPlayer, gameObject.transform.position, Quaternion.identity);
+        }
+        deadSpr.transform.position = transform.position;
+        deadSpr.SetActive(true);
+        //this.gameObject.SetActive(false);
         Debug.Log("Player died. Press 'Esc' to restart.");
     }
 }
