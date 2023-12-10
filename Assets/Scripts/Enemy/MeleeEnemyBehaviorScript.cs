@@ -18,7 +18,7 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
     public override void EnemyAttack() {
         if (EnemyInRange()) {
             HitEffect.CreateHitEffectStatic(playerPosition.position, new Color(1, 0, 0, 1));
-            PlayerScript.Instance.killPlayer();
+            PlayerBehaviorScript.Instance.killPlayer();
         }
     }
 

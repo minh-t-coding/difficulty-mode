@@ -68,8 +68,8 @@ public class EnemyManagerScript : MonoBehaviour {
 
         // Sort the list based on distance to the player
         enemies.Sort((a, b) =>
-            Vector3.Distance(a.position, PlayerScript.Instance.getMovePoint().position)
-                .CompareTo(Vector3.Distance(b.position, PlayerScript.Instance.getMovePoint().position)));
+            Vector3.Distance(a.position, PlayerBehaviorScript.Instance.getMovePoint().position)
+                .CompareTo(Vector3.Distance(b.position, PlayerBehaviorScript.Instance.getMovePoint().position)));
 
         foreach(Transform enemy in enemies) {
             BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();

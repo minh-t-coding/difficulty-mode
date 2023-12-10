@@ -1,8 +1,8 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour {
-    public static PlayerScript Instance;
+public class PlayerBehaviorScript : MonoBehaviour {
+    public static PlayerBehaviorScript Instance;
     [SerializeField] protected float playerSpeed;
     [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
@@ -227,7 +227,7 @@ public class PlayerScript : MonoBehaviour {
     /// </summary>
     /// <param name="newState"></param>
     private void ChangePlayerAnimationState(string newState) {
-        if (currentState == newState) return;
+        if (currentState == newState || isDead) return;
         playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
         playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
         playerSpriteAnimator.Play(newState);

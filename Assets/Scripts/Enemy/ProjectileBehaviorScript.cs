@@ -34,7 +34,7 @@ public class ProjectileBehaviorScript : StateEntity {
         projectileDestination.parent = null;
         projectileDestination.position = transform.position;
         //myActionIndicator = ActionIndicator.Create(transform);
-        playerPosition = PlayerScript.Instance.getMovePoint();
+        playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
     }
 
     public override void DestroyAssociates() { 
@@ -58,7 +58,7 @@ public class ProjectileBehaviorScript : StateEntity {
         // Check if projectile position touches Player
         if (Vector3.Distance(transform.position, playerPosition.position) < .05f) {
             DestroyProjectile();
-            PlayerScript.Instance.killPlayer();
+            PlayerBehaviorScript.Instance.killPlayer();
         }
     }
 
@@ -70,16 +70,16 @@ public class ProjectileBehaviorScript : StateEntity {
     public void ProjectileMove() {
         Debug.Log("PROJ MOVE");
         switch (direction) {
-            case (int) PlayerScript.Direction.Up:
+            case (int) PlayerBehaviorScript.Direction.Up:
                 projectileDestination.position += new Vector3(0f, projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Down:
+            case (int) PlayerBehaviorScript.Direction.Down:
                 projectileDestination.position += new Vector3(0f, -projectileDistance, 0f);
                 break;
-            case (int) PlayerScript.Direction.Left:
+            case (int) PlayerBehaviorScript.Direction.Left:
                 projectileDestination.position += new Vector3(-projectileDistance, 0f, 0f);
                 break;
-            case (int) PlayerScript.Direction.Right:
+            case (int) PlayerBehaviorScript.Direction.Right:
                 projectileDestination.position += new Vector3(projectileDistance, 0f, 0f);
                 break;
         }

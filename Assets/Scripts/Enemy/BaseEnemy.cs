@@ -62,7 +62,7 @@ public class BaseEnemy : StateEntity
         enemyDestination = movePoint.transform;
         enemyDestination.parent = null; 
         //myActionIndicator = ActionIndicator.Create(transform);
-        playerPosition = PlayerScript.Instance.getMovePoint();
+        playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
         
         nextMoves = new List<Vector3>();
     }

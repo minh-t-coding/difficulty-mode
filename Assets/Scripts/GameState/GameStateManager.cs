@@ -21,7 +21,7 @@ public class GameStateManager : MonoBehaviour {
         GameObject newStateParent = new GameObject("GameState" + currTurn);
         newStateParent.transform.parent = transform;
         GameState newState = new GameState();
-        newState.setPlayerState(PlayerScript.Instance.GetPlayerState());
+        newState.setPlayerState(PlayerBehaviorScript.Instance.GetPlayerState());
         StateEntity[] entities = GameObject.FindObjectsOfType<StateEntity>(false);
         List<GameObject> savedObjects = new List<GameObject>();
         foreach (StateEntity entity in entities) {
@@ -64,7 +64,7 @@ public class GameStateManager : MonoBehaviour {
             unloadCurrState();
             Debug.Log("LOADING STATE" + turn);
             GameState state = gameStates[turn];
-            PlayerScript.Instance.LoadPlayerState(state.getPlayerState());
+            PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {
                 obj.SetActive(true);
