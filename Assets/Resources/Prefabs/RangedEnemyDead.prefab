@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3820889363502310205}
   - component: {fileID: 1478557712263611458}
-  - component: {fileID: 3791658371711120209}
+  - component: {fileID: 4517973391315658945}
   m_Layer: 0
   m_Name: RangedEnemyDead
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3791658371711120209
+--- !u!114 &4517973391315658945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,6 +94,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7702694606017096423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffde0d7d676e21049bd6199b163bd727, type: 3}
+  m_Script: {fileID: 11500000, guid: 71babd9cf49357d478814f357fba1e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

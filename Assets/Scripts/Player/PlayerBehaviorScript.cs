@@ -1,3 +1,4 @@
+
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -84,14 +85,14 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
-        
-        ChangePlayerAnimationState(PLAYER_ATTACK);
-        
         if (GameStateManager.Instance!=null) {
             GameStateManager.Instance.captureGameState();
         }
+        Debug.Log("ATTACK");
+        ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+
     }
 
     private void processPlayerInput() {

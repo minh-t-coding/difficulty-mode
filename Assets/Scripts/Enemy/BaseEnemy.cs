@@ -105,10 +105,10 @@ public class BaseEnemy : StateEntity
 
         if (enemyHealth <= 0) {
             Debug.Log("enemy killed!");
-            Instantiate(deadEnemy, movePoint.transform.position, Quaternion.identity);
-            this.gameObject.SetActive(false);
-            movePoint.SetActive(false);
-            myActionIndicator.gameObject.SetActive(false);
+            GameObject dead = Instantiate(deadEnemy, movePoint.transform.position, Quaternion.identity);
+            dead.SetActive(true);
+            DestroyAssociates();
+            Destroy(this.gameObject);
         }
     }
     
