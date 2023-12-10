@@ -62,7 +62,8 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(prefabDirection), ProjectileManagerScript.Instance.transform);
         projectile.GetComponent<ProjectileBehaviorScript>().OnStateLoad();
         projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
-        
+        ChangeEnemyAnimationState(enemyType + ENEMY_ATTACK, distanceFromPlayer.normalized);
+        base.EnemyAttack();
     }
 
     public override void EnemyMove() {
@@ -84,7 +85,9 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
 
             // only alter path if there is no collision
             if (tileMap.IsCellEmpty(newPosition)) {
+                Vector3 pathToPlayer = newPosition - enemyDestination.position;
                 enemyDestination.position = newPosition;
+                ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
             }
 
             return;

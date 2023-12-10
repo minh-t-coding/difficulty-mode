@@ -106,6 +106,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   playerSpriteAnimator: {fileID: 6760571740585487748}
+  deadPlayer: {fileID: 5290340711519050914, guid: ae5119ccd8e84d044bdfdbb9a6faef94, type: 3}
   multiInputWindow: 0.05
   dashSpeed: 8
   dashTiming: 0.4
