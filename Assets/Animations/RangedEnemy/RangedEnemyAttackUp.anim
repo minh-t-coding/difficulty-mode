@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerDeflectUp
+  m_Name: RangedEnemyAttackUp
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,9 +21,9 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: -1047411376, guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719, type: 3}
+      value: {fileID: 205945651, guid: a1929de4b524d0443baa9ef25b422d07, type: 3}
     - time: 0.98333335
-      value: {fileID: -1047411376, guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719, type: 3}
+      value: {fileID: 205945651, guid: a1929de4b524d0443baa9ef25b422d07, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -46,8 +46,8 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: -1047411376, guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719, type: 3}
-    - {fileID: -1047411376, guid: 4b6866b3e2ef2c44f8fe7ae05d8d8719, type: 3}
+    - {fileID: 205945651, guid: a1929de4b524d0443baa9ef25b422d07, type: 3}
+    - {fileID: 205945651, guid: a1929de4b524d0443baa9ef25b422d07, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -74,8 +74,8 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.5
-    functionName: ChangePlayerAnimationState
-    data: PlayerIdle
+    functionName: ChangeEnemyAnimationStateFromEvent
+    data: EnemyIdle
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
