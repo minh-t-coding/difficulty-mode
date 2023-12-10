@@ -66,6 +66,11 @@ public class ProjectileBehaviorScript : StateEntity {
             DestroyProjectile();
             PlayerBehaviorScript.Instance.killPlayer();
         }
+
+        // Check if projectile hits an Enemy
+        if (EnemyManagerScript.Instance.EnemyAttacked(transform.position, 999)) {
+            DestroyProjectile();
+        }
     }
 
     private void DestroyProjectile() {
@@ -92,7 +97,6 @@ public class ProjectileBehaviorScript : StateEntity {
     }
 
     public void projectileReflected() {
-        Debug.Log("projectile reflected");
         this.setDirection(opposites[direction]);
     }
 

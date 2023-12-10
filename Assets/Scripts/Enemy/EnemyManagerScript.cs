@@ -43,17 +43,18 @@ public class EnemyManagerScript : MonoBehaviour {
         return e;
     }
 
-    public void EnemyAttacked(Vector3 enemyPosition, float damage) {
+    public bool EnemyAttacked(Vector3 enemyPosition, float damage) {
         foreach(Transform enemy in transform) {
             if (enemy != null) {
                 BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
 
                 if (enemyBehavior.transform.position == enemyPosition) {
                     enemyBehavior.EnemyAttacked(damage);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public void EnemyTurn() {
