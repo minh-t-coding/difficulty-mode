@@ -35,6 +35,7 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
     }
 
     public override void EnemyAttack() {
+        SoundManager.Instance.playSound("laser");
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         
         Vector3 prefabDirection;

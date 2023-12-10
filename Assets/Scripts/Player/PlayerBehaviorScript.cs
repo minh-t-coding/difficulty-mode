@@ -79,6 +79,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                     ChangePlayerAnimationState(PLAYER_DASH);
                 } else {
                     ChangePlayerAnimationState(PLAYER_MOVE);
+                    // SoundManager.Instance.playSound("walking");
                 }
             }
         }
@@ -91,6 +92,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
             GameStateManager.Instance.captureGameState();
         }
         Debug.Log("ATTACK");
+        SoundManager.Instance.playSound("staff_swish");
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
@@ -182,6 +184,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 if (!willHitWall(destination.position + currInputDir)) {
                     destination.position += currInputDir;
                     playerInAction = true;
+                    SoundManager.Instance.playSound("walking");
                 }
             }
         }
