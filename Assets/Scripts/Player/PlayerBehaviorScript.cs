@@ -95,6 +95,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
+        ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position);
 
     }
 
@@ -283,6 +284,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     public void killPlayer() {
+        if (PlayerInputManager.Instance.getIsStickoMode()) {
+            return;
+        }
         ChangePlayerAnimationState(PLAYER_DIE);
         isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
