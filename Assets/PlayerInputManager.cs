@@ -98,8 +98,8 @@ public class PlayerInputManager : MonoBehaviour {
 
     public void setAllowedActions(List<KeyCode> presses) {
         allowedActions = new List<PlayerInputActions>();
-        foreach(KeyCode key in presses) {
-            Debug.Log(getActionMappedToKey(key).ToString());
+        foreach (KeyCode key in presses) {
+            //Debug.Log(getActionMappedToKey(key).ToString());
             allowedActions.Add(getActionMappedToKey(key));
         }
     }

@@ -12,6 +12,14 @@ public class BeatmapGenerator : MonoBehaviour
     
     protected Beatmap beatmap;
 
+    public static BeatmapGenerator Instance;
+
+    void Awake() {
+        if (Instance==null) {
+            Instance = this;
+        }
+    } 
+
     // can return multiple keys in the case of diagonal movements
     private List<KeyCode> getDirectionKeys(Vector3 direction) {
         List<KeyCode> keys = new List<KeyCode>();
@@ -21,7 +29,6 @@ public class BeatmapGenerator : MonoBehaviour
         } else if (direction.x == -1f) {
             keys.Add(KeyCode.A);
         }
-
         if (direction.y == 1f) {
             keys.Add(KeyCode.W);
         } else if (direction.y == -1f) {
@@ -41,10 +48,15 @@ public class BeatmapGenerator : MonoBehaviour
         List<float> hits = new List<float>();
         List<KeyCode> keys = new List<KeyCode>();
 
-        float curHit = 1;
-
+        float curHit = 0;
+        int currState = 0;
         foreach (PlayerState state in playerStates) {
+            if (currState==0 || currState == playerStates.Count-1) {
+                currState++;
+                continue;
+            }
             PlayerState.PlayerAction action = state.getAction();
+            //Debug.Log(action.ToString());
             Vector3 direction = state.getDirection();
 
             if (action == PlayerState.PlayerAction.Move) {
@@ -73,10 +85,17 @@ public class BeatmapGenerator : MonoBehaviour
             } else if (action == PlayerState.PlayerAction.Attack) {
                 keys.Add(KeyCode.Return);
                 hits.Add(curHit);
+                List<KeyCode> keyCodes = getDirectionKeys(direction);
+                foreach(KeyCode key in keyCodes) {
+                    keys.Add(key);
+                    hits.Add(curHit); 
+                }
+
                 curHit += 1;
             }
+            currState++;
         }
 
-        beatmap = new Beatmap(hits.ToArray(), keys.ToArray());
+        beatmap = new Beatmap(hits.ToArray(), keys.ToArray(),4f);
     }
 }

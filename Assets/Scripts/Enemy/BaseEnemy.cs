@@ -47,18 +47,23 @@ public class BaseEnemy : StateEntity
     protected virtual void Update() {
         transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, enemyDestination.position) <= Mathf.Epsilon && !isAttacking) {
+        if (Vector3.Distance(transform.position, enemyDestination.position) <= 0.01f && !isAttacking) {
+            transform.position = snapVectorToGrid( transform.position);
             ChangeEnemyAnimationState(enemyType + ENEMY_IDLE, Vector3.zero);
         }
+    }
+    public static Vector3 snapVectorToGrid(Vector3 v) {
+        return new Vector3(Mathf.Round(v.x*2)/2,Mathf.Round(v.y*2)/2,Mathf.Round(v.z*2)/2);
     }
 
     public override void CreateAssociates() {
         tileMap = GameObject.Find("Top").GetComponent<Tilemap>();
         EnemyManagerScript.Instance.addEnemy(this);
+        transform.position = snapVectorToGrid(transform.position);
         transform.parent = EnemyManagerScript.Instance.transform;
         movePoint = new GameObject("MovePoint"+gameObject.name);
         movePoint.transform.parent = null;
-        movePoint.transform.position = transform.position;
+        movePoint.transform.position = snapVectorToGrid(transform.position);
         enemyDestination = movePoint.transform;
         enemyDestination.parent = null; 
         myActionIndicator = ActionIndicator.Create(transform);
@@ -103,7 +108,6 @@ public class BaseEnemy : StateEntity
         enemyHealth -= damage;
 
         if (enemyHealth <= 0) {
-            Debug.Log("enemy killed!");
             GameObject dead = Instantiate(deadEnemy, movePoint.transform.position, Quaternion.identity);
             dead.SetActive(true);
             DestroyAssociates();

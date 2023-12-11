@@ -60,7 +60,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         destination.parent = null;
         currentSpeed = playerSpeed;
         lastPos = transform.position;
-        lastDir = new Vector3(0, -1, 0);
+        lastDir = new Vector3(0, 0, 0);
     }
     public PlayerState GetPlayerState() {
         return new PlayerState(lastPos, lastDir, lastAction);
@@ -87,11 +87,11 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     private void playerAttack(Vector3 enemyPosition) {
         lastAction = PlayerState.PlayerAction.Attack;
-        
-        if (GameStateManager.Instance!=null) {
+        lastDir = currActionDir;
+        if (GameStateManager.Instance!=null && !PlayerInputManager.Instance.getIsStickoMode()) {
             GameStateManager.Instance.captureGameState();
         }
-        Debug.Log("ATTACK");
+        lastAction = PlayerState.PlayerAction.NONE;
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
@@ -115,6 +115,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                             destination.position += currInputDir - currActionDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
                             currActionDir = currInputDir;
                             lastAction = PlayerState.PlayerAction.Move;
+                            lastDir = currActionDir;
                         } else {
                             destination.position -= currActionDir;    // undo initiated action if new destination is invalid
                             playerInAction = false;
@@ -126,6 +127,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                             currActionDir = currInputDir;
                             playerInAction = true;
                             lastAction = PlayerState.PlayerAction.Move;
+                            lastDir = currActionDir;
                         }
                     }
                 }
@@ -154,6 +156,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 if (currInputDir == currActionDir) {
                     hasDashed = true;
                     lastAction = PlayerState.PlayerAction.Dash;
+                    lastDir = currInputDir;
                     if (!willHitWall(destination.position + currInputDir)) {
                         destination.position += currInputDir;
                         currentSpeed = dashSpeed;
@@ -172,6 +175,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
                 if (!isDead) ChangePlayerAnimationState(PLAYER_IDLE);
+                
                 lastDir = currActionDir;
                 currActionDir = Vector3.zero;
                 hasDashed = false;
@@ -183,7 +187,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
                 currActionDir = currInputDir;
-
+                //lastDir = currActionDir;
                 if (!willHitWall(destination.position + currInputDir)) {
                     destination.position += currInputDir;
                     playerInAction = true;
@@ -214,9 +218,17 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (PlayerInputManager.Instance.getIsStickoMode()) {
             //PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
         }
-        if (GameStateManager.Instance!=null && captureState) {
+        if (captureState && lastAction == PlayerState.PlayerAction.NONE) {
+            lastAction = PlayerState.PlayerAction.Move;
+        }
+        lastDir = currActionDir;
+        if (PlayerInputManager.Instance.getIsStickoMode()){
+            PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+        }
+        if (GameStateManager.Instance!=null && captureState && !PlayerInputManager.Instance.getIsStickoMode()) {
             GameStateManager.Instance.captureGameState();
         }
+        lastAction = PlayerState.PlayerAction.NONE;
         if (EnemyManagerScript.Instance != null) {
             EnemyManagerScript.Instance.EnemyTurn();
         }
@@ -250,7 +262,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (currentState == newState) return;
         playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
         playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
-        Debug.Log(newState);
         playerSpriteAnimator.Play(newState);
         currentState = newState;
     }
