@@ -10,7 +10,7 @@ public class ActionIndicator : MonoBehaviour {
 
     protected Transform attachTo;
 
-    protected Vector3 offset = new Vector3(0, 0.7f, -5);
+    protected Vector3 offset = new Vector3(0, 0.3f, -5);
 
     public enum ActionIndicatorActions {
         Attack,
@@ -50,7 +50,7 @@ public class ActionIndicator : MonoBehaviour {
 
     public void SetAttackAction(Vector3 dir) {
         textBox.text = "!";
-        offset = dir;
+        //offset = dir;
         textBox.color = new Color(1f, 0f, 0f, 1f);
     }
 
