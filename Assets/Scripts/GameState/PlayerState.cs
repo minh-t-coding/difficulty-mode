@@ -6,7 +6,8 @@ public class PlayerState {
     public enum PlayerAction {
         Move,
         Dash,
-        Attack
+        Attack,
+        NONE
     }
     
     protected Vector3 pos;
@@ -17,7 +18,7 @@ public class PlayerState {
     protected bool isDead;
 
     public PlayerState(Vector3 p, Vector3 d, PlayerAction a) {
-        Debug.Log("direction " + d);
+        //Debug.Log("direction " + d);
         pos = p;
         direction = d;
         action = a;

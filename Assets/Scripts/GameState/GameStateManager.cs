@@ -62,24 +62,29 @@ public class GameStateManager : MonoBehaviour {
     protected bool isBusy;
 
 
-    public void loadGameState(int turn) {
+    public void loadGameState(int turn, bool clearAllAheadStates = true) {
         isBusy = true;
+        if (currTurn == turn) {
+            Debug.Log("Tried to load same state?");
+            return;
+        }
         if (gameStates.Count > turn && turn >= 1) {
 
             unloadCurrState();
             Debug.Log("LOADING STATE" + turn);
             GameState state = gameStates[turn];
-            Debug.Log(state.getPlayerState().getAction());
             PlayerBehaviorScript.Instance.gameObject.SetActive(true);
             PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {
-                Debug.Log(obj.tag);
                 obj.SetActive(true);
                 obj.GetComponent<StateEntity>().OnStateLoad();
             }
-            for (int i = turn; i < gameStates.Count; i++) {
-                clearGameState(i);
+
+            if (clearAllAheadStates) {
+                for (int i = turn; i < gameStates.Count; i++) {
+                    clearGameState(i);
+                }
             }
             currTurn = turn;
             if (turn == 0) {
@@ -90,13 +95,16 @@ public class GameStateManager : MonoBehaviour {
         isBusy = false;
     }
 
+    
+
     public List<PlayerState> getPlayerStates() {
         List<PlayerState> playerStates = new List<PlayerState>();
-
+        Debug.Log("PLAYER STATES!!");
         foreach (GameState state in gameStates) {
+            //Debug.Log(state.getPlayerState().getAction().ToString() +state.getPlayerState().getDirection());
             playerStates.Add(state.getPlayerState());
         }
-
+        Debug.Log("DONEE!!");
         return playerStates;
     }
 
@@ -107,7 +115,7 @@ public class GameStateManager : MonoBehaviour {
             savedInitState = true;
             captureGameState();
         }
-        if (Input.GetKeyDown(KeyCode.Backspace) && !isBusy) {
+        if (Input.GetKeyDown(KeyCode.Backspace) && !isBusy && !PlayerInputManager.Instance.getIsStickoMode()) {
             loadGameState(currTurn - 1);
         }
     }

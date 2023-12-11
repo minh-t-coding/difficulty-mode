@@ -20,6 +20,12 @@ public class BeatManager : MonoBehaviour {
 
     [SerializeField] private TMP_Text countdownTextBox;
 
+    [SerializeField] private int numLives;
+
+    [SerializeField] private GameObject bar;
+
+    private bool stickoModeActive;
+
     public static BeatManager Instance;
 
     protected Beatmap myMap;
@@ -62,8 +68,9 @@ public class BeatManager : MonoBehaviour {
         if (Instance == null) {
             Instance = this;
             indy.SetActive(false);
+            bar.SetActive(false);
             songStarted = false;
-            mapInitPos = mapParent.transform.position;
+            mapInitPos = mapParent.transform.localPosition;
             countdownTextBox.gameObject.SetActive(false);
         }
     }
@@ -82,16 +89,30 @@ public class BeatManager : MonoBehaviour {
         countdownTextBox.gameObject.SetActive(false);
     }
 
+    public IEnumerator<float> FinishAnim() {
+
+        yield return Timing.WaitForSeconds(1f);
+        float  initVol = audioSource.volume;
+        int numSteps = 40;
+        for(int i=0;i<numSteps;i++) {
+            audioSource.volume -= initVol/numSteps;
+            yield return Timing.WaitForSeconds(0.1f);
+        }
+        audioSource.Stop();
+    }
+
     public void constructBeatmap(Beatmap map) {
         float[] hits = map.getHits();
         KeyCode[] keys = map.getKeys();
         beatmapHits = new List<BeatmapHit>();
         int i = 0;
-        mapParent.transform.position = mapInitPos + new Vector3(0, -(-myMap.getDelay() - tunedInputLag) * mapScrollSpeed, 0);
+        mapParent.transform.localPosition = mapInitPos + new Vector3(0, -(-myMap.getDelay() - tunedInputLag) * (mapScrollSpeed * transform.lossyScale.y), 0);
         foreach (float hit in hits) {
             GameObject newHit = Instantiate(hitPrefab);
             newHit.transform.SetParent(mapParent);
             newHit.transform.localPosition = new Vector3(getHitHoriPos(keys[i]), hit * mapScrollSpeed, 0f);
+            Vector3 initScale = newHit.transform.localScale;
+            newHit.transform.localScale = new Vector3(transform.lossyScale.x * initScale.x, transform.lossyScale.y * initScale.y, transform.lossyScale.z * initScale.z);
             BeatmapHit hitComp = newHit.GetComponent<BeatmapHit>();
             hitComp.setKey(keys[i].ToString());
             beatmapHits.Add(hitComp);
@@ -130,32 +151,65 @@ public class BeatManager : MonoBehaviour {
         return concurrentHits.Count;
 
     }
-
+    protected bool hasLoadedFirstState = false;
+    int currState = 1;
     private void Update() {
+
         //foreach(Intervals interval in intervals) {
         //    float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * interval.GetIntervalLength(bpm)));
         //    interval.CheckForNewInterval(sampledTime);
         //}
 
-        if (audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
+        if (songStarted && audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
+            if (numMissedBeats >= numLives) {
+                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+                Debug.Log("you lose >:(, restart nerd");
+                audioSource.Stop();
+                return;
+            }
+            if (!hasLoadedFirstState) {
+                hasLoadedFirstState = true;
+                GameStateManager.Instance.loadGameState(currState, false);
+                currState++;
+            }
             mapParent.gameObject.SetActive(true);
             if (myCurrBeat < myMap.getHits().Length) {
                 float nextHit = myMap.getHits()[myCurrBeat] + tunedInputLag + universalOffset;
                 float sampledTime = (audioSource.timeSamples / (audioSource.clip.frequency * Intervals.GetIntervalLength(bpm, 1f))) - myMap.getDelay();
-                mapParent.transform.position = mapInitPos + new Vector3(0, -(sampledTime - tunedInputLag) * mapScrollSpeed, 0);
+                mapParent.transform.localPosition = mapInitPos + new Vector3(0, -(sampledTime - tunedInputLag) * (mapScrollSpeed), 0);
                 float diff = Mathf.Abs(nextHit - sampledTime);
                 float unOffseted = Mathf.Abs(myMap.getHits()[myCurrBeat] - sampledTime);
                 int numHits = getConcurrentHits(myMap, myCurrBeat);
+                List<KeyCode> concurrentHits = new List<KeyCode>();
+
+                for (int i = 0; i < numHits; i++) {
+                    concurrentHits.Add(myMap.getKeys()[myCurrBeat + i]);
+                }
                 if (!readyForInput && diff <= inputWindow) {
                     readyForInput = true;
+                    if (myCurrBeat > 0) {
+                        if (myMap.getHits().Length > myCurrBeat + 1) {
+                            float c = myMap.getHits()[myCurrBeat + 1] - myMap.getHits()[myCurrBeat];
+                            if (c != 0.5f) {
+                                GameStateManager.Instance.loadGameState(currState, false);
+                                currState++;
+                            }
+                        }
+                        else {
+                            GameStateManager.Instance.loadGameState(currState, false);
+                            currState++;
+                        }
+                    }
+                    PlayerInputManager.Instance.setAllowedActions(concurrentHits);
                 }
                 if (readyForInput && numHits > 0) {
                     bool pressedAllHits = true;
-                    for (int i = 0; i < numHits; i++) {
-                        pressedAllHits = pressedAllHits && Input.GetKey(myMap.getKeys()[myCurrBeat + i]);
+                    foreach (KeyCode key in concurrentHits) {
+                        pressedAllHits = pressedAllHits && Input.GetKey(key);
                     }
 
                     if (pressedAllHits) {
+
                         Debug.Log("HIT!");
                         if (nextHit >= sampledTime) {
                             aboves.Add(diff);
@@ -173,12 +227,18 @@ public class BeatManager : MonoBehaviour {
                     }
                 }
 
-                if (readyForInput && diff > inputWindow) {
-                    noteExpired = true;
-                    for (int i = 0; i < numHits; i++) {
-                        beatmapHits[myCurrBeat + i].CreateMissEffect();
+                if (diff > inputWindow) {
+                    if (readyForInput) {
+                        noteExpired = true;
+                        for (int i = 0; i < numHits; i++) {
+                            beatmapHits[myCurrBeat + i].CreateMissEffect();
+                        }
+                        numMissedBeats++;
+
+                        Debug.Log("LOAD STATE" + currState);
                     }
-                    numMissedBeats++;
+
+
                     //Debug.Log("MISS! :(");
                 }
 
@@ -188,25 +248,30 @@ public class BeatManager : MonoBehaviour {
                 }
 
                 if (hitNote || noteExpired) {
+
+
+
                     myCurrBeat += numHits;
                     hitNote = false;
                     noteExpired = false;
                     readyForInput = false;
                     hasPlayedTick = false;
+
                 }
             }
             else {
-                audioSource.Stop();
+                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
                 songStarted = false;
                 Debug.Log("SONG FINISHED");
                 List<float> alls = new List<float>();
                 alls.AddRange(aboves);
                 alls.AddRange(belows);
                 Debug.Log("Avg offset " + avg(alls));
-
-
+                Timing.RunCoroutine(FinishAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
+                GameStateManager.Instance.loadGameState(currState, false);
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
+                Debug.Log("Yay you win :)");
             }
 
         }
@@ -229,6 +294,9 @@ public class BeatManager : MonoBehaviour {
 
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
+        bar.SetActive(true);
+        stickoModeActive = true;
+        PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;
         startTimeOfOutro = startTime;
         bpm = song.getBpm();
@@ -241,6 +309,7 @@ public class BeatManager : MonoBehaviour {
         belows = new List<float>();
         aboves = new List<float>();
         songStarted = true;
+
         Timing.RunCoroutine(CountDownAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
         //Timing.RunCoroutine(triggerOnBeatsCo(map).CancelWith(this.gameObject),Segment.Update,this.gameObject.GetInstanceID());
     }
