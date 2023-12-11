@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerState {
+    public enum PlayerAction {
+        Move,
+        Dash,
+        Attack
+    }
+    
     protected Vector3 pos;
 
-    protected string action;
+    protected PlayerAction action;
     protected Vector3 direction;
 
     protected bool isDead;
 
-    public PlayerState(Vector3 p, Vector3 d) {
+    public PlayerState(Vector3 p, Vector3 d, PlayerAction a) {
         Debug.Log("direction " + d);
         pos = p;
         direction = d;
+        action = a;
         isDead = false;
     }
 
@@ -21,7 +28,7 @@ public class PlayerState {
         return direction;
     }
 
-    public string getAction() {
+    public PlayerAction getAction() {
         return action;
     }
 
