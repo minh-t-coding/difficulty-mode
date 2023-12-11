@@ -72,7 +72,7 @@ public class SongTransitionerController : MonoBehaviour {
 
     public void PlaySong(SongObj s) {
         currSong = s;
-        nextEventTime = AudioSettings.dspTime + 1f;
+        nextEventTime = AudioSettings.dspTime + 3f;
         hasPlayedIntro = false;
         beginTransition = false;
         running = true;
@@ -86,7 +86,7 @@ public class SongTransitionerController : MonoBehaviour {
 
         double time = AudioSettings.dspTime;
 
-        if (time + 0.5f >= nextEventTime) {
+        if (time + 1f >= nextEventTime) {
             if (!hasPlayedIntro) {
                 hasPlayedIntro = true;
                 loopSources[flip].clip = currSong.getIntroPart();

@@ -1,4 +1,5 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -26,10 +27,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
     private bool isDead = false;
 
     protected Vector3 lastPos;
-
-    protected string lastAction;
-
-
+    protected Vector3 lastDir;
+    protected PlayerState.PlayerAction lastAction;
 
     // Animation state variables
     private string currentState;
@@ -54,17 +53,17 @@ public class PlayerBehaviorScript : MonoBehaviour {
     void Awake() {
         if (Instance == null) {
             Instance = this;
-        }
+        } 
     }
 
     void Start() {
         destination.parent = null;
         currentSpeed = playerSpeed;
         lastPos = transform.position;
-        lastAction = PLAYER_IDLE;
+        lastDir = new Vector3(0, 0, 0);
     }
     public PlayerState GetPlayerState() {
-        return new PlayerState(lastPos, lastAction);
+        return new PlayerState(lastPos, lastDir, lastAction);
     }
     void Update() {
         if (isDead) {
@@ -87,10 +86,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
-        if (GameStateManager.Instance!=null) {
+        lastAction = PlayerState.PlayerAction.Attack;
+        lastDir = currActionDir;
+        if (GameStateManager.Instance!=null && !PlayerInputManager.Instance.getIsStickoMode()) {
             GameStateManager.Instance.captureGameState();
         }
-        Debug.Log("ATTACK");
+        lastAction = PlayerState.PlayerAction.NONE;
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
@@ -100,7 +101,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     private void processPlayerInput() {
         // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
-        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
+        Vector3 currInputDir = PlayerInputManager.Instance.getDirectionalInput();
 
         // Check if an input for a diagonal move was made
         // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
@@ -114,6 +115,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
                         if (!willHitWall(destination.position + currInputDir - currActionDir)) {
                             destination.position += currInputDir - currActionDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
                             currActionDir = currInputDir;
+                            lastAction = PlayerState.PlayerAction.Move;
+                            lastDir = currActionDir;
                         } else {
                             destination.position -= currActionDir;    // undo initiated action if new destination is invalid
                             playerInAction = false;
@@ -124,6 +127,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
                             destination.position += currInputDir;
                             currActionDir = currInputDir;
                             playerInAction = true;
+                            lastAction = PlayerState.PlayerAction.Move;
+                            lastDir = currActionDir;
                         }
                     }
                 }
@@ -134,7 +139,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         // Dash can only be performed once per action
         if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
             // Check if player has pressed the attack button and is not a diagonal input
-            if (Input.GetKey(KeyCode.Return) && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
+            if ( PlayerInputManager.Instance.getAttackInput() && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
                 playerAttack(destination.position);
 
                 // undo motion
@@ -151,6 +156,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 // Ensure player doesn't move into wall
                 if (currInputDir == currActionDir) {
                     hasDashed = true;
+                    lastAction = PlayerState.PlayerAction.Dash;
+                    lastDir = currInputDir;
                     if (!willHitWall(destination.position + currInputDir)) {
                         destination.position += currInputDir;
                         currentSpeed = dashSpeed;
@@ -168,7 +175,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
                 lastInitialDirectionalInputTime = 0f;
                 playerInAction = false;
-                ChangePlayerAnimationState(PLAYER_IDLE);
+                if (!isDead) ChangePlayerAnimationState(PLAYER_IDLE);
+                
+                lastDir = currActionDir;
                 currActionDir = Vector3.zero;
                 hasDashed = false;
                 currentSpeed = playerSpeed;
@@ -179,7 +188,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
                 currActionDir = currInputDir;
-
+                //lastDir = currActionDir;
                 if (!willHitWall(destination.position + currInputDir)) {
                     destination.position += currInputDir;
                     playerInAction = true;
@@ -199,15 +208,28 @@ public class PlayerBehaviorScript : MonoBehaviour {
     public void LoadPlayerState(PlayerState p) {
         transform.position = p.getPos();
         lastPos = p.getPos();
+        lastAction = p.getAction();
         destination.position = transform.position;
         isDead = false;
-        ChangePlayerAnimationState(p.getAction());
+        currActionDir = p.getDirection();
+        ChangePlayerAnimationStateForce(PLAYER_IDLE);
     }
 
     private void processEnemyTurn(bool captureState) {
-        if (GameStateManager.Instance!=null && captureState) {
+        if (PlayerInputManager.Instance.getIsStickoMode()) {
+            //PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+        }
+        if (captureState && lastAction == PlayerState.PlayerAction.NONE) {
+            lastAction = PlayerState.PlayerAction.Move;
+        }
+        lastDir = currActionDir;
+        if (PlayerInputManager.Instance.getIsStickoMode()){
+            PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+        }
+        if (GameStateManager.Instance!=null && captureState && !PlayerInputManager.Instance.getIsStickoMode()) {
             GameStateManager.Instance.captureGameState();
         }
+        lastAction = PlayerState.PlayerAction.NONE;
         if (EnemyManagerScript.Instance != null) {
             EnemyManagerScript.Instance.EnemyTurn();
         }
@@ -215,7 +237,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
         lastPos = transform.position;
-        lastAction = currentState;
     }
 
     /// <summary>
@@ -246,12 +267,24 @@ public class PlayerBehaviorScript : MonoBehaviour {
         currentState = newState;
     }
 
+    /// <summary>
+    /// Force sprite to change even if state is the same
+    /// </summary>
+    /// <param name="newState"></param>
+    private void ChangePlayerAnimationStateForce(string newState) {
+        playerSpriteAnimator.SetFloat("MovementX", currActionDir.x);
+        playerSpriteAnimator.SetFloat("MovementY", currActionDir.y);
+        playerSpriteAnimator.Play(newState);
+        currentState = newState;
+    }
+
     // Move Point getter method
     public Transform getMovePoint() {
         return transform;
     }
 
     public void killPlayer() {
+        ChangePlayerAnimationState(PLAYER_DIE);
         isDead = true;
         Debug.Log("Player died. Press 'Esc' to restart.");
     }

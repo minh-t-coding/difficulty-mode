@@ -16,7 +16,7 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
     }
 
     public override void EnemyAttack() {
-        if (EnemyInRange()) {
+        if (EnemyInRange() && !PlayerInputManager.Instance.getIsStickoMode()) {
             HitEffect.CreateHitEffectStatic(playerPosition.position, new Color(1, 0, 0, 1));
             PlayerBehaviorScript.Instance.killPlayer();
         }
@@ -27,19 +27,28 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         if (distanceFromPlayer.magnitude < movementRange) {
             //move enemy so they are top/bottom/left/right of player
-            Vector3 newPosition;
+            Vector3 newPosition = enemyDestination.position;
             if (Mathf.Abs(distanceFromPlayer.x) < Mathf.Abs(distanceFromPlayer.y)) {
-                newPosition = enemyDestination.position + new Vector3(distanceFromPlayer.x / Mathf.Abs(distanceFromPlayer.x), 0);
+                if (distanceFromPlayer.x!=0) {
+                    newPosition = enemyDestination.position + new Vector3(distanceFromPlayer.x / Mathf.Abs(distanceFromPlayer.x), 0);
+                } else {
+                    return;
+                }
             }
             else {
-                newPosition = enemyDestination.position + new Vector3(0, distanceFromPlayer.y / Mathf.Abs(distanceFromPlayer.y));
+                if (distanceFromPlayer.y!=0) {
+                    newPosition = enemyDestination.position + new Vector3(0, distanceFromPlayer.y / Mathf.Abs(distanceFromPlayer.y));
+                } else {
+                    return;
+                }
             }
 
             // only alter path if there is no collision 
-            if (tileMap.IsCellEmpty(newPosition)) {
-                enemyDestination.position = newPosition;
-            }
-
+            
+            //if (tileMap.IsCellEmpty(newPosition)) {
+                
+            //}
+            enemyDestination.position = newPosition;
             return;
         }
 
