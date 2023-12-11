@@ -15,10 +15,10 @@ public class EnemiesRemainingScript : MonoBehaviour
 
     void Start() {
         clearedEnemies = false;
-        textParent.SetActive(false);
+        textParent.SetActive(true);
     }
 
-    protected float waitFor = 0.2f;
+    protected float waitFor = 0.3f;
 
     protected float currTime = 0f;
 
