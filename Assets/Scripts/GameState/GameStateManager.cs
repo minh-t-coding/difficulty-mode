@@ -69,10 +69,12 @@ public class GameStateManager : MonoBehaviour {
             unloadCurrState();
             Debug.Log("LOADING STATE" + turn);
             GameState state = gameStates[turn];
+            Debug.Log(state.getPlayerState().getAction());
             PlayerBehaviorScript.Instance.gameObject.SetActive(true);
             PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {
+                Debug.Log(obj.tag);
                 obj.SetActive(true);
                 obj.GetComponent<StateEntity>().OnStateLoad();
             }
@@ -88,6 +90,15 @@ public class GameStateManager : MonoBehaviour {
         isBusy = false;
     }
 
+    public List<PlayerState> getPlayerStates() {
+        List<PlayerState> playerStates = new List<PlayerState>();
+
+        foreach (GameState state in gameStates) {
+            playerStates.Add(state.getPlayerState());
+        }
+
+        return playerStates;
+    }
 
     // Update is called once per frame
     void Update() {

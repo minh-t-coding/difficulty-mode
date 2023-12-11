@@ -28,6 +28,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     protected Vector3 lastPos;
     protected Vector3 lastDir;
+    protected PlayerState.PlayerAction lastAction;
 
     // Animation state variables
     private string currentState;
@@ -62,7 +63,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         lastDir = new Vector3(0, -1, 0);
     }
     public PlayerState GetPlayerState() {
-        return new PlayerState(lastPos, lastDir);
+        return new PlayerState(lastPos, lastDir, lastAction);
     }
     void Update() {
         if (isDead) {
@@ -85,6 +86,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     private void playerAttack(Vector3 enemyPosition) {
+        lastAction = PlayerState.PlayerAction.Attack;
+        
         if (GameStateManager.Instance!=null) {
             GameStateManager.Instance.captureGameState();
         }
@@ -111,6 +114,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                         if (!willHitWall(destination.position + currInputDir - currActionDir)) {
                             destination.position += currInputDir - currActionDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
                             currActionDir = currInputDir;
+                            lastAction = PlayerState.PlayerAction.Move;
                         } else {
                             destination.position -= currActionDir;    // undo initiated action if new destination is invalid
                             playerInAction = false;
@@ -121,6 +125,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                             destination.position += currInputDir;
                             currActionDir = currInputDir;
                             playerInAction = true;
+                            lastAction = PlayerState.PlayerAction.Move;
                         }
                     }
                 }
@@ -148,6 +153,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 // Ensure player doesn't move into wall
                 if (currInputDir == currActionDir) {
                     hasDashed = true;
+                    lastAction = PlayerState.PlayerAction.Dash;
                     if (!willHitWall(destination.position + currInputDir)) {
                         destination.position += currInputDir;
                         currentSpeed = dashSpeed;
@@ -197,6 +203,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     public void LoadPlayerState(PlayerState p) {
         transform.position = p.getPos();
         lastPos = p.getPos();
+        lastAction = p.getAction();
         destination.position = transform.position;
         isDead = false;
         currActionDir = p.getDirection();
