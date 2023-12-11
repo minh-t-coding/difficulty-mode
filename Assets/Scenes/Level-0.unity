@@ -1484,7 +1484,7 @@ MonoBehaviour:
   loopSources:
   - {fileID: 314365995}
   - {fileID: 314365994}
-  currSong: {fileID: 11400000, guid: 0147083f46c90a54aa5337881d865069, type: 2}
+  currSong: {fileID: 11400000, guid: 9f1c04c52c2844a4abcf4212a7a5c6f0, type: 2}
 --- !u!114 &314365997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1529,10 +1529,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemiesRemaining
       objectReference: {fileID: 0}
-    - target: {fileID: 4296803241619420551, guid: 65ec0c123f4c12a458419098e32b84ff, type: 3}
-      propertyPath: textParent
-      value: 
-      objectReference: {fileID: 1122245865}
     - target: {fileID: 7423627826257517524, guid: 65ec0c123f4c12a458419098e32b84ff, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3048,11 +3044,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 949038609}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1122245865 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3934875543540587653, guid: 65ec0c123f4c12a458419098e32b84ff, type: 3}
-  m_PrefabInstance: {fileID: 357921637}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1225396491
 GameObject:
   m_ObjectHideFlags: 0
