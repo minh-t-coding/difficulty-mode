@@ -20,6 +20,8 @@ public class BeatManager : MonoBehaviour {
 
     [SerializeField] private TMP_Text countdownTextBox;
 
+    private bool stickoModeActive;
+
     public static BeatManager Instance;
 
     protected Beatmap myMap;
@@ -146,13 +148,18 @@ public class BeatManager : MonoBehaviour {
                 float diff = Mathf.Abs(nextHit - sampledTime);
                 float unOffseted = Mathf.Abs(myMap.getHits()[myCurrBeat] - sampledTime);
                 int numHits = getConcurrentHits(myMap, myCurrBeat);
+                List<KeyCode> concurrentHits = new List<KeyCode>();
+                for (int i = 0; i < numHits; i++) {
+                    concurrentHits.Add(myMap.getKeys()[myCurrBeat + i]);
+                }
                 if (!readyForInput && diff <= inputWindow) {
                     readyForInput = true;
+                    PlayerInputManager.Instance.setAllowedActions(concurrentHits);
                 }
                 if (readyForInput && numHits > 0) {
                     bool pressedAllHits = true;
-                    for (int i = 0; i < numHits; i++) {
-                        pressedAllHits = pressedAllHits && Input.GetKey(myMap.getKeys()[myCurrBeat + i]);
+                    foreach (KeyCode key in concurrentHits) {
+                        pressedAllHits = pressedAllHits && Input.GetKey(key);
                     }
 
                     if (pressedAllHits) {
@@ -179,6 +186,7 @@ public class BeatManager : MonoBehaviour {
                         beatmapHits[myCurrBeat + i].CreateMissEffect();
                     }
                     numMissedBeats++;
+                    PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
                     //Debug.Log("MISS! :(");
                 }
 
@@ -229,6 +237,8 @@ public class BeatManager : MonoBehaviour {
 
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
+        stickoModeActive = true;
+        PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;
         startTimeOfOutro = startTime;
         bpm = song.getBpm();

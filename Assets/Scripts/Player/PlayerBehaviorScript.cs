@@ -1,4 +1,5 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -96,7 +97,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     private void processPlayerInput() {
         // isHorizontalAxisInUse and isVerticalAxisInUse make GetAxisRaw behave like GetKeyDown instead of GetKey
-        Vector3 currInputDir = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
+        Vector3 currInputDir = PlayerInputManager.Instance.getDirectionalInput();
 
         // Check if an input for a diagonal move was made
         // This is to add leniency to making a diagonal move so it doesn't have to be frame-perfect
@@ -130,7 +131,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         // Dash can only be performed once per action
         if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
             // Check if player has pressed the attack button and is not a diagonal input
-            if (Input.GetKey(KeyCode.Return) && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
+            if ( PlayerInputManager.Instance.getAttackInput() && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
                 playerAttack(destination.position);
 
                 // undo motion
@@ -203,6 +204,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     private void processEnemyTurn(bool captureState) {
+        if (PlayerInputManager.Instance.getIsStickoMode()) {
+            //PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+        }
         if (GameStateManager.Instance!=null && captureState) {
             GameStateManager.Instance.captureGameState();
         }
