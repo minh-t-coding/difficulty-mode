@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,8 @@ public class EnemyManagerScript : MonoBehaviour {
     public static EnemyManagerScript Instance;
 
     private HashSet<GameObject> enemyMovepoints = new HashSet<GameObject>();
+    protected int meleeEnemyCount;
+    protected int rangedEnemyCount;
 
     protected List<BaseEnemy> currEnemies;
 
@@ -18,17 +20,26 @@ public class EnemyManagerScript : MonoBehaviour {
             Instance = this;
         }
         currEnemies = new List<BaseEnemy>();
-        // Save References of all enemy movepoints
     }
 
     
 
     public void addEnemy(BaseEnemy e) {
         currEnemies.Add(e);
+        if (e.CompareTag("MeleeEnemy")) {
+            meleeEnemyCount++;
+        } else if (e.CompareTag("RangedEnemy")) {
+            rangedEnemyCount++;
+        }
     }
 
     public void removeEnemy(BaseEnemy e) {
         currEnemies.Remove(e);
+        if (e.CompareTag("MeleeEnemy")) {
+            meleeEnemyCount--;
+        } else if (e.CompareTag("RangedEnemy")) {
+            rangedEnemyCount--;
+        }
     }
 
     
@@ -38,7 +49,7 @@ public class EnemyManagerScript : MonoBehaviour {
         foreach(BaseEnemy enemy in currEnemies) {
             if (enemy!=null) {
             e.Add(enemy.getMovePoint());
-           } // Getting first child, maybe better way to do this?
+           }
         }
         return e;
     }
@@ -90,7 +101,10 @@ public class EnemyManagerScript : MonoBehaviour {
                 }
                 enemyBehavior.UpdateIndicator();
             }
-        }
-        
+        } 
+    }
+
+    public Tuple<int, int> getEnemyCounts() {
+        return new Tuple <int, int>(meleeEnemyCount, rangedEnemyCount);
     }
 }

@@ -73,6 +73,7 @@ public class GameStateManager : MonoBehaviour {
             PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {
+                Debug.Log(obj.tag);
                 obj.SetActive(true);
                 obj.GetComponent<StateEntity>().OnStateLoad();
             }
