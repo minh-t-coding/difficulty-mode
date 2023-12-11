@@ -280,7 +280,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     // Move Point getter method
     public Transform getMovePoint() {
-        return transform;
+        return destination;
     }
 
     public void killPlayer() {

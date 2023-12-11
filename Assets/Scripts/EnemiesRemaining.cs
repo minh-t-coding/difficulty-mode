@@ -18,7 +18,7 @@ public class EnemiesRemainingScript : MonoBehaviour
         textParent.SetActive(true);
     }
 
-    protected float waitFor = 1f;
+    protected float waitFor = 0.3f;
 
     protected float currTime = 0f;
 

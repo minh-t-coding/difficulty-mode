@@ -45,7 +45,7 @@ public class ProjectileBehaviorScript : StateEntity {
         projectileDestination.parent = null;
         projectileDestination.position = transform.position;
         //myActionIndicator = ActionIndicator.Create(transform);
-        playerPosition = PlayerBehaviorScript.Instance.getMovePoint();
+        playerPosition = PlayerBehaviorScript.Instance.transform;
     }
 
     public override void DestroyAssociates() { 
