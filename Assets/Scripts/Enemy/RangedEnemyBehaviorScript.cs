@@ -34,34 +34,29 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         return false;
     }
 
+
     public override void EnemyAttack() {
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
-        
-        Vector3 prefabDirection;
-        int scriptDirection;
+        Vector3 scriptDirection;
 
         // set prefab and script directions based on position relative to player
         if (distanceFromPlayer.x == 0) {
             if (distanceFromPlayer.y > 0) {
-                prefabDirection = new Vector3(0, 0, 0);
-                scriptDirection = (int) PlayerBehaviorScript.Direction.Up;
+                scriptDirection = new Vector3(0, 1, 0);
             } else {
-                prefabDirection = new Vector3(0, 0, 180);
-                scriptDirection = (int) PlayerBehaviorScript.Direction.Down;
+                scriptDirection = new Vector3(0, -1, 0);
             }
         } else {
             if (distanceFromPlayer.x < 0) {
-                prefabDirection = new Vector3(0, 0, 90);
-                scriptDirection = (int) PlayerBehaviorScript.Direction.Left;
+                scriptDirection = new Vector3(-1, 0, 0);
             } else {
-                prefabDirection = new Vector3(0, 0, -90);
-                scriptDirection = (int) PlayerBehaviorScript.Direction.Right;
+                scriptDirection = new Vector3(1, 0, 0);
             }
         }
 
-        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(prefabDirection), ProjectileManagerScript.Instance.transform);
+        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity, ProjectileManagerScript.Instance.transform);
         projectile.GetComponent<ProjectileBehaviorScript>().OnStateLoad();
-        projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection);
+        projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection.normalized);
         ChangeEnemyAnimationState(enemyType + ENEMY_ATTACK, distanceFromPlayer.normalized);
         base.EnemyAttack();
     }

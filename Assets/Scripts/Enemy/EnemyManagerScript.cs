@@ -54,12 +54,12 @@ public class EnemyManagerScript : MonoBehaviour {
         return e;
     }
 
-    public bool EnemyAttacked(Vector3 enemyPosition, float damage) {
-        foreach(Transform enemy in transform) {
+    public bool EnemyAttacked(Vector3 enemyPosition, float damage,float tolerance =0f) {
+        foreach(Transform enemy in transform) { 
             if (enemy != null) {
                 BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
 
-                if (enemyBehavior.transform.position == enemyPosition) {
+                if ( (enemyBehavior.transform.position -enemyPosition).magnitude <= tolerance) {
                     enemyBehavior.EnemyAttacked(damage);
                     return true;
                 }
