@@ -17,6 +17,8 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
 
     public override void EnemyAttack() {
         if (EnemyInRange() && !PlayerInputManager.Instance.getIsStickoMode()) {
+            ChangeEnemyAnimationState(enemyType + ENEMY_ATTACK, playerPosition.position - enemyDestination.position);
+            base.EnemyAttack();
             HitEffect.CreateHitEffectStatic(playerPosition.position, new Color(1, 0, 0, 1));
             PlayerBehaviorScript.Instance.killPlayer();
         }
@@ -48,7 +50,9 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
             //if (tileMap.IsCellEmpty(newPosition)) {
                 
             //}
+            Vector3 pathToPlayer = newPosition - enemyDestination.position;
             enemyDestination.position = newPosition;
+            ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
             return;
         }
 
