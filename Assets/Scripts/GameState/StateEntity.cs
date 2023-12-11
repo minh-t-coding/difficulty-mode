@@ -15,6 +15,6 @@ public class StateEntity : MonoBehaviour {
 
 
     public virtual void DestroyAssociates() {
-        Debug.Log("DESTROY VBLANKK");
+        //Debug.Log("DESTROY VBLANKK");
     }
 }

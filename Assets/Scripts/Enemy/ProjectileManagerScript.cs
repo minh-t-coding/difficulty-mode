@@ -42,6 +42,24 @@ public class ProjectileManagerScript : MonoBehaviour
         }
     }
 
+    public void ProjectileAttacked(Vector3 projectilePosition, Vector3 playerPos) {
+        Vector3 newDir = projectilePosition - playerPos;
+
+        foreach (Transform projectile in transform) {
+            if (projectile != null) {
+                ProjectileBehaviorScript projectileBehavior = projectile.GetComponent<ProjectileBehaviorScript>();
+
+                if (projectileBehavior.transform.position == projectilePosition) {
+                    // add reflect logic here
+                    // Debug.Log("projectile hit");
+                    Debug.Log(projectileBehavior);
+                    projectileBehavior.projectileReflected(newDir.normalized);
+                    return;
+                }
+            }
+        }
+    }
+
     public bool getAreProjectilesInAction() {
         return this.areProjectilesInAction;
     }
