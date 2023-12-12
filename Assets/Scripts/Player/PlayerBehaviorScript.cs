@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerBehaviorScript : MonoBehaviour {
     public static PlayerBehaviorScript Instance;
@@ -28,6 +29,11 @@ public class PlayerBehaviorScript : MonoBehaviour {
     protected Vector3 lastPos;
     protected Vector3 lastDir;
     protected PlayerState.PlayerAction lastAction;
+
+    // Tutorial variables
+    // Variable for Tutorial tips
+    private bool hasDiedFirstTime = false;
+    private GameObject undoTip;
 
     // Animation state variables
     private string currentState;
@@ -65,6 +71,13 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (Instance == null) {
             Instance = this;
         } 
+
+        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            undoTip = GameObject.Find("UndoTip");
+            if (undoTip != null) {
+                undoTip.SetActive(false);
+            }
+        }
     }
 
     void Start() {
@@ -357,12 +370,24 @@ public class PlayerBehaviorScript : MonoBehaviour {
         return destination;
     }
 
+    public Transform getPlayerTransform() {
+        return this.transform;
+    }
+
     public void killPlayer() {
         if (PlayerInputManager.Instance.getIsStickoMode()) {
             return;
         }
         ChangePlayerAnimationState(PLAYER_DIE);
         isDead = true;
-        Debug.Log("Player died. Press 'Esc' to restart.");
+
+        // Specific case for level 0
+        if (!hasDiedFirstTime && SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            // Show tool tip
+            if (undoTip != null) {
+                undoTip.SetActive(true);
+            }
+            hasDiedFirstTime = true;    
+        }
     }
 }
