@@ -42,7 +42,7 @@ public class ProjectileManagerScript : MonoBehaviour
         }
     }
 
-    public void ProjectileAttacked(Vector3 projectilePosition, Vector3 playerPos) {
+    public bool ProjectileAttacked(Vector3 projectilePosition, Vector3 playerPos) {
         Vector3 newDir = projectilePosition - playerPos;
 
         foreach (Transform projectile in transform) {
@@ -54,10 +54,12 @@ public class ProjectileManagerScript : MonoBehaviour
                     // Debug.Log("projectile hit");
                     Debug.Log(projectileBehavior);
                     projectileBehavior.projectileReflected(newDir.normalized);
-                    return;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public bool getAreProjectilesInAction() {
