@@ -13,13 +13,38 @@ public class EnemyManagerScript : MonoBehaviour {
 
     protected List<BaseEnemy> currEnemies;
 
-    
+    private bool areEnemiesInAction = false;
 
     void Awake() {
         if (Instance == null) {
             Instance = this;
         }
         currEnemies = new List<BaseEnemy>();
+    }
+
+    void Update() {
+        int notMovingEnemyCnt = 0; 
+
+        if (transform.childCount.Equals(0)) {
+            this.areEnemiesInAction = false;
+        }
+
+        foreach(Transform enemy in transform) {
+            if (enemy != null) {
+                BaseEnemy enemyScript = enemy.GetComponent<BaseEnemy>();
+                if (enemyScript != null) {
+                    if (!enemyScript.getIsEnemyMoving()) {
+                        notMovingEnemyCnt++;
+                    }
+                    this.areEnemiesInAction =  this.areEnemiesInAction || enemyScript.getIsEnemyMoving();
+
+                    // if all projectiles are not moving, reset the flag
+                    if (notMovingEnemyCnt.Equals(transform.childCount)) {
+                        this.areEnemiesInAction = false;
+                    }
+                }
+            }
+        }
     }
 
     
@@ -103,6 +128,10 @@ public class EnemyManagerScript : MonoBehaviour {
                 enemyBehavior.UpdateIndicator();
             }
         } 
+    }
+
+    public bool getAreEnemiesInAction() {
+        return this.areEnemiesInAction;
     }
 
     public Tuple<int, int> getEnemyCounts() {
