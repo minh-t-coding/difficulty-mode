@@ -113,7 +113,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
-        ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position);
+        if (ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position)) {
+            ChangePlayerAnimationState(PLAYER_DEFLECT);
+        };
 
     }
 
