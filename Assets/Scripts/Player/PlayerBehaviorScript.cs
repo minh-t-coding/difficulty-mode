@@ -219,10 +219,11 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
                 // Ensure player doesn't move into wall
                 if (currInputDir == currActionDir) {
-                    hasDashed = true;
-                    lastAction = PlayerState.PlayerAction.Dash;
-                    lastDir = currInputDir;
+                    
                     if (!willHitWall(destination.position + currInputDir)) {
+                        hasDashed = true;
+                        lastAction = PlayerState.PlayerAction.Dash;
+                        lastDir = currInputDir;
                         destination.position += currInputDir;
                         currentSpeed = dashSpeed;
                     }

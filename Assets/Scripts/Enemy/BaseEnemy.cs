@@ -152,7 +152,7 @@ public class BaseEnemy : StateEntity
             }
             
             // Only move if next move is not on another enemy
-            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer)) {
+            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer) && tileMap.IsCellEmpty(enemyDestination.position + pathToPlayer)) {
                 enemyDestination.position += pathToPlayer;
                 ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
             }
