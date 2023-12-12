@@ -90,31 +90,31 @@ public class PlayerInputManager : MonoBehaviour {
     }
 
     public Vector3 getDirectionalInput() {
-        if (isStickoMode) {
-            Vector3 retVec = new Vector3(0, 0, 0);
-            if (allowedActions.Contains(PlayerInputActions.MoveRight)) {
-                if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveRight))) {
-                    retVec += new Vector3(1, 0, 0);
-                }
+        
+        Vector3 retVec = new Vector3(0, 0, 0);
+        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveRight)) {
+            if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveRight))) {
+                retVec += new Vector3(1, 0, 0);
             }
-            if (allowedActions.Contains(PlayerInputActions.MoveUp)) {
-                if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveUp))) {
-                    retVec += new Vector3(0, 1, 0);
-                }
-            }
-            if (allowedActions.Contains(PlayerInputActions.MoveLeft)) {
-                if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveLeft))) {
-                    retVec += new Vector3(-1, 0, 0);
-                }
-            }
-            if (allowedActions.Contains(PlayerInputActions.MoveDown)) {
-                if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveDown))) {
-                    retVec += new Vector3(0, -1, 0);
-                }
-            }
-            return retVec;
         }
-        return new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
+        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveUp)) {
+            if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveUp))) {
+                retVec += new Vector3(0, 1, 0);
+            }
+        }
+        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveLeft)) {
+            if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveLeft))) {
+                retVec += new Vector3(-1, 0, 0);
+            }
+        }
+        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveDown)) {
+            if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveDown))) {
+                retVec += new Vector3(0, -1, 0);
+            }
+        }
+        return retVec;
+        
+        //return new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
     }
 
     public bool getAttackInput() {
