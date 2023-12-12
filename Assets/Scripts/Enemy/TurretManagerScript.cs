@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretManagerScript : MonoBehaviour {
     public static TurretManagerScript Instance;
-    private bool shouldShoot = false;
+    private bool shouldShoot = true;
 
     void Awake() {
         if (Instance == null) {

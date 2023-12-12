@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1748283234507112829}
   - component: {fileID: 6902509529479378613}
   - component: {fileID: 8318537281178314211}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Turret
   m_TagString: MeleeEnemy
   m_Icon: {fileID: 0}
@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 9082856576031890689}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3444851, y: 0.6450649, z: 0.16289032}
-  m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
+  m_LocalPosition: {x: 2.5, y: -2.5, z: 0}
+  m_LocalScale: {x: 0.16, y: 0.16, z: 0.16}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,5 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6530ee526216d194fa6bf53228a4d095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootingDirection: 1
+  shootingDirection: 3
   projectilePrefab: {fileID: 1935206967942099077, guid: 2d0c6a853bd4dfd45b3da8fd0f36924e, type: 3}
