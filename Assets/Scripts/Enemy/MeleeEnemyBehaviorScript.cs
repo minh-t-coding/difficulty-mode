@@ -33,27 +33,23 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
             if (Mathf.Abs(distanceFromPlayer.x) < Mathf.Abs(distanceFromPlayer.y)) {
                 if (distanceFromPlayer.x!=0) {
                     newPosition = enemyDestination.position + new Vector3(distanceFromPlayer.x / Mathf.Abs(distanceFromPlayer.x), 0);
-                } else {
-                    return;
-                }
+                } 
             }
             else {
                 if (distanceFromPlayer.y!=0) {
                     newPosition = enemyDestination.position + new Vector3(0, distanceFromPlayer.y / Mathf.Abs(distanceFromPlayer.y));
-                } else {
-                    return;
-                }
+                } 
             }
 
             // only alter path if there is no collision 
             
-            //if (tileMap.IsCellEmpty(newPosition)) {
-                
-            //}
-            Vector3 pathToPlayer = newPosition - enemyDestination.position;
-            enemyDestination.position = newPosition;
-            ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
-            return;
+            if (tileMap.IsCellEmpty(newPosition)) {
+                Vector3 pathToPlayer = newPosition - enemyDestination.position;
+                Debug.Log(pathToPlayer);
+                enemyDestination.position = newPosition;
+                ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
+                return;
+            }
         }
 
         base.EnemyMove();

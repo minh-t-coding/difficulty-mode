@@ -24,7 +24,6 @@ public class BeatManager : MonoBehaviour {
 
     [SerializeField] private GameObject bar;
 
-    private bool stickoModeActive;
 
     public static BeatManager Instance;
 
@@ -301,7 +300,6 @@ public class BeatManager : MonoBehaviour {
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
         bar.SetActive(true);
-        stickoModeActive = true;
         PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;
         startTimeOfOutro = startTime;

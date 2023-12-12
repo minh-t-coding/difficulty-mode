@@ -8,7 +8,7 @@ public class BeatmapHit : MonoBehaviour
 {
     [SerializeField] protected SpriteRenderer spr;
 
-    [SerializeField] protected Text textBox;
+    [SerializeField] protected GameObject arrow;
 
     protected Color baseColor;
 
@@ -24,7 +24,18 @@ public class BeatmapHit : MonoBehaviour
     }
 
     public void setKey(string s) {
-        textBox.text = s;
+        if (s.Equals("W")) {
+            arrow.transform.eulerAngles = new Vector3(0,0,0);
+        } else if (s.Equals("A")) {
+            arrow.transform.eulerAngles = new Vector3(0,0,90);
+        } else if (s.Equals("S")) {
+            arrow.transform.eulerAngles = new Vector3(0,0,180);
+        } else if (s.Equals("D")) {
+            arrow.transform.eulerAngles = new Vector3(0,0,270);
+        } else {
+            arrow.SetActive(false);
+        }
+        
     }
 
     protected float distFromBar() {
