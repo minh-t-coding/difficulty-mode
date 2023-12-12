@@ -11,6 +11,8 @@ public class ProjectileBehaviorScript : StateEntity {
     private Vector3 direction;
     private bool isProjectileMoving;
     private GameObject projectileMovePoint;
+    [SerializeField] protected SpriteRenderer projectileSpriteRenderer;
+    [SerializeField] protected Sprite deflectedProjectileSprite;
 
     protected bool hitsEnemies;
 
@@ -91,6 +93,7 @@ public class ProjectileBehaviorScript : StateEntity {
     public void projectileReflected(Vector3 newDir) {
         setHitsEnemies(true);
         this.setDirection(newDir);
+        projectileSpriteRenderer.sprite = deflectedProjectileSprite;
     }
 
     public bool getIsProjectileMoving() {
@@ -98,7 +101,7 @@ public class ProjectileBehaviorScript : StateEntity {
     }
 
     public void setDirection(Vector3 newDirection) {
-        transform.eulerAngles = new Vector3(0,0,Vector3.Angle(newDirection,new Vector3(0,1,0)));
+        transform.eulerAngles = new Vector3(0, 0, Vector3.SignedAngle(newDirection, new Vector3(0, 1, 0), new Vector3(0, 0, -1)));
         this.direction = newDirection;
     }
 }
