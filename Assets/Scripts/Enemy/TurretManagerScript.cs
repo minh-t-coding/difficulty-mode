@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretManagerScript : MonoBehaviour {
     public static TurretManagerScript Instance;
-    private bool shouldShoot = true;
+    // private bool shouldShoot = true;
 
     void Awake() {
         if (Instance == null) {
@@ -13,7 +13,7 @@ public class TurretManagerScript : MonoBehaviour {
     }
 
     public void TurretTurn() {
-        if (shouldShoot) {
+        // if (shouldShoot) {
             foreach(Transform turret in transform) {
                 TurretBehaviorScript turretBehaviorScript = turret.GetComponent<TurretBehaviorScript>();
                 if (turretBehaviorScript != null && turretBehaviorScript.isActiveAndEnabled) {
@@ -21,7 +21,7 @@ public class TurretManagerScript : MonoBehaviour {
                     // TODO: Turret attack indicator?
                 }
             }
-        }
-        shouldShoot = !shouldShoot;
+        // }
+        // shouldShoot = !shouldShoot;
     }
 }

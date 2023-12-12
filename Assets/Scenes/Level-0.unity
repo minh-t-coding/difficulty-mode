@@ -1463,6 +1463,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8318537281178314211, guid: f925c359335c36a44a8b3fc757b9b0f0, type: 3}
+      propertyPath: shouldShootOffset
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9082856576031890689, guid: f925c359335c36a44a8b3fc757b9b0f0, type: 3}
       propertyPath: m_Name
       value: Turret (1)
@@ -3054,11 +3058,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3943845442041829110, guid: 19a835ad89d5bbc4084a69504b9e253b, type: 3}
       propertyPath: m_text
-      value: DASHING
+      value: TURRETS AND DASHING
       objectReference: {fileID: 0}
     - target: {fileID: 3943845442041829110, guid: 19a835ad89d5bbc4084a69504b9e253b, type: 3}
       propertyPath: m_margin.z
-      value: -617.89276
+      value: -1018.40454
       objectReference: {fileID: 0}
     - target: {fileID: 8508989603732145554, guid: 19a835ad89d5bbc4084a69504b9e253b, type: 3}
       propertyPath: m_Name
@@ -3070,7 +3074,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9033901695653057841, guid: 19a835ad89d5bbc4084a69504b9e253b, type: 3}
       propertyPath: m_text
-      value: Double tap a movement key to dash in that direction!
+      value: 'Turrets fire at a constant frequency and cannot be destroyed.
+
+
+        Setting
+        up position is key, double tap a movement key to dash in that direction!'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3203,6 +3211,10 @@ PrefabInstance:
     - target: {fileID: 1748283234507112829, guid: f925c359335c36a44a8b3fc757b9b0f0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8318537281178314211, guid: f925c359335c36a44a8b3fc757b9b0f0, type: 3}
+      propertyPath: shouldShootOffset
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9082856576031890689, guid: f925c359335c36a44a8b3fc757b9b0f0, type: 3}
       propertyPath: m_Name
@@ -10542,15 +10554,15 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 256692632}
+  - {fileID: 1693121885}
   - {fileID: 378849399}
+  - {fileID: 468838024}
   - {fileID: 629596648}
   - {fileID: 2051059816}
   - {fileID: 1557828023}
-  - {fileID: 1971213877}
-  - {fileID: 1903971094}
-  - {fileID: 949038609}
-  - {fileID: 7178051210780169441}
-  - {fileID: 1654837735}
   - {fileID: 1970133218}
-  - {fileID: 468838024}
-  - {fileID: 1693121885}
+  - {fileID: 1903971094}
+  - {fileID: 7178051210780169441}
+  - {fileID: 1971213877}
+  - {fileID: 949038609}
+  - {fileID: 1654837735}
