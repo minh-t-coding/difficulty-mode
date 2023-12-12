@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Toolbox;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class BaseEnemy : StateEntity
@@ -33,6 +34,18 @@ public class BaseEnemy : StateEntity
     private bool isEnemyMoving;
     protected ActionIndicator myActionIndicator;
 
+    // Variable for Tutorial tips
+    private bool hasAttacked = false;
+    private GameObject actionIndicatorTip;
+
+    void Awake() {
+        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            actionIndicatorTip = GameObject.Find("ActionIndicatorTip");
+            if (actionIndicatorTip != null) {
+                actionIndicatorTip.SetActive(false);
+            }
+        }
+    }
     
     protected virtual void Start() {
         if (!createdAssociates) {
@@ -100,6 +113,15 @@ public class BaseEnemy : StateEntity
         if (myActionIndicator!=null ) {
             if (EnemyInRange()) {
                 myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Attack, GetAttackDirection());
+
+                // Specific case for level 0
+                if (!hasAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
+                    // Show tool tip
+                    if (actionIndicatorTip != null) {
+                        actionIndicatorTip.SetActive(true);
+                    }
+                    hasAttacked = true;    
+                }
             } else {
                 myActionIndicator.SetAction(ActionIndicator.ActionIndicatorActions.Move, GetAttackDirection());
             }

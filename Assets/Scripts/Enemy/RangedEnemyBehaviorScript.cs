@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Toolbox;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 
@@ -10,6 +11,19 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
     // Gun Variables
     [SerializeField] protected GameObject projectilePrefab;
     [SerializeField] protected float movementRange;
+
+    // Variable for Tutorial tips
+    private bool hasRangedAttacked = false;
+    private GameObject reflectTip;
+
+    void Awake() {
+        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            reflectTip = GameObject.Find("ReflectTip");
+            if (reflectTip != null) {
+                reflectTip.SetActive(false);
+            }
+        }
+    }
 
     // Update is called once per frame
     protected override void Update() {        
@@ -23,8 +37,7 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         if ((distanceFromPlayer.magnitude <= movementRange) && (distanceFromPlayer.x == 0 || distanceFromPlayer.y == 0)) {   
             
             // don't shoot if a wall is in the way
-            if (Physics2D.Linecast(enemyDestination.position, playerPosition.position, collisionMask))
-            {
+            if (Physics2D.Linecast(enemyDestination.position, playerPosition.position, collisionMask)) {
                 return false;
             }
 
@@ -59,6 +72,15 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection.normalized);
         ChangeEnemyAnimationState(enemyType + ENEMY_ATTACK, distanceFromPlayer.normalized);
         base.EnemyAttack();
+
+        // Specific case for level 0
+        if (!hasRangedAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            // Show tool tip
+            if (reflectTip != null) {
+                reflectTip.SetActive(true);
+            }
+            hasRangedAttacked = true;    
+        }
     }
 
     public override void EnemyMove() {

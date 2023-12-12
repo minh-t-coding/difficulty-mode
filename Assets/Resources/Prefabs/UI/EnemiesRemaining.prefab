@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 539.75, y: 284.7539}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4296803241619420551
@@ -52,7 +52,6 @@ MonoBehaviour:
   rangedEnemyCountText: {fileID: 4536444402037763792}
   meleeEnemyCountText: {fileID: 651093437504196153}
   textParent: {fileID: 0}
---- !u!1 &1639641991411113358
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -253,7 +252,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 913835324, guid: 7d7cc94d924037246a1681cf1aecb72f, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -471,7 +470,6 @@ RectTransform:
   m_AnchoredPosition: {x: -8.3057, y: 8.306}
   m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3023178380073585034
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
