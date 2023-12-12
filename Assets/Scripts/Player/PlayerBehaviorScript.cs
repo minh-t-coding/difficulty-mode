@@ -236,6 +236,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (ProjectileManagerScript.Instance != null) {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
+        if (TurretManagerScript.Instance != null) {
+            TurretManagerScript.Instance.TurretTurn();
+        }
         lastPos = transform.position;
     }
 
