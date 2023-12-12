@@ -14,7 +14,7 @@ public class DashTipTriggerScript : MonoBehaviour {
     }
 
     void Update() {
-        if (PlayerBehaviorScript.Instance.getMovePoint().position == this.transform.position && !tipSeen) {
+        if (PlayerBehaviorScript.Instance.getPlayerTransform().position == this.transform.position && !tipSeen) {
             dashTip.SetActive(true);
             tipSeen = true;
         }
