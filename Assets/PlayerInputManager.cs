@@ -16,7 +16,12 @@ public class PlayerInputManager : MonoBehaviour {
         MoveLeft,
         MoveDown,
         Attack,
+        Dash,
         NONE
+    }
+
+    public bool isAttackAllowed() {
+        return allowedActions.Contains(PlayerInputActions.Attack);
     }
 
     protected List<PlayerInputActions> allowedActions;
@@ -54,6 +59,34 @@ public class PlayerInputManager : MonoBehaviour {
     public void setIsStickoMode(bool b) {
         allowedActions = new List<PlayerInputActions>();
         isStickoMode = b;
+    }
+
+    public bool pressedAllDirectionals() {
+        if (getGoalDirectionalInput() == new Vector3(0,0,0)) {
+            return false;
+        }
+        return getGoalDirectionalInput() == getDirectionalInput();
+    }
+
+    public bool pressedNoDirectionals() {
+        return getDirectionalInput() == new Vector3(0,0,0);
+    }
+
+    public Vector3 getGoalDirectionalInput() {
+        Vector3 retVec = new Vector3(0, 0, 0);
+        if (allowedActions.Contains(PlayerInputActions.MoveRight)) {
+            retVec += new Vector3(1, 0, 0);
+        }
+        if (allowedActions.Contains(PlayerInputActions.MoveUp)) {
+            retVec += new Vector3(0, 1, 0);
+        }
+        if (allowedActions.Contains(PlayerInputActions.MoveLeft)) {
+            retVec += new Vector3(-1, 0, 0);
+        }
+        if (allowedActions.Contains(PlayerInputActions.MoveDown)) {
+            retVec += new Vector3(0, -1, 0);
+        }
+        return retVec;
     }
 
     public Vector3 getDirectionalInput() {
@@ -96,12 +129,22 @@ public class PlayerInputManager : MonoBehaviour {
         return Input.GetKey(KeyCode.Return);
     }
 
-    public void setAllowedActions(List<KeyCode> presses) {
+    public void setAllowedActions(List<KeyCode> presses, bool isDash) {
         allowedActions = new List<PlayerInputActions>();
+        if (presses.Count==0) {
+            //Debug.Log("EMPTYY!");
+        }
         foreach (KeyCode key in presses) {
             //Debug.Log(getActionMappedToKey(key).ToString());
             allowedActions.Add(getActionMappedToKey(key));
         }
+        if (isDash) {
+             allowedActions.Add(PlayerInputActions.Dash);
+        }
+    }
+
+    public List<PlayerInputActions> getAllowedActions() {
+        return allowedActions;
     }
 
 
