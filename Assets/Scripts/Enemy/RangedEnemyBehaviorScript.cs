@@ -37,8 +37,7 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         if ((distanceFromPlayer.magnitude <= movementRange) && (distanceFromPlayer.x == 0 || distanceFromPlayer.y == 0)) {   
             
             // don't shoot if a wall is in the way
-            if (Physics2D.Linecast(enemyDestination.position, playerPosition.position, collisionMask))
-            {
+            if (Physics2D.Linecast(enemyDestination.position, playerPosition.position, collisionMask)) {
                 return false;
             }
 
