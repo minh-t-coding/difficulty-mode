@@ -31,7 +31,7 @@ public class BaseEnemy : StateEntity
     protected const string ENEMY_ATTACK = "EnemyAttack";
     protected const string ENEMY_DIE = "EnemyDie";
 
-
+    private bool isEnemyMoving;
     protected ActionIndicator myActionIndicator;
 
     // Variable for Tutorial tips
@@ -53,6 +53,10 @@ public class BaseEnemy : StateEntity
         }
     }
 
+    public bool getIsEnemyMoving() {
+        return isEnemyMoving;
+    }
+
     public GameObject getMovePoint() {
         return movePoint;
     }
@@ -61,8 +65,11 @@ public class BaseEnemy : StateEntity
         transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, enemyDestination.position) <= 0.01f && !isAttacking) {
+            isEnemyMoving = false;
             transform.position = snapVectorToGrid( transform.position);
             ChangeEnemyAnimationState(enemyType + ENEMY_IDLE, Vector3.zero);
+        } else {
+            isEnemyMoving = true;
         }
     }
     public static Vector3 snapVectorToGrid(Vector3 v) {

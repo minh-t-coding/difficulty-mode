@@ -18,8 +18,8 @@ public class BeatmapTester : MonoBehaviour
     void init()
     {
         hasStarted=true;
-        myBeatmap = new Beatmap(hits, keys,delay);
-        SongTransitionerController.Instance.startTransition(myBeatmap);
+        //myBeatmap = new Beatmap(hits, keys,delay);
+        //SongTransitionerController.Instance.startTransition(myBeatmap);
         text.SetActive(false);
     }
 

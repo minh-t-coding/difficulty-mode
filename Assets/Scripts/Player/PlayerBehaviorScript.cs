@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerBehaviorScript : MonoBehaviour {
@@ -13,7 +12,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected GameObject deadPlayer;
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
-    [SerializeField] protected float dashTiming = 0.4f;
+    [SerializeField] protected float dashTiming = 0.2f;
     
     private float currentSpeed;
 
@@ -38,6 +37,18 @@ public class PlayerBehaviorScript : MonoBehaviour {
     const string PLAYER_ATTACK = "PlayerAttack";
     const string PLAYER_DEFLECT = "PlayerDeflect";
     const string PLAYER_DIE = "PlayerDie";
+
+    protected bool didOneAction;
+
+    protected bool dashIsNext;
+
+    public void setDashIsNext(bool b) {
+        dashIsNext = b;
+    }
+
+    protected bool firstInputOfDash;
+
+    protected bool liftedUp;
 
     public enum Direction {
         Down,
@@ -81,8 +92,15 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 }
             }
         }
-        
-        processPlayerInput();
+        if (PlayerInputManager.Instance.getIsStickoMode()) {
+            if ( !didOneAction) {
+                processPlayerInputStickoMode();
+            }
+        } else {
+            if (!ProjectileManagerScript.Instance.getAreProjectilesInAction() && !EnemyManagerScript.Instance.getAreEnemiesInAction()) {
+                processPlayerInput();
+            }
+        }
     }
 
     private void playerAttack(Vector3 enemyPosition) {
@@ -95,8 +113,54 @@ public class PlayerBehaviorScript : MonoBehaviour {
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
-        ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position);
+        if (ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position)) {
+            ChangePlayerAnimationState(PLAYER_DEFLECT);
+        };
 
+    }
+
+    private void processPlayerInputStickoMode() {
+        List<PlayerInputManager.PlayerInputActions> allowedActions = PlayerInputManager.Instance.getAllowedActions();
+
+        if (allowedActions.Contains(PlayerInputManager.PlayerInputActions.Attack)) { // Okay were only attacking
+            Vector3 attackDir = PlayerInputManager.Instance.getDirectionalInput();
+            if (PlayerInputManager.Instance.getAttackInput() && attackDir != new Vector3(0,0,0)) {
+
+                playerAttack(destination.position + attackDir);
+                processEnemyTurn(false);
+                didOneAction = true;
+                return;
+            }
+        } else if (allowedActions.Contains(PlayerInputManager.PlayerInputActions.Dash)) { // Okay were dashing
+            if (PlayerInputManager.Instance.pressedAllDirectionals() && !firstInputOfDash) {
+                firstInputOfDash = true;
+            }
+
+            if (firstInputOfDash && PlayerInputManager.Instance.pressedNoDirectionals() && !liftedUp) {
+                liftedUp = true;
+            }
+
+            if (liftedUp && PlayerInputManager.Instance.pressedAllDirectionals() ) {
+                Vector3 dir = PlayerInputManager.Instance.getDirectionalInput();
+                ChangePlayerAnimationState(PLAYER_DASH);
+                destination.position += dir*2;
+                processEnemyTurn(false);
+                didOneAction = true;
+                currentSpeed = dashSpeed;
+                return;
+            }
+
+        } else { // okay were moving
+            
+            if (PlayerInputManager.Instance.pressedAllDirectionals()) {
+                
+                Vector3 dir = PlayerInputManager.Instance.getDirectionalInput();
+                ChangePlayerAnimationState(PLAYER_MOVE);
+                destination.position += dir;
+                processEnemyTurn(false);
+                didOneAction = true;
+            }
+        }
     }
 
     private void processPlayerInput() {
@@ -113,7 +177,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
                     if (playerInAction) {   
                         // if original action was valid and had already been initiated
                         if (!willHitWall(destination.position + currInputDir - currActionDir)) {
-                            destination.position += currInputDir - currActionDir; // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
+                            
+                            destination.position += currInputDir - currActionDir;
+                            // for some reason, second input becomes (+-1, +-1, 0), so first input needs to be subtracted
                             currActionDir = currInputDir;
                             lastAction = PlayerState.PlayerAction.Move;
                             lastDir = currActionDir;
@@ -183,7 +249,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 currentSpeed = playerSpeed;
             }
 
-            if (newInputReceived(currInputDir)) {
+            if (newInputReceived(currInputDir) && !playerInAction) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
@@ -206,25 +272,29 @@ public class PlayerBehaviorScript : MonoBehaviour {
     }
 
     public void LoadPlayerState(PlayerState p) {
+        didOneAction = false;
         transform.position = p.getPos();
         lastPos = p.getPos();
         lastAction = p.getAction();
+        playerInAction = false;
+        dashIsNext = false;
+        liftedUp = false;
+        firstInputOfDash = false;
         destination.position = transform.position;
         isDead = false;
         currActionDir = p.getDirection();
+        currentSpeed = playerSpeed;
+        //PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
         ChangePlayerAnimationStateForce(PLAYER_IDLE);
     }
 
     private void processEnemyTurn(bool captureState) {
-        if (PlayerInputManager.Instance.getIsStickoMode()) {
-            //PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
-        }
         if (captureState && lastAction == PlayerState.PlayerAction.NONE) {
             lastAction = PlayerState.PlayerAction.Move;
         }
         lastDir = currActionDir;
         if (PlayerInputManager.Instance.getIsStickoMode()){
-            PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+            PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
         }
         if (GameStateManager.Instance!=null && captureState && !PlayerInputManager.Instance.getIsStickoMode()) {
             GameStateManager.Instance.captureGameState();
@@ -239,7 +309,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (TurretManagerScript.Instance != null) {
             TurretManagerScript.Instance.TurretTurn();
         }
-        lastPos = transform.position;
+        lastPos = destination.position;
     }
 
     /// <summary>

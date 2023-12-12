@@ -91,7 +91,9 @@ public class BeatManager : MonoBehaviour {
 
     public IEnumerator<float> FinishAnim() {
 
-        yield return Timing.WaitForSeconds(1f);
+        yield return Timing.WaitForSeconds(0.1f);
+        GameStateManager.Instance.loadGameState(currState, false);
+         yield return Timing.WaitForSeconds(0.9f);
         float  initVol = audioSource.volume;
         int numSteps = 40;
         for(int i=0;i<numSteps;i++) {
@@ -151,6 +153,8 @@ public class BeatManager : MonoBehaviour {
         return concurrentHits.Count;
 
     }
+
+    
     protected bool hasLoadedFirstState = false;
     int currState = 1;
     private void Update() {
@@ -162,7 +166,7 @@ public class BeatManager : MonoBehaviour {
 
         if (songStarted && audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
             if (numMissedBeats >= numLives) {
-                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 Debug.Log("you lose >:(, restart nerd");
                 audioSource.Stop();
                 return;
@@ -188,9 +192,11 @@ public class BeatManager : MonoBehaviour {
                 if (!readyForInput && diff <= inputWindow) {
                     readyForInput = true;
                     if (myCurrBeat > 0) {
-                        if (myMap.getHits().Length > myCurrBeat + 1) {
-                            float c = myMap.getHits()[myCurrBeat + 1] - myMap.getHits()[myCurrBeat];
-                            if (c != 0.5f) {
+                        if (myMap.getHits().Length > myCurrBeat + numHits) { // hacky way to handle dashes
+                            float currNote = myMap.getHits()[myCurrBeat];
+                            float noteType = currNote - Mathf.Floor(currNote);
+                            float distToNextNote = myMap.getHits()[myCurrBeat + numHits] - myMap.getHits()[myCurrBeat];
+                            if (noteType == 0.0f || distToNextNote != 0.5f) {
                                 GameStateManager.Instance.loadGameState(currState, false);
                                 currState++;
                             }
@@ -200,7 +206,7 @@ public class BeatManager : MonoBehaviour {
                             currState++;
                         }
                     }
-                    PlayerInputManager.Instance.setAllowedActions(concurrentHits);
+                    PlayerInputManager.Instance.setAllowedActions(concurrentHits, myMap.getActions()[myCurrBeat] == PlayerState.PlayerAction.Dash);
                 }
                 if (readyForInput && numHits > 0) {
                     bool pressedAllHits = true;
@@ -260,7 +266,7 @@ public class BeatManager : MonoBehaviour {
                 }
             }
             else {
-                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>());
+                PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 songStarted = false;
                 Debug.Log("SONG FINISHED");
                 List<float> alls = new List<float>();
@@ -268,7 +274,7 @@ public class BeatManager : MonoBehaviour {
                 alls.AddRange(belows);
                 Debug.Log("Avg offset " + avg(alls));
                 Timing.RunCoroutine(FinishAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
-                GameStateManager.Instance.loadGameState(currState, false);
+                
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
                 Debug.Log("Yay you win :)");

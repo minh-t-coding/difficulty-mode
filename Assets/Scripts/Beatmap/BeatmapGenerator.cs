@@ -4,7 +4,6 @@ using UnityEngine;
 using MEC;
 using System.Linq;
 using UnityEngine.AI;
-using UnityEditor.Experimental.GraphView;
 using System.Security.Cryptography;
 public class BeatmapGenerator : MonoBehaviour
 {   
@@ -47,6 +46,7 @@ public class BeatmapGenerator : MonoBehaviour
 
         List<float> hits = new List<float>();
         List<KeyCode> keys = new List<KeyCode>();
+        List<PlayerState.PlayerAction> actions = new List<PlayerState.PlayerAction>();
 
         float curHit = 0;
         int currState = 0;
@@ -56,6 +56,7 @@ public class BeatmapGenerator : MonoBehaviour
                 continue;
             }
             PlayerState.PlayerAction action = state.getAction();
+            
             //Debug.Log(action.ToString());
             Vector3 direction = state.getDirection();
 
@@ -65,6 +66,7 @@ public class BeatmapGenerator : MonoBehaviour
                 foreach(KeyCode key in keyCodes) {
                     keys.Add(key);
                     hits.Add(curHit);
+                    actions.Add(action);
                 }
 
                 curHit += 1;
@@ -74,28 +76,31 @@ public class BeatmapGenerator : MonoBehaviour
                 foreach(KeyCode key in keyCodes) {
                     keys.Add(key);
                     hits.Add(curHit);
+                    actions.Add(action);
                 }
 
                 foreach(KeyCode key in keyCodes) {
                     keys.Add(key);
                     hits.Add(curHit + 0.5f);
+                    actions.Add(action);
                 }
 
                 curHit += 1;
             } else if (action == PlayerState.PlayerAction.Attack) {
                 keys.Add(KeyCode.Return);
                 hits.Add(curHit);
+                actions.Add(action);
                 List<KeyCode> keyCodes = getDirectionKeys(direction);
                 foreach(KeyCode key in keyCodes) {
                     keys.Add(key);
-                    hits.Add(curHit); 
+                    hits.Add(curHit);
+                    actions.Add(action);
                 }
 
                 curHit += 1;
             }
             currState++;
         }
-
-        beatmap = new Beatmap(hits.ToArray(), keys.ToArray(),4f);
+        beatmap = new Beatmap(hits.ToArray(), keys.ToArray(),actions.ToArray(),4f);
     }
 }

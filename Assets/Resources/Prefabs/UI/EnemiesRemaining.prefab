@@ -51,8 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rangedEnemyCountText: {fileID: 4536444402037763792}
   meleeEnemyCountText: {fileID: 651093437504196153}
-  textParent: {fileID: 3934875543540587653}
---- !u!1 &1639641991411113358
+  textParent: {fileID: 0}
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -213,15 +212,15 @@ RectTransform:
   m_GameObject: {fileID: 3859869066886298710}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4575330213141016322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 126.75, y: 11.246094}
-  m_SizeDelta: {x: 178, y: 178}
+  m_AnchoredPosition: {x: 117.5, y: 8.306}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7274762780319126256
 CanvasRenderer:
@@ -251,7 +250,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -506641547, guid: a79e82925af057b49a28ad907314316c, type: 3}
+  m_Sprite: {fileID: 913835324, guid: 7d7cc94d924037246a1681cf1aecb72f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -461,17 +460,16 @@ RectTransform:
   m_GameObject: {fileID: 4580432254140451968}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4575330213141016322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 15}
-  m_SizeDelta: {x: 178, y: 178}
+  m_AnchoredPosition: {x: -8.3057, y: 8.306}
+  m_SizeDelta: {x: 65, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3023178380073585034
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -499,7 +497,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1310343073, guid: a1929de4b524d0443baa9ef25b422d07, type: 3}
+  m_Sprite: {fileID: 716532891, guid: 7d7cc94d924037246a1681cf1aecb72f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
