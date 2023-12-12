@@ -12,7 +12,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected GameObject deadPlayer;
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
-    [SerializeField] protected float dashTiming = 0.4f;
+    [SerializeField] protected float dashTiming = 0.2f;
     
     private float currentSpeed;
 
@@ -97,7 +97,9 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 processPlayerInputStickoMode();
             }
         } else {
-            processPlayerInput();
+            if (!ProjectileManagerScript.Instance.getAreProjectilesInAction() && !EnemyManagerScript.Instance.getAreEnemiesInAction()) {
+                processPlayerInput();
+            }
         }
     }
 
@@ -245,7 +247,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 currentSpeed = playerSpeed;
             }
 
-            if (newInputReceived(currInputDir)) {
+            if (newInputReceived(currInputDir) && !playerInAction) {
                 isHorizontalAxisInUse = Mathf.Abs(currInputDir.x) == 1f;
                 isVerticalAxisInUse = Mathf.Abs(currInputDir.y) == 1f;
                 lastInitialDirectionalInputTime = Time.time;
@@ -302,7 +304,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (ProjectileManagerScript.Instance != null) {
             ProjectileManagerScript.Instance.ProjectileTurn();
         }
-        lastPos = transform.position;
+        lastPos = destination.position;
     }
 
     /// <summary>
