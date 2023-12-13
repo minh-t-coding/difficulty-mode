@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9908182e7e3648149b2430cc1e80c11a, type: 3}
+  m_Name: menu160
+  m_EditorClassIdentifier: 
+  bpm: 160
+  introPart: {fileID: 8300000, guid: 99460305f6247a347b4fe88e79fb8f4c, type: 3}
+  introLength: 31.11111
+  loopingPart: {fileID: 8300000, guid: f1dfef83e6a8dad4f9b36a3c1489173b, type: 3}
+  loopingLength: 160
+  outroPart: {fileID: 0}
