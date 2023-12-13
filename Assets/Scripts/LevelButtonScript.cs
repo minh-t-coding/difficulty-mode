@@ -7,7 +7,6 @@ public class LevelButtonScript : MonoBehaviour {
 
     [SerializeField] int level;
     public void OnButtonClick() {
-        Debug.Log("he");
         SceneManager.LoadScene(level+1);
     }
     
