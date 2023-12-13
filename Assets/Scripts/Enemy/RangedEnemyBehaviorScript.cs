@@ -77,7 +77,7 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         if (!hasRangedAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
             // Show tool tip
             if (reflectTip != null) {
-                reflectTip.SetActive(true);
+                TipManagerScript.Instance.EnqueueTip(reflectTip);
             }
             hasRangedAttacked = true;    
         }

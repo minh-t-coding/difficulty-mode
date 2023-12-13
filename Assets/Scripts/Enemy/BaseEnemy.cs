@@ -118,7 +118,7 @@ public class BaseEnemy : StateEntity
                 if (!hasAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
                     // Show tool tip
                     if (actionIndicatorTip != null) {
-                        actionIndicatorTip.SetActive(true);
+                        TipManagerScript.Instance.EnqueueTip(actionIndicatorTip);
                     }
                     hasAttacked = true;    
                 }

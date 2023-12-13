@@ -385,7 +385,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         if (!hasDiedFirstTime && SceneManager.GetActiveScene().name.Equals("Level-0")) {
             // Show tool tip
             if (undoTip != null) {
-                undoTip.SetActive(true);
+                TipManagerScript.Instance.EnqueueTip(undoTip);
             }
             hasDiedFirstTime = true;    
         }
