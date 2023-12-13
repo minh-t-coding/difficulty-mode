@@ -72,7 +72,7 @@ public class SongTransitionerController : MonoBehaviour {
 
     public void PlaySong(SongObj s) {
         currSong = s;
-        nextEventTime = AudioSettings.dspTime + 3f;
+        nextEventTime = AudioSettings.dspTime + 2f;
         hasPlayedIntro = false;
         beginTransition = false;
         running = true;

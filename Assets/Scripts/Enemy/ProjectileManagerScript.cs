@@ -38,7 +38,7 @@ public class ProjectileManagerScript : MonoBehaviour
                         this.areProjectilesInAction = false;
                     }
                 }
-            }
+            } 
         }
     }
 
