@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: tut155
   m_EditorClassIdentifier: 
   bpm: 77.5
-  introPart: {fileID: 8300000, guid: c7a5902a2b48d4a4cb9dc66fa8b5467a, type: 3}
+  introPart: {fileID: 8300000, guid: e05bedc27d1bc5d4ca192944505230be, type: 3}
   introLength: 16
-  loopingPart: {fileID: 8300000, guid: 2e720a065049cd149921555796b96148, type: 3}
-  loopingLength: 36
-  outroPart: {fileID: 8300000, guid: 44d07e28f639ba443b5926992486cb7c, type: 3}
+  loopingPart: {fileID: 8300000, guid: dbac0cb9f0fb4da42a69f4c0ce48b43b, type: 3}
+  loopingLength: 88
+  outroPart: {fileID: 8300000, guid: 8573663cf73ad7d428488c5390e14f85, type: 3}
