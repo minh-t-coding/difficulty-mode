@@ -277,6 +277,9 @@ public class BeatManager : MonoBehaviour {
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
                 Debug.Log("Yay you win :)");
+
+                // Progress level on beatmap win
+                LevelHandlerScript.Instance.progressLevel();
             }
 
         }
