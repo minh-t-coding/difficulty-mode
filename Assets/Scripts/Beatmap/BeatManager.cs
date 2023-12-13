@@ -168,6 +168,7 @@ public class BeatManager : MonoBehaviour {
                 PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 Debug.Log("you lose >:(, restart nerd");
                 audioSource.Stop();
+                DeathMenu.Instance.ShowMenu();
                 return;
             }
             if (!hasLoadedFirstState) {
@@ -242,7 +243,6 @@ public class BeatManager : MonoBehaviour {
 
                         Debug.Log("LOAD STATE" + currState);
                     }
-
 
                     //Debug.Log("MISS! :(");
                 }
