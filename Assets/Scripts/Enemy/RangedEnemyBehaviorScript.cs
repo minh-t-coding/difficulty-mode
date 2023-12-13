@@ -13,16 +13,19 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
     [SerializeField] protected float movementRange;
 
     // Variable for Tutorial tips
-    private bool hasRangedAttacked = false;
+    private bool hasRangedAttacked;
     private GameObject reflectTip;
 
-    void Awake() {
+    protected override void Start() {
+        hasRangedAttacked = false;
         if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
             reflectTip = GameObject.Find("ReflectTip");
             if (reflectTip != null) {
+                TipManagerScript.Instance.addToAllTips("ReflectTip", reflectTip);
                 reflectTip.SetActive(false);
             }
         }
+        base.Start();
     }
 
     // Update is called once per frame
@@ -76,6 +79,9 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         // Specific case for level 0
         if (!hasRangedAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
             // Show tool tip
+            if (reflectTip == null) {
+                reflectTip = TipManagerScript.Instance.GetTip("ReflectTip");
+            }
             if (reflectTip != null) {
                 TipManagerScript.Instance.EnqueueTip(reflectTip);
             }
