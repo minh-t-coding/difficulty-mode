@@ -9,6 +9,7 @@ public class BeatmapHit : MonoBehaviour
     [SerializeField] protected SpriteRenderer spr;
 
     [SerializeField] protected GameObject arrow;
+    [SerializeField] protected GameObject hitIcon;
 
     protected Color baseColor;
 
@@ -34,6 +35,7 @@ public class BeatmapHit : MonoBehaviour
             arrow.transform.eulerAngles = new Vector3(0,0,270);
         } else {
             arrow.SetActive(false);
+            hitIcon.SetActive(true);
         }
         
     }
