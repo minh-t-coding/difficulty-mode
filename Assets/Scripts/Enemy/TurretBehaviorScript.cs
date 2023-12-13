@@ -9,6 +9,15 @@ public class TurretBehaviorScript : MonoBehaviour {
     [SerializeField] Direction shootingDirection;
     [SerializeField] protected GameObject projectilePrefab;
     [SerializeField] protected bool shouldShootOffset;
+    [SerializeField] protected Animator turretAnimator;
+
+    private string currentAnimationState;
+    const string TURRET_IDLE = "TurretIdle";
+    const string TURRET_ATTACK = "TurretAttack";
+
+    private void Start() {
+        turretAnimator.SetFloat("Direction", (float) shootingDirection);
+    }
 
     public void TurretAttack() {
         if (shouldShootOffset) {
@@ -27,7 +36,15 @@ public class TurretBehaviorScript : MonoBehaviour {
             GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity, ProjectileManagerScript.Instance.transform);
             projectile.GetComponent<ProjectileBehaviorScript>().OnStateLoad();
             projectile.GetComponent<ProjectileBehaviorScript>().setDirection(scriptDirection.normalized);
+
+            ChangeTurretAnimationState(TURRET_ATTACK);
         }
         shouldShootOffset = !shouldShootOffset;
+    }
+
+    private void ChangeTurretAnimationState(string newAnimationState) {
+        if (currentAnimationState == newAnimationState) return;
+        turretAnimator.Play(newAnimationState);
+        currentAnimationState = newAnimationState;
     }
 }
