@@ -96,7 +96,9 @@ public class GameStateManager : MonoBehaviour {
         isBusy = false;
     }
 
-    
+    public int GetCurrTurn() {
+        return this.currTurn;
+    }
 
     public List<PlayerState> getPlayerStates() {
         List<PlayerState> playerStates = new List<PlayerState>();

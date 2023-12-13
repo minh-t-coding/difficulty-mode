@@ -8,7 +8,7 @@ public class TurretBehaviorScript : MonoBehaviour {
     enum Direction { Up, Down, Left, Right }
     [SerializeField] Direction shootingDirection;
     [SerializeField] protected GameObject projectilePrefab;
-    [SerializeField] protected bool shouldShootOffset;
+    [SerializeField] protected int shouldShootOffset;
     [SerializeField] protected Animator turretAnimator;
 
     private string currentAnimationState;
@@ -20,7 +20,8 @@ public class TurretBehaviorScript : MonoBehaviour {
     }
 
     public void TurretAttack() {
-        if (shouldShootOffset) {
+        int shouldShoot = (shouldShootOffset + GameStateManager.Instance.GetCurrTurn()) % 2;
+        if (shouldShoot == 1) {
             Vector3 scriptDirection;
 
             if (shootingDirection == Direction.Up) {
@@ -39,7 +40,6 @@ public class TurretBehaviorScript : MonoBehaviour {
 
             ChangeTurretAnimationState(TURRET_ATTACK);
         }
-        shouldShootOffset = !shouldShootOffset;
     }
 
     private void ChangeTurretAnimationState(string newAnimationState) {
