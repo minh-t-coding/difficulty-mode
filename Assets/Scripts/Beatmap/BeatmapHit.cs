@@ -39,7 +39,7 @@ public class BeatmapHit : MonoBehaviour
     }
 
     protected float distFromBar() {
-        return (BeatmapBar.Instance.transform.position - transform.position).magnitude;
+        return Mathf.Abs(BeatmapBar.Instance.transform.position.y - transform.position.y);
     }
 
     protected float colorFunc(float dist) {
