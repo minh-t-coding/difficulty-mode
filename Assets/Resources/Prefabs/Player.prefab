@@ -105,6 +105,9 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 256
+  turretCollisionMask:
+    serializedVersion: 2
+    m_Bits: 128
   playerSpriteAnimator: {fileID: 6760571740585487748}
   deadPlayer: {fileID: 5290340711519050914, guid: ae5119ccd8e84d044bdfdbb9a6faef94, type: 3}
   multiInputWindow: 0.05
