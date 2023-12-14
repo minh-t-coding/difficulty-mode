@@ -9205,9 +9205,74 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 378849399}
     m_Modifications:
+    - target: {fileID: 417899027347965909, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_text
+      value: "Ranged enemies will shoot projectiles that are faster than you. \n\nBut
+        you can reflect them if you're adjacent by attacking it!\n\n\n\n\n\nPress
+        'T' to continue..."
+      objectReference: {fileID: 0}
+    - target: {fileID: 1046086079747184502, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1489878445861907121, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_text
+      value: 'An unaccounted for attack can take you off-guard.
+
+
+        In ''Predicto''
+        mode, press the ''BACKSPACE'' button to undo the previous move!
+
+
+
+
+        Press
+        ''T'' to continue...'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2298456220637166098, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751696716857416976, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_text
+      value: 'Enemies will show an indicator if they will attack on the next action!
+
+
+        Attack
+        this alien before it attacks you by pressing a direction and ''ENTER''!
+
+
+
+
+        Press
+        ''T'' to continue...'
+      objectReference: {fileID: 0}
     - target: {fileID: 3773118020606616062, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
       propertyPath: m_Name
       value: TipManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4564513695346478515, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4776650822684305109, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_text
+      value: 'Turrets fire at a constant frequency and cannot be destroyed.
+
+
+        Setting
+        up position is key, double tap a movement key to dash in that direction!
+
+
+
+
+
+        Press
+        ''T'' to continue...'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260995812500813430, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7468475884839241189, guid: 18e1c6bd6ef44b44a9425269a301ce6b, type: 3}
       propertyPath: m_LocalPosition.x
