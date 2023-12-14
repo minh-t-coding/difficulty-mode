@@ -393,7 +393,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
         if (hasDiedFirstTime == 0) {
             // Show tool tip
-            if (undoTip == null) {
+            if (undoTip == null && TipManagerScript.Instance) {
                 undoTip = TipManagerScript.Instance.GetTip("UndoTip");
             }
             if (undoTip != null) {
