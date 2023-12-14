@@ -7,6 +7,8 @@ using UnityEngine;
 public class SongObj : ScriptableObject
 {
     [SerializeField] protected float bpm;
+
+    [SerializeField] protected bool isHalfTime;
     [SerializeField] protected AudioClip introPart;
 
     [SerializeField] protected float introLength;
@@ -19,6 +21,10 @@ public class SongObj : ScriptableObject
 
     public float getBpm() {
         return bpm;
+    }
+
+    public bool getIsHalfTime() {
+        return isHalfTime;
     }
 
     public AudioClip getIntroPart() {
