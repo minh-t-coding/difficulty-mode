@@ -14,7 +14,9 @@ public class DashTipTriggerScript : MonoBehaviour {
     }
 
     void Update() {
-        if (PlayerBehaviorScript.Instance.getPlayerTransform().position == this.transform.position && !tipSeen) {
+        Vector3 extraTile = this.transform.position + Vector3.up;
+        bool isOnTriggerTile = PlayerBehaviorScript.Instance.getPlayerTransform().position == this.transform.position || PlayerBehaviorScript.Instance.getPlayerTransform().position == extraTile;
+        if (isOnTriggerTile && !tipSeen) {
             TipManagerScript.Instance.EnqueueTip(dashTip);
             tipSeen = true;
         }

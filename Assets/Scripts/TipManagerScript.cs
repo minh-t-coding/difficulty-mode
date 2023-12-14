@@ -25,6 +25,8 @@ public class TipManagerScript : MonoBehaviour
             // Only display the tip if player has not beaten tutorial
             if (!seenTipNames.Contains(currentTip.name) && (PlayerPrefs.GetInt("levelAt") < 1)) {
                 currentTip.SetActive(true);
+            } else if (!seenTipNames.Contains(currentTip.name) && currentTip.name.Equals("UndoTip")) {
+                currentTip.SetActive(true);
             }
         }
     }

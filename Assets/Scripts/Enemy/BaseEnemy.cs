@@ -44,15 +44,17 @@ public class BaseEnemy : StateEntity
     private GameObject actionIndicatorTip;
 
     void Awake() {
-        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
-            actionIndicatorTip = GameObject.Find("ActionIndicatorTip");
-            if (actionIndicatorTip != null) {
-                actionIndicatorTip.SetActive(false);
-            }
-        }
     }
     
     protected virtual void Start() {
+        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            actionIndicatorTip = GameObject.Find("ActionIndicatorTip");
+            if (actionIndicatorTip != null) {
+                TipManagerScript.Instance.addToAllTips("ActionIndicatorTip", actionIndicatorTip);
+                actionIndicatorTip.SetActive(false);
+            }
+        }
+        
         if (!createdAssociates) {
             CreateAssociates();
         }
@@ -144,6 +146,9 @@ public class BaseEnemy : StateEntity
                 // Specific case for level 0
                 if (!hasAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
                     // Show tool tip
+                    if (actionIndicatorTip == null) {
+                        actionIndicatorTip = TipManagerScript.Instance.GetTip("ActionIndicatorTip");
+                    }
                     if (actionIndicatorTip != null) {
                         TipManagerScript.Instance.EnqueueTip(actionIndicatorTip);
                     }

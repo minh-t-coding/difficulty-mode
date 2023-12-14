@@ -32,7 +32,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     // Tutorial variables
     // Variable for Tutorial tips
-    private bool hasDiedFirstTime = false;
     private GameObject undoTip;
 
     // Animation state variables
@@ -72,12 +71,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
             Instance = this;
         } 
 
-        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
-            undoTip = GameObject.Find("UndoTip");
-            if (undoTip != null) {
-                undoTip.SetActive(false);
-            }
+        undoTip = GameObject.Find("UndoTip");
+        if (undoTip != null) {
+            TipManagerScript.Instance.addToAllTips("UndoTip", undoTip);
+            undoTip.SetActive(false);
         }
+        
     }
 
     void Start() {
@@ -383,12 +382,17 @@ public class PlayerBehaviorScript : MonoBehaviour {
         isDead = true;
 
         // Specific case for level 0
-        if (!hasDiedFirstTime && SceneManager.GetActiveScene().name.Equals("Level-0")) {
+        int hasDiedFirstTime = PlayerPrefs.GetInt("hasDiedFirstTime", 0);
+
+        if (hasDiedFirstTime == 0) {
             // Show tool tip
+            if (undoTip == null) {
+                undoTip = TipManagerScript.Instance.GetTip("UndoTip");
+            }
             if (undoTip != null) {
                 TipManagerScript.Instance.EnqueueTip(undoTip);
             }
-            hasDiedFirstTime = true;    
+            PlayerPrefs.SetInt("hasDiedFirstTime", 1);  
         }
     }
 }
