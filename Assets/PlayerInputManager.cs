@@ -114,22 +114,22 @@ public class PlayerInputManager : MonoBehaviour {
     public Vector3 getDirectionalInput() {
         
         Vector3 retVec = new Vector3(0, 0, 0);
-        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveRight) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveRight)] )) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveRight))) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveRight))) {
                 retVec += new Vector3(1, 0, 0);
             }
         }
-        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveUp) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveUp)] )) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveUp) )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveUp))) {
                 retVec += new Vector3(0, 1, 0);
             }
         }
-        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveLeft) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveLeft)] )) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveLeft))) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveLeft))) {
                 retVec += new Vector3(-1, 0, 0);
             }
         }
-        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveDown) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveDown)] )) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveDown) )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveDown))) {
                 retVec += new Vector3(0, -1, 0);
             }
@@ -141,7 +141,7 @@ public class PlayerInputManager : MonoBehaviour {
 
     public bool getAttackInput() {
         if (isStickoMode) {
-            if (allowedActions.Contains(PlayerInputActions.Attack)  && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveDown)] ) {
+            if (allowedActions.Contains(PlayerInputActions.Attack)) {
                 return Input.GetKey(KeyCode.Return);
             }
             else {
