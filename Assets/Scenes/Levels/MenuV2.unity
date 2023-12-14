@@ -3632,7 +3632,7 @@ GameObject:
   - component: {fileID: 1785189612}
   - component: {fileID: 1785189611}
   - component: {fileID: 1785189614}
-  - component: {fileID: 1785189613}
+  - component: {fileID: 1785189615}
   m_Layer: 0
   m_Name: Menu Music
   m_TagString: Untagged
@@ -3650,8 +3650,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 99460305f6247a347b4fe88e79fb8f4c, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -3751,20 +3751,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1785189613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1785189610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6431fd81eef5e8340804a7ce8a71e409, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSourceIntro: {fileID: 1785189611}
-  audioSourceLoop: {fileID: 1785189614}
 --- !u!82 &1785189614
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3775,11 +3761,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f1dfef83e6a8dad4f9b36a3c1489173b, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3861,6 +3847,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1785189615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785189610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39175267d53f13340a674e5969f25f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loopSources:
+  - {fileID: 1785189611}
+  - {fileID: 1785189614}
+  currSong: {fileID: 11400000, guid: 41362d1b0952c5a4d99b0c60e65668f1, type: 2}
+  playSongOnStart: 1
 --- !u!1 &1791234460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4174,7 +4177,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
