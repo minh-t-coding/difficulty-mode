@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TipManagerScript : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class TipManagerScript : MonoBehaviour
     void Update() {
         if (tips.Count != 0) {
             GameObject currentTip = tips.Peek();
-            if (!seenTipNames.Contains(currentTip.name)) {
+            // Only display the tip if player has not beaten tutorial
+            if (!seenTipNames.Contains(currentTip.name) && (PlayerPrefs.GetInt("levelAt") < 1)) {
                 currentTip.SetActive(true);
             }
         }
