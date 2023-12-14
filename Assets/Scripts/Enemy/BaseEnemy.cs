@@ -110,6 +110,18 @@ public class BaseEnemy : StateEntity
         CreateAssociates();
     }
 
+    public virtual void copyEnemy(BaseEnemy other) {
+        other.setHasAggroed(hasAggroed);
+    }
+
+    public bool getHasAggroed() {
+        return hasAggroed;
+    }
+
+    public void setHasAggroed(bool b) {
+        hasAggroed = b;
+    }
+
     public virtual bool isInAggroRange() {
         if ( (maintainAggro && hasAggroed) || aggroRange == -1) {
             return true;
