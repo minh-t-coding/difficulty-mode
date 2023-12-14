@@ -13,11 +13,17 @@ public class SongObj : ScriptableObject
 
     [SerializeField] protected float introLength;
 
+    [SerializeField] protected float introVolume = 1f;
+
     [SerializeField] protected AudioClip loopingPart;
 
     [SerializeField] protected float loopingLength;
 
+    [SerializeField] protected float loopingVolume = 1f;
+
     [SerializeField] protected AudioClip outroPart;
+
+    [SerializeField] protected float outroVolume = 1f;
 
     public float getBpm() {
         return bpm;
@@ -41,6 +47,18 @@ public class SongObj : ScriptableObject
 
     public float getLoopingLength() {
         return loopingLength;
+    }
+
+    public float getOutroVolume() {
+        return outroVolume;
+    }
+
+    public float getIntroVolume() {
+        return introVolume;
+    }
+
+    public float getLoopingVolume() {
+        return loopingVolume;
     }
 
     public AudioClip getOutroPart() {

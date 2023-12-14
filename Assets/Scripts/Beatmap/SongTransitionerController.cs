@@ -56,12 +56,14 @@ public class SongTransitionerController : MonoBehaviour {
             loopSources[flip].clip = currSong.getOutroPart();
             loopSources[flip].PlayScheduled(targTime);
             loopSources[1 - flip].SetScheduledEndTime(targTime);
+            loopSources[flip].volume = currSong.getOutroVolume();
             BeatManager.Instance.triggerBeatmap(bm, currSong, loopSources[flip], targTime);
         }
         else {
             double targTime = lastEventTime;
             loopSources[flip].clip = currSong.getOutroPart();
             loopSources[flip].PlayScheduled(targTime);
+            loopSources[flip].volume = currSong.getOutroVolume();
             loopSources[1 - flip].SetScheduledEndTime(targTime);
             BeatManager.Instance.triggerBeatmap(bm, currSong, loopSources[flip], targTime);
         }
@@ -80,6 +82,7 @@ public class SongTransitionerController : MonoBehaviour {
         nextEventTime = AudioSettings.dspTime+0.05f;
         loopSources[flip].clip = currSong.getIntroPart();
         loopSources[flip].PlayScheduled(nextEventTime);
+        loopSources[flip].volume = currSong.getIntroVolume();
         currSegmentLength = currSong.getIntroLength();
         running = true;
         nextEventTime += 60.0f / currSong.getBpm() * (currSegmentLength);
@@ -106,11 +109,13 @@ public class SongTransitionerController : MonoBehaviour {
             if (!hasPlayedIntro) {
                 hasPlayedIntro = true;
                 loopSources[flip].clip = currSong.getIntroPart();
+                loopSources[flip].volume = currSong.getIntroVolume();
                 loopSources[flip].PlayScheduled(nextEventTime);
                 currSegmentLength = currSong.getIntroLength();
             }
             else {
                 loopSources[flip].clip = currSong.getLoopingPart();
+                loopSources[flip].volume = currSong.getLoopingVolume();
                 loopSources[flip].PlayScheduled(nextEventTime);
                 currSegmentLength = currSong.getLoopingLength();
             }
