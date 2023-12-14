@@ -73,6 +73,7 @@ public class BeatmapHit : MonoBehaviour
 
             if (beenHit) {
                 arrow.SetActive(false);
+                hitIcon.SetActive(false);
                 spr.enabled = false;
             }
         }
