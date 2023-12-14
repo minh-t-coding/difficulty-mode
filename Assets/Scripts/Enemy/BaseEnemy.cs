@@ -11,6 +11,9 @@ public class BaseEnemy : StateEntity
     [SerializeField] protected float enemyHealth;
     [SerializeField] protected float enemySpeed;
 
+    [SerializeField] protected float aggroRange = -1; //-1 means infinite aggro range
+    [SerializeField] protected bool maintainAggro; 
+
     protected Transform enemyDestination;
     [SerializeField] protected string enemyType;
     [SerializeField] protected LayerMask collisionMask;
@@ -36,6 +39,8 @@ public class BaseEnemy : StateEntity
 
     // Variable for Tutorial tips
     private bool hasAttacked = false;
+
+    private bool hasAggroed = false;
     private GameObject actionIndicatorTip;
 
     void Awake() {
@@ -103,6 +108,16 @@ public class BaseEnemy : StateEntity
     public override void OnStateLoad() {
         createdAssociates = true;
         CreateAssociates();
+    }
+
+    public virtual bool isInAggroRange() {
+        if ( (maintainAggro && hasAggroed) || aggroRange == -1) {
+            return true;
+        }
+       Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
+       bool inRange = aggroRange >= distanceFromPlayer.magnitude;
+        hasAggroed = inRange;
+        return inRange;
     }
 
     public virtual bool EnemyInRange() {
