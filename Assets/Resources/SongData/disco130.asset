@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: disco130
   m_EditorClassIdentifier: 
   bpm: 130
+  isHalfTime: 0
   introPart: {fileID: 8300000, guid: d4d855f290a732946827b21bc4d0993e, type: 3}
   introLength: 16
+  introVolume: 0.6
   loopingPart: {fileID: 8300000, guid: dfdaf6fc64ddacf4faa616cf3d67f362, type: 3}
   loopingLength: 32
+  loopingVolume: 0.6
   outroPart: {fileID: 8300000, guid: 58b00d9ebe5adb843b52b61c19ac818c, type: 3}
+  outroVolume: 0.8

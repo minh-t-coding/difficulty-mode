@@ -16,6 +16,9 @@ MonoBehaviour:
   isHalfTime: 1
   introPart: {fileID: 8300000, guid: 8e6a11889a7d8214b8835c4197219c7e, type: 3}
   introLength: 32
+  introVolume: 0.6
   loopingPart: {fileID: 8300000, guid: eda554a7122230044b4d867b1a99c367, type: 3}
   loopingLength: 124
+  loopingVolume: 0.6
   outroPart: {fileID: 8300000, guid: 29d5d9653dbfa114d989ba9c4e723f2a, type: 3}
+  outroVolume: 1
