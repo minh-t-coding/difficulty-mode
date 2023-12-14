@@ -9,6 +9,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected LayerMask turretCollisionMask;
     [SerializeField] protected Animator playerSpriteAnimator;
     [SerializeField] protected GameObject deadPlayer;
     [SerializeField] protected float multiInputWindow = 0.05f;
@@ -331,7 +332,13 @@ public class PlayerBehaviorScript : MonoBehaviour {
     /// </summary>
     /// <param name="position"></param>
     private bool willHitWall(Vector3 position) {
-        return Physics2D.OverlapCircle(position, 0.1f, collisionMask);
+        if (Physics2D.OverlapCircle(position, 0.2f, turretCollisionMask)) {
+            Debug.Log("swag");
+        }
+        if (Physics2D.OverlapCircle(position, 0.1f, collisionMask)) {
+            Debug.Log("lois");
+        }
+        return Physics2D.OverlapCircle(position, 0.1f, collisionMask) || Physics2D.OverlapCircle(position, 0.1f, turretCollisionMask);
     }
 
     /// <summary>
