@@ -26,6 +26,8 @@ public class PlayerInputManager : MonoBehaviour {
 
     protected List<PlayerInputActions> allowedActions;
 
+    protected Dictionary<KeyCode, bool> needsToLiftDict;
+
 
     public PlayerInputActions getActionMappedToKey(KeyCode key) {
         for (int i = 0; i < inputMapping.Count; i++) {
@@ -52,7 +54,10 @@ public class PlayerInputManager : MonoBehaviour {
     void Awake() {
         if (Instance == null) {
             Instance = this;
-
+            needsToLiftDict = new Dictionary<KeyCode, bool>();
+            foreach(KeyCode key in inputMapping) {
+                needsToLiftDict.Add(key, false);
+            }
         }
     }
 
@@ -66,6 +71,23 @@ public class PlayerInputManager : MonoBehaviour {
             return false;
         }
         return getGoalDirectionalInput() == getDirectionalInput();
+    }
+
+    public bool pressedWrongInput(List<KeyCode> currHits) {
+        bool wrongInput = false;
+        foreach(KeyCode key in inputMapping) {
+            if (!currHits.Contains(key)) {
+                if (Input.GetKey(key)) {
+                    Debug.Log("MISSED" + key);
+                }
+                wrongInput = wrongInput || Input.GetKey(key);
+            }
+        }
+        return wrongInput;
+    }
+
+    public bool getNeedsToLift(KeyCode key) {
+        return  needsToLiftDict[key];
     }
 
     public bool pressedNoDirectionals() {
@@ -92,22 +114,22 @@ public class PlayerInputManager : MonoBehaviour {
     public Vector3 getDirectionalInput() {
         
         Vector3 retVec = new Vector3(0, 0, 0);
-        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveRight)) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveRight) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveRight)] )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveRight))) {
                 retVec += new Vector3(1, 0, 0);
             }
         }
-        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveUp)) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveUp) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveUp)] )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveUp))) {
                 retVec += new Vector3(0, 1, 0);
             }
         }
-        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveLeft)) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveLeft) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveLeft)] )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveLeft))) {
                 retVec += new Vector3(-1, 0, 0);
             }
         }
-        if (!isStickoMode || allowedActions.Contains(PlayerInputActions.MoveDown)) {
+        if (!isStickoMode || (allowedActions.Contains(PlayerInputActions.MoveDown) && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveDown)] )) {
             if (Input.GetKey(getKeyCodeMappedToAction(PlayerInputActions.MoveDown))) {
                 retVec += new Vector3(0, -1, 0);
             }
@@ -119,7 +141,7 @@ public class PlayerInputManager : MonoBehaviour {
 
     public bool getAttackInput() {
         if (isStickoMode) {
-            if (allowedActions.Contains(PlayerInputActions.Attack)) {
+            if (allowedActions.Contains(PlayerInputActions.Attack)  && !needsToLiftDict[getKeyCodeMappedToAction(PlayerInputActions.MoveDown)] ) {
                 return Input.GetKey(KeyCode.Return);
             }
             else {
@@ -147,9 +169,16 @@ public class PlayerInputManager : MonoBehaviour {
         return allowedActions;
     }
 
+    public void setNeedsToLift(KeyCode key) {
+        needsToLiftDict[key] = true;
+    }
 
     // Update is called once per frame
     void Update() {
-
+        foreach(KeyCode key in inputMapping) {
+            if (!Input.GetKey(key) && needsToLiftDict[key]) {
+                needsToLiftDict[key] = false;
+            }
+        }
     }
 }

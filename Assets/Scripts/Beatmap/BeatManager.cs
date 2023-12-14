@@ -234,10 +234,10 @@ public class BeatManager : MonoBehaviour {
                 if (readyForInput && numHits > 0) {
                     bool pressedAllHits = true;
                     foreach (KeyCode key in concurrentHits) {
-                        pressedAllHits = pressedAllHits && Input.GetKey(key);
+                        pressedAllHits = pressedAllHits && Input.GetKey(key) && !PlayerInputManager.Instance.getNeedsToLift(key);
                     }
 
-                    if (pressedAllHits) {
+                    if (pressedAllHits && !PlayerInputManager.Instance.pressedWrongInput(concurrentHits)) {
 
                         Debug.Log("HIT!");
                         if (nextHit >= sampledTime) {
@@ -250,11 +250,14 @@ public class BeatManager : MonoBehaviour {
                         for (int i = 0; i < numHits; i++) {
                             beatmapHits[myCurrBeat + i].CreateHitEffect();
                         }
-
+                        foreach(KeyCode key in concurrentHits) {
+                            PlayerInputManager.Instance.setNeedsToLift(key);
+                        }
                         hitNote = true;
                         numHitBeats++;
                     }
                 }
+                
 
                 if (diff > inputWindow) {
                     if (readyForInput) {
