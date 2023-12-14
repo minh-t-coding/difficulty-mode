@@ -101,6 +101,11 @@ public class BeatManager : MonoBehaviour {
         }
         audioSource.Stop();
         audioSource.volume = initVol;
+
+        // Progress level on beatmap win
+        if (LevelHandlerScript.Instance!=null) {
+            LevelHandlerScript.Instance.progressLevel();
+        }
     }
 
     public IEnumerator<float> FailAnim() {
@@ -305,11 +310,6 @@ public class BeatManager : MonoBehaviour {
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
                 Debug.Log("Yay you win :)");
-
-                // Progress level on beatmap win
-                if (LevelHandlerScript.Instance!=null) {
-                    LevelHandlerScript.Instance.progressLevel();
-                }
             }
 
         }
