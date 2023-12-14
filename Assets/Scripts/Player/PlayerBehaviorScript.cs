@@ -9,6 +9,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected float playerAttackDamage;
     [SerializeField] protected Transform destination;
     [SerializeField] protected LayerMask collisionMask;
+    [SerializeField] protected LayerMask turretCollisionMask;
     [SerializeField] protected Animator playerSpriteAnimator;
     [SerializeField] protected GameObject deadPlayer;
     [SerializeField] protected float multiInputWindow = 0.05f;
@@ -32,7 +33,6 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
     // Tutorial variables
     // Variable for Tutorial tips
-    private bool hasDiedFirstTime = false;
     private GameObject undoTip;
 
     // Animation state variables
@@ -72,12 +72,12 @@ public class PlayerBehaviorScript : MonoBehaviour {
             Instance = this;
         } 
 
-        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
-            undoTip = GameObject.Find("UndoTip");
-            if (undoTip != null) {
-                undoTip.SetActive(false);
-            }
+        undoTip = GameObject.Find("UndoTip");
+        if (undoTip != null) {
+            TipManagerScript.Instance.addToAllTips("UndoTip", undoTip);
+            undoTip.SetActive(false);
         }
+        
     }
 
     void Start() {
@@ -123,6 +123,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
             GameStateManager.Instance.captureGameState();
         }
         lastAction = PlayerState.PlayerAction.NONE;
+        SoundManager.Instance.playSound("staff_swish");
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
@@ -331,7 +332,13 @@ public class PlayerBehaviorScript : MonoBehaviour {
     /// </summary>
     /// <param name="position"></param>
     private bool willHitWall(Vector3 position) {
-        return Physics2D.OverlapCircle(position, 0.1f, collisionMask);
+        if (Physics2D.OverlapCircle(position, 0.2f, turretCollisionMask)) {
+            Debug.Log("swag");
+        }
+        if (Physics2D.OverlapCircle(position, 0.1f, collisionMask)) {
+            Debug.Log("lois");
+        }
+        return Physics2D.OverlapCircle(position, 0.1f, collisionMask) || Physics2D.OverlapCircle(position, 0.1f, turretCollisionMask);
     }
 
     /// <summary>
@@ -382,12 +389,17 @@ public class PlayerBehaviorScript : MonoBehaviour {
         isDead = true;
 
         // Specific case for level 0
-        if (!hasDiedFirstTime && SceneManager.GetActiveScene().name.Equals("Level-0")) {
+        int hasDiedFirstTime = PlayerPrefs.GetInt("hasDiedFirstTime", 0);
+
+        if (hasDiedFirstTime == 0) {
             // Show tool tip
+            if (undoTip == null) {
+                undoTip = TipManagerScript.Instance.GetTip("UndoTip");
+            }
             if (undoTip != null) {
                 TipManagerScript.Instance.EnqueueTip(undoTip);
             }
-            hasDiedFirstTime = true;    
+            PlayerPrefs.SetInt("hasDiedFirstTime", 1);  
         }
     }
 }

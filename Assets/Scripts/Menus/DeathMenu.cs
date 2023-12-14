@@ -7,7 +7,9 @@ public class DeathMenu : MonoBehaviour
 {
     public static DeathMenu Instance;
     
-    public GameObject deathMenuUI;
+    [SerializeField] protected GameObject deathMenuUI;
+
+    [SerializeField] protected GameObject winMenuUI;
 
     void Awake() {
         if (Instance == null) {
@@ -26,9 +28,14 @@ public class DeathMenu : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ShowMenu() {
+    public void ShowDeathMenu() {
         deathMenuUI.SetActive(true);
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
+    }
+
+    public void ShowWinMenu() {
+        winMenuUI.SetActive(true);
+        //Time.timeScale = 0f;
     }
 
     public void LoadMenu() {

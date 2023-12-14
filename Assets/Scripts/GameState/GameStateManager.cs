@@ -30,7 +30,10 @@ public class GameStateManager : MonoBehaviour {
             ProjectileBehaviorScript proj = entity.gameObject.GetComponent<ProjectileBehaviorScript>();
             if (proj != null) {
                 proj.copyDir(copy.gameObject.GetComponent<ProjectileBehaviorScript>());
-
+            }
+            BaseEnemy enem = entity.gameObject.GetComponent<BaseEnemy>();
+            if (enem != null) {
+                enem.copyEnemy(copy.gameObject.GetComponent<BaseEnemy>());
             }
             copy.name = entity.gameObject.name;
             copy.SetActive(false);

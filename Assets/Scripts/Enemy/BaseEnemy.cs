@@ -11,6 +11,9 @@ public class BaseEnemy : StateEntity
     [SerializeField] protected float enemyHealth;
     [SerializeField] protected float enemySpeed;
 
+    [SerializeField] protected float aggroRange = -1; //-1 means infinite aggro range
+    [SerializeField] protected bool maintainAggro; 
+
     protected Transform enemyDestination;
     [SerializeField] protected string enemyType;
     [SerializeField] protected LayerMask collisionMask;
@@ -36,18 +39,22 @@ public class BaseEnemy : StateEntity
 
     // Variable for Tutorial tips
     private bool hasAttacked = false;
+
+    private bool hasAggroed = false;
     private GameObject actionIndicatorTip;
 
     void Awake() {
-        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
-            actionIndicatorTip = GameObject.Find("ActionIndicatorTip");
-            if (actionIndicatorTip != null) {
-                actionIndicatorTip.SetActive(false);
-            }
-        }
     }
     
     protected virtual void Start() {
+        if (SceneManager.GetActiveScene().name.Equals("Level-0")) {
+            actionIndicatorTip = GameObject.Find("ActionIndicatorTip");
+            if (actionIndicatorTip != null) {
+                TipManagerScript.Instance.addToAllTips("ActionIndicatorTip", actionIndicatorTip);
+                actionIndicatorTip.SetActive(false);
+            }
+        }
+        
         if (!createdAssociates) {
             CreateAssociates();
         }
@@ -105,6 +112,28 @@ public class BaseEnemy : StateEntity
         CreateAssociates();
     }
 
+    public virtual void copyEnemy(BaseEnemy other) {
+        other.setHasAggroed(hasAggroed);
+    }
+
+    public bool getHasAggroed() {
+        return hasAggroed;
+    }
+
+    public void setHasAggroed(bool b) {
+        hasAggroed = b;
+    }
+
+    public virtual bool isInAggroRange() {
+        if ( (maintainAggro && hasAggroed) || aggroRange == -1) {
+            return true;
+        }
+       Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
+       bool inRange = aggroRange >= distanceFromPlayer.magnitude;
+        hasAggroed = inRange;
+        return inRange;
+    }
+
     public virtual bool EnemyInRange() {
         return false;
     }
@@ -117,6 +146,9 @@ public class BaseEnemy : StateEntity
                 // Specific case for level 0
                 if (!hasAttacked && SceneManager.GetActiveScene().name.Equals("Level-0")) {
                     // Show tool tip
+                    if (actionIndicatorTip == null) {
+                        actionIndicatorTip = TipManagerScript.Instance.GetTip("ActionIndicatorTip");
+                    }
                     if (actionIndicatorTip != null) {
                         TipManagerScript.Instance.EnqueueTip(actionIndicatorTip);
                     }
@@ -143,6 +175,7 @@ public class BaseEnemy : StateEntity
             }
             DestroyAssociates();
             Destroy(this.gameObject);
+            SoundManager.Instance.playSound("enemy_splat");
         }
     }
     
@@ -155,6 +188,7 @@ public class BaseEnemy : StateEntity
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
         HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
         HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
+        HashSet<Vector3> turretPositions = TurretManagerScript.Instance.getTurretPositions();
         foreach (GameObject movepoint in enemyMovepoints) {
             if (movepoint.activeSelf) {
                 movepointPositions.Add(movepoint.transform.position);
@@ -173,8 +207,10 @@ public class BaseEnemy : StateEntity
                 pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.y);
             }
             
-            // Only move if next move is not on another enemy
-            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer) && tileMap.IsCellEmpty(enemyDestination.position + pathToPlayer)) {
+            // Only move if next move is not on another enemy or turret
+            if (!turretPositions.Contains(enemyDestination.position + pathToPlayer) && 
+                !movepointPositions.Contains(enemyDestination.position + pathToPlayer) && 
+                tileMap.IsCellEmpty(enemyDestination.position + pathToPlayer)) {
                 enemyDestination.position += pathToPlayer;
                 ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
             }

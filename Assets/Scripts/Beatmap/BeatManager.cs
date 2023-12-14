@@ -100,6 +100,23 @@ public class BeatManager : MonoBehaviour {
             yield return Timing.WaitForSeconds(0.1f);
         }
         audioSource.Stop();
+        audioSource.volume = initVol;
+    }
+
+    public IEnumerator<float> FailAnim() {
+
+        float initVol = audioSource.volume;
+        float initPitch = audioSource.pitch;
+        int numSteps = 10;
+        SoundManager.Instance.playSound("recordScratch");
+        for(int i=0;i<numSteps;i++) {
+            audioSource.volume -= initVol/numSteps;
+            audioSource.pitch -= initPitch/numSteps;
+            yield return Timing.WaitForSeconds(0.1f);
+        }
+        audioSource.Stop();
+        audioSource.volume = initVol;
+        audioSource.pitch = initPitch;
     }
 
     public void constructBeatmap(Beatmap map) {
@@ -156,6 +173,8 @@ public class BeatManager : MonoBehaviour {
     
     protected bool hasLoadedFirstState = false;
     int currState = 1;
+
+    protected bool hasFailed = false;
     private void Update() {
 
         //foreach(Intervals interval in intervals) {
@@ -163,12 +182,16 @@ public class BeatManager : MonoBehaviour {
         //    interval.CheckForNewInterval(sampledTime);
         //}
 
-        if (songStarted && audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
+        if (songStarted && !hasFailed && audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
             if (numMissedBeats >= numLives) {
                 PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 Debug.Log("you lose >:(, restart nerd");
-                audioSource.Stop();
-                DeathMenu.Instance.ShowMenu();
+                if (DeathMenu.Instance!=null) {
+                    DeathMenu.Instance.ShowDeathMenu();
+                }
+                //audioSource.Stop();
+                hasFailed = true;
+                Timing.RunCoroutine(FailAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
                 return;
             }
             if (!hasLoadedFirstState) {
@@ -273,10 +296,17 @@ public class BeatManager : MonoBehaviour {
                 alls.AddRange(belows);
                 Debug.Log("Avg offset " + avg(alls));
                 Timing.RunCoroutine(FinishAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
-                
+                if (DeathMenu.Instance!=null) {
+                    DeathMenu.Instance.ShowWinMenu();
+                }
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
                 Debug.Log("Yay you win :)");
+
+                // Progress level on beatmap win
+                if (LevelHandlerScript.Instance!=null) {
+                    LevelHandlerScript.Instance.progressLevel();
+                }
             }
 
         }
@@ -300,6 +330,7 @@ public class BeatManager : MonoBehaviour {
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
         bar.SetActive(true);
+        hasFailed = false;
         PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;
         startTimeOfOutro = startTime;

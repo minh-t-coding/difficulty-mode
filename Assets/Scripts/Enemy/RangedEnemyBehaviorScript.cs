@@ -55,6 +55,8 @@ public class RangedEnemyBehaviorScript : BaseEnemy {
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         Vector3 scriptDirection;
 
+        SoundManager.Instance.playSound("laser");
+
         // set prefab and script directions based on position relative to player
         if (distanceFromPlayer.x == 0) {
             if (distanceFromPlayer.y > 0) {
