@@ -188,6 +188,7 @@ public class BaseEnemy : StateEntity
         nextMoves = AStar.FindPathClosest(tileMap, enemyDestination.position, playerPosition.position);
         HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
         HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
+        HashSet<Vector3> turretPositions = TurretManagerScript.Instance.getTurretPositions();
         foreach (GameObject movepoint in enemyMovepoints) {
             if (movepoint.activeSelf) {
                 movepointPositions.Add(movepoint.transform.position);
@@ -206,8 +207,10 @@ public class BaseEnemy : StateEntity
                 pathToPlayer = pathToPlayer / Mathf.Abs(pathToPlayer.y);
             }
             
-            // Only move if next move is not on another enemy
-            if (!movepointPositions.Contains(enemyDestination.position + pathToPlayer) && tileMap.IsCellEmpty(enemyDestination.position + pathToPlayer)) {
+            // Only move if next move is not on another enemy or turret
+            if (!turretPositions.Contains(enemyDestination.position + pathToPlayer) && 
+                !movepointPositions.Contains(enemyDestination.position + pathToPlayer) && 
+                tileMap.IsCellEmpty(enemyDestination.position + pathToPlayer)) {
                 enemyDestination.position += pathToPlayer;
                 ChangeEnemyAnimationState(enemyType + ENEMY_MOVE, pathToPlayer);
             }
