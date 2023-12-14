@@ -19,6 +19,8 @@ public class SongTransitionerController : MonoBehaviour {
 
     [SerializeField] protected SongObj currSong;
 
+    [SerializeField] protected bool playSongOnStart = true;
+
 
 
     private int flip = 0;
@@ -67,7 +69,21 @@ public class SongTransitionerController : MonoBehaviour {
     }
 
     void Start() {
-        PlaySong(currSong);
+        if (playSongOnStart) {
+            PlaySong(currSong);
+        } 
+    }
+
+    public void PlaySongImmediately() {
+
+        hasPlayedIntro = true;
+        nextEventTime = AudioSettings.dspTime+0.05f;
+        loopSources[flip].clip = currSong.getIntroPart();
+        loopSources[flip].PlayScheduled(nextEventTime);
+        currSegmentLength = currSong.getIntroLength();
+        running = true;
+        nextEventTime += 60.0f / currSong.getBpm() * (currSegmentLength);
+        flip = 1 - flip;
     }
 
     public void PlaySong(SongObj s) {
