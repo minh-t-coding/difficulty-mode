@@ -143,6 +143,7 @@ public class BaseEnemy : StateEntity
             }
             DestroyAssociates();
             Destroy(this.gameObject);
+            SoundManager.Instance.playSound("enemy_splat");
         }
     }
     

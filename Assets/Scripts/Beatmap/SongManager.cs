@@ -194,6 +194,18 @@ public class SongManager : MonoBehaviour
         audioSource.volume = songVoldict[soundName];
     }
 
+
+    public static IEnumerator<float> TapeStop(AudioSource audioSource, float FadeTime) {
+        
+        float startVolume = audioSource.volume;
+        while (audioSource.volume > 0) {
+            audioSource.volume -= startVolume * Time.deltaTime / FadeTime;
+            yield return Timing.WaitForOneFrame;
+        }
+        audioSource.Stop ();
+        audioSource.volume = startVolume;
+    }
+
     public void stopAll(){
         foreach(KeyValuePair<string, AudioSource> entry in songDict) {
             entry.Value.Stop();

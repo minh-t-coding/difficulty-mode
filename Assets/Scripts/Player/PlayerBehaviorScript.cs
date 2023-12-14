@@ -123,6 +123,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
             GameStateManager.Instance.captureGameState();
         }
         lastAction = PlayerState.PlayerAction.NONE;
+        SoundManager.Instance.playSound("staff_swish");
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
