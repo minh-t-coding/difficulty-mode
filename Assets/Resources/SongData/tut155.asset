@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: tut155
   m_EditorClassIdentifier: 
   bpm: 77.5
+  isHalfTime: 1
   introPart: {fileID: 8300000, guid: e05bedc27d1bc5d4ca192944505230be, type: 3}
   introLength: 16
   loopingPart: {fileID: 8300000, guid: dbac0cb9f0fb4da42a69f4c0ce48b43b, type: 3}

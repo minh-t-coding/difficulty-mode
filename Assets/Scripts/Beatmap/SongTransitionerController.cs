@@ -45,7 +45,7 @@ public class SongTransitionerController : MonoBehaviour {
     public void startTransition(Beatmap bm) {
         beginTransition = true;
         running = false;
-        double barLength = (60.0f / currSong.getBpm()) * (4);
+        double barLength = (60.0f / currSong.getBpm()) * (currSong.getIsHalfTime()? 2 : 4);
         if (lastEventTime <= AudioSettings.dspTime) {
             double timeIntoSegment = AudioSettings.dspTime - lastEventTime;
             double barsIntoSegment = timeIntoSegment / barLength;

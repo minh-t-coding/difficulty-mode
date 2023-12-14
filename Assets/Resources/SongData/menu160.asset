@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: menu160
   m_EditorClassIdentifier: 
   bpm: 160
+  isHalfTime: 0
   introPart: {fileID: 8300000, guid: 99460305f6247a347b4fe88e79fb8f4c, type: 3}
   introLength: 31.11111
   loopingPart: {fileID: 8300000, guid: f1dfef83e6a8dad4f9b36a3c1489173b, type: 3}
