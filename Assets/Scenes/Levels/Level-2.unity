@@ -2022,6 +2022,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BeatManCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4186359935930809333, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
+      propertyPath: currSong
+      value: 
+      objectReference: {fileID: 11400000, guid: 207b1ea5f45047a4faf644920d04993b, type: 2}
     - target: {fileID: 7264192816399962472, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: m_Pivot.x
       value: 0
