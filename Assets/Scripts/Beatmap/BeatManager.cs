@@ -186,6 +186,9 @@ public class BeatManager : MonoBehaviour {
             if (numMissedBeats >= numLives) {
                 PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 Debug.Log("you lose >:(, restart nerd");
+                if (DeathMenu.Instance!=null) {
+                    DeathMenu.Instance.ShowDeathMenu();
+                }
                 //audioSource.Stop();
                 hasFailed = true;
                 Timing.RunCoroutine(FailAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
@@ -264,7 +267,6 @@ public class BeatManager : MonoBehaviour {
                         Debug.Log("LOAD STATE" + currState);
                     }
 
-
                     //Debug.Log("MISS! :(");
                 }
 
@@ -294,13 +296,17 @@ public class BeatManager : MonoBehaviour {
                 alls.AddRange(belows);
                 Debug.Log("Avg offset " + avg(alls));
                 Timing.RunCoroutine(FinishAnim().CancelWith(gameObject), this.gameObject.GetInstanceID());
-                
+                if (DeathMenu.Instance!=null) {
+                    DeathMenu.Instance.ShowWinMenu();
+                }
                 Debug.Log("Num Hit" + numHitBeats);
                 Debug.Log("Num Missed" + numMissedBeats);
                 Debug.Log("Yay you win :)");
 
                 // Progress level on beatmap win
-                LevelHandlerScript.Instance.progressLevel();
+                if (LevelHandlerScript.Instance!=null) {
+                    LevelHandlerScript.Instance.progressLevel();
+                }
             }
 
         }
