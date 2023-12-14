@@ -24,6 +24,10 @@ public class BeatManager : MonoBehaviour {
 
     [SerializeField] private GameObject bar;
 
+    [SerializeField] private GameObject iconsParent;
+
+    [SerializeField] private BeatmapIcon[] icons;
+
 
     public static BeatManager Instance;
 
@@ -68,6 +72,7 @@ public class BeatManager : MonoBehaviour {
             Instance = this;
             indy.SetActive(false);
             bar.SetActive(false);
+            iconsParent.SetActive(false);
             songStarted = false;
             mapInitPos = mapParent.transform.localPosition;
             countdownTextBox.gameObject.SetActive(false);
@@ -134,6 +139,7 @@ public class BeatManager : MonoBehaviour {
             GameObject newHit = Instantiate(hitPrefab);
             newHit.transform.SetParent(mapParent);
             newHit.transform.localPosition = new Vector3(getHitHoriPos(keys[i]), hit * mapScrollSpeed, 0f);
+            
             Vector3 initScale = newHit.transform.localScale;
             newHit.transform.localScale = new Vector3(transform.lossyScale.x * initScale.x, transform.lossyScale.y * initScale.y, transform.lossyScale.z * initScale.z);
             BeatmapHit hitComp = newHit.GetComponent<BeatmapHit>();
@@ -141,7 +147,28 @@ public class BeatManager : MonoBehaviour {
             beatmapHits.Add(hitComp);
             i++;
         }
+        positionIcons();
         mapParent.gameObject.SetActive(false);
+
+    }
+
+    public void positionIcons() {
+        foreach(BeatmapIcon icon in icons) {
+            icon.transform.localPosition = new Vector3(getIconHoriPos(icon.getKeyCode()), 0, 0f);
+        }
+    }
+
+    protected float getIconHoriPos(KeyCode key) {
+        float spacing = 1;
+
+        float offset = -4;
+        for (int i = 0; i < keyOrder.Length; i++) {
+            if (keyOrder[i] == key) {
+                return offset + spacing * i;
+            }
+        }
+
+        return offset - spacing;
 
     }
 
@@ -333,6 +360,7 @@ public class BeatManager : MonoBehaviour {
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
         bar.SetActive(true);
+        iconsParent.SetActive(true);
         hasFailed = false;
         PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;

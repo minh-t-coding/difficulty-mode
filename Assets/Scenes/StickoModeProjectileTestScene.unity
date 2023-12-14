@@ -2409,6 +2409,7 @@ MonoBehaviour:
   countdownTextBox: {fileID: 745844005}
   numLives: 1
   bar: {fileID: 0}
+  icons: []
 --- !u!4 &949038609
 Transform:
   m_ObjectHideFlags: 0
