@@ -2395,6 +2395,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1253122633511569322, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 519420031}
     - target: {fileID: 3424409285115211979, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: m_Name
       value: BeatManCanvas
