@@ -2837,6 +2837,7 @@ MonoBehaviour:
   - {fileID: 949038605}
   - {fileID: 949038604}
   currSong: {fileID: 11400000, guid: 0147083f46c90a54aa5337881d865069, type: 2}
+  playSongOnStart: 1
 --- !u!114 &949038607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3115,6 +3116,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 2051059816}
     m_Modifications:
     - target: {fileID: 7554809510222433346, guid: eab6bda3b7392e047bcdf485081cd0fc, type: 3}
+      propertyPath: aggroRange
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7554809510222433346, guid: eab6bda3b7392e047bcdf485081cd0fc, type: 3}
+      propertyPath: maintainAggro
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7554809510222433346, guid: eab6bda3b7392e047bcdf485081cd0fc, type: 3}
       propertyPath: movementRange
       value: 5
       objectReference: {fileID: 0}
@@ -3124,7 +3133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7735969931333664060, guid: eab6bda3b7392e047bcdf485081cd0fc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.5
+      value: 11.5
       objectReference: {fileID: 0}
     - target: {fileID: 7735969931333664060, guid: eab6bda3b7392e047bcdf485081cd0fc, type: 3}
       propertyPath: m_LocalPosition.z
