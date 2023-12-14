@@ -79,7 +79,8 @@ public class BeatmapHit : MonoBehaviour
 
     public void CreateHitEffect() {
         beenHit = true;
-        Transform status = Instantiate((Resources.Load("Prefabs/BeatmapComponents/hitEffect") as GameObject).transform,transform.position, Quaternion.identity);
+        Transform status = Instantiate((Resources.Load("Prefabs/BeatmapComponents/hitEffect") as GameObject).transform);
+        status.transform.position = new Vector3(transform.position.x,transform.position.y,0);
         HitEffect de = status.GetComponent<HitEffect>();
         de.Setup(baseColor,1f);
         
