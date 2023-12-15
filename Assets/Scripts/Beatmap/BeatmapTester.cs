@@ -8,6 +8,8 @@ public class BeatmapTester : MonoBehaviour
 
     [SerializeField] protected KeyCode[] keys;
 
+    [SerializeField] protected PlayerState.PlayerAction[] actions;
+
     [SerializeField] protected float delay;
 
     [SerializeField] protected GameObject text;
@@ -18,9 +20,9 @@ public class BeatmapTester : MonoBehaviour
     void init()
     {
         hasStarted=true;
-        //myBeatmap = new Beatmap(hits, keys,delay);
-        //SongTransitionerController.Instance.startTransition(myBeatmap);
-        text.SetActive(false);
+        myBeatmap = new Beatmap(hits, keys,actions,4f);
+        SongTransitionerController.Instance.startTransition(myBeatmap);
+        //text.SetActive(false);
     }
 
     void Update() {

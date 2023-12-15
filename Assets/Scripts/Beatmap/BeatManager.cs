@@ -33,7 +33,7 @@ public class BeatManager : MonoBehaviour {
 
     protected Beatmap myMap;
 
-    private AudioSource audioSource;
+    private AudioSource[] audioSources;
 
     protected bool hasPlayedTick;
     protected bool songStarted;
@@ -98,14 +98,17 @@ public class BeatManager : MonoBehaviour {
         yield return Timing.WaitForSeconds(0.1f);
         GameStateManager.Instance.loadGameState(currState, false);
          yield return Timing.WaitForSeconds(0.9f);
-        float  initVol = audioSource.volume;
+        float  initVol = audioSources[0].volume;
         int numSteps = 40;
         for(int i=0;i<numSteps;i++) {
-            audioSource.volume -= initVol/numSteps;
+            audioSources[0].volume -= initVol/numSteps;
+            audioSources[1].volume -= initVol/numSteps;
             yield return Timing.WaitForSeconds(0.1f);
         }
-        audioSource.Stop();
-        audioSource.volume = initVol;
+        audioSources[0].Stop();
+        audioSources[1].Stop();
+        audioSources[0].volume = initVol;
+        audioSources[1].volume = initVol;
 
         // Progress level on beatmap win
         if (LevelHandlerScript.Instance!=null) {
@@ -115,18 +118,23 @@ public class BeatManager : MonoBehaviour {
 
     public IEnumerator<float> FailAnim() {
 
-        float initVol = audioSource.volume;
-        float initPitch = audioSource.pitch;
+        float initVol = audioSources[0].volume;
+        float initPitch = audioSources[0].pitch;
         int numSteps = 10;
         SoundManager.Instance.playSound("recordScratch");
         for(int i=0;i<numSteps;i++) {
-            audioSource.volume -= initVol/numSteps;
-            audioSource.pitch -= initPitch/numSteps;
+            audioSources[0].volume -= initVol/numSteps;
+            audioSources[0].pitch -= initPitch/numSteps;
+            audioSources[1].volume -= initVol/numSteps;
+            audioSources[1].pitch -= initPitch/numSteps;
             yield return Timing.WaitForSeconds(0.1f);
         }
-        audioSource.Stop();
-        audioSource.volume = initVol;
-        audioSource.pitch = initPitch;
+        audioSources[0].Stop();
+        audioSources[1].Stop();
+        audioSources[0].volume = initVol;
+        audioSources[0].pitch = initPitch;
+        audioSources[1].volume = initVol;
+        audioSources[1].pitch = initPitch;
     }
 
     public void constructBeatmap(Beatmap map) {
@@ -207,6 +215,10 @@ public class BeatManager : MonoBehaviour {
     int currState = 1;
 
     protected bool hasFailed = false;
+
+    protected bool hasAudioSources() {
+        return audioSources!=null && audioSources.Length == 2 && audioSources[0] !=null && audioSources[1] !=null;
+    }
     private void Update() {
 
         //foreach(Intervals interval in intervals) {
@@ -214,7 +226,7 @@ public class BeatManager : MonoBehaviour {
         //    interval.CheckForNewInterval(sampledTime);
         //}
 
-        if (songStarted && !hasFailed && audioSource != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
+        if (songStarted && !hasFailed && audioSources != null && AudioSettings.dspTime > startTimeOfOutro && audioSource.isPlaying) {
             if (numMissedBeats >= numLives) {
                 PlayerInputManager.Instance.setAllowedActions(new List<KeyCode>(), false);
                 Debug.Log("you lose >:(, restart nerd");
@@ -377,7 +389,7 @@ public class BeatManager : MonoBehaviour {
     }
 
 
-    public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
+    public void triggerBeatmap(Beatmap map, SongObj song, AudioSource[] sources, double startTime) {
         bar.SetActive(true);
         iconsParent.SetActive(true);
         hasFailed = false;

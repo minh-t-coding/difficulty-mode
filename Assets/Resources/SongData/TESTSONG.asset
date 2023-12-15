@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9908182e7e3648149b2430cc1e80c11a, type: 3}
+  m_Name: TESTSONG
+  m_EditorClassIdentifier: 
+  bpm: 130
+  isHalfTime: 0
+  introPart: {fileID: 8300000, guid: 4db55ad701cada3448fc48f273609a11, type: 3}
+  introLength: 212
+  introVolume: 1
+  loopingPart: {fileID: 8300000, guid: 5cad424f2b6e7564a9965d79758133eb, type: 3}
+  loopingLength: 96
+  loopingVolume: 1
+  outroPart: {fileID: 0}
+  outroLength: 208
+  outroVolume: 1
+  outroLoopPart: {fileID: 0}
+  outroLoopLength: 0
+  outroLoopVolume: 1

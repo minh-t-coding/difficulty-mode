@@ -1253,6 +1253,57 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &158478782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 158478784}
+  - component: {fileID: 158478783}
+  m_Layer: 0
+  m_Name: beatmapTesta
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &158478783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158478782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ed636aff77b0843b80e00d469290e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hits:
+  - 100000
+  - 200000
+  keys: 7700000077000000
+  actions: 0000000000000000
+  delay: 0
+  text: {fileID: 0}
+--- !u!4 &158478784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158478782}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4195786, y: 0.68093264, z: 5185.58}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &163256612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2452,6 +2503,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BeatManCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4186359935930809333, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
+      propertyPath: currSong
+      value: 
+      objectReference: {fileID: 11400000, guid: 0147083f46c90a54aa5337881d865069, type: 2}
     - target: {fileID: 7264192816399962472, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2535,6 +2590,10 @@ PrefabInstance:
     - target: {fileID: 7471816711117978173, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8910593093984847888, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
+      propertyPath: numLives
+      value: 10100110
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10948,3 +11007,4 @@ SceneRoots:
   - {fileID: 572531144}
   - {fileID: 1218866554}
   - {fileID: 1705927158}
+  - {fileID: 158478784}

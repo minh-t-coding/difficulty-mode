@@ -50,9 +50,12 @@ public class SongTransitionerController : MonoBehaviour {
         }
     }
 
+    protected bool onOutro = false;
+
     public void startTransition(Beatmap bm) {
         beginTransition = true;
         running = false;
+        onOutro = true;
         double barLength = (60.0f / currSong.getBpm()) * (currSong.getIsHalfTime()? 2 : 4);
         if (lastEventTime <= AudioSettings.dspTime) {
             double timeIntoSegment = AudioSettings.dspTime - lastEventTime;
@@ -63,6 +66,7 @@ public class SongTransitionerController : MonoBehaviour {
             loopSources[flip].PlayScheduled(targTime);
             loopSources[1 - flip].SetScheduledEndTime(targTime);
             loopSources[flip].volume = currSong.getOutroVolume();
+            nextEventTime =targTime + 60.0f / currSong.getBpm() * (currSong.getOutroLength());
             BeatManager.Instance.triggerBeatmap(bm, currSong, loopSources[flip], targTime);
         }
         else {
@@ -71,8 +75,10 @@ public class SongTransitionerController : MonoBehaviour {
             loopSources[flip].PlayScheduled(targTime);
             loopSources[flip].volume = currSong.getOutroVolume();
             loopSources[1 - flip].SetScheduledEndTime(targTime);
+            nextEventTime =targTime + 60.0f / currSong.getBpm() * (currSong.getOutroLength());
             BeatManager.Instance.triggerBeatmap(bm, currSong, loopSources[flip], targTime);
         }
+        running = true;
 
     }
 
@@ -112,7 +118,13 @@ public class SongTransitionerController : MonoBehaviour {
         double time = AudioSettings.dspTime;
 
         if (time + 1f >= nextEventTime) {
-            if (!hasPlayedIntro) {
+            if (onOutro) {
+                hasPlayedIntro = true;
+                loopSources[flip].clip = currSong.getOutroLoopPart();
+                loopSources[flip].volume = currSong.getOutroLoopVolume();
+                loopSources[flip].PlayScheduled(nextEventTime);
+                currSegmentLength = currSong.getOutroLoopLength();
+            } else if (!hasPlayedIntro) {
                 hasPlayedIntro = true;
                 loopSources[flip].clip = currSong.getIntroPart();
                 loopSources[flip].volume = currSong.getIntroVolume();
