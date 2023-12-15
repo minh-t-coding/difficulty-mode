@@ -63,6 +63,8 @@ public class BeatManager : MonoBehaviour {
 
     protected int countdown = 0;
 
+    protected int numStickoModeAttempts;
+
     protected List<float> aboves;
     protected List<float> belows;
 
@@ -72,6 +74,20 @@ public class BeatManager : MonoBehaviour {
     protected List<BeatmapHit> beatmapHits;
 
     protected KeyCode[] keyOrder = new KeyCode[6] { KeyCode.A, KeyCode.W, KeyCode.S, KeyCode.D, KeyCode.Space, KeyCode.Return };
+
+    public void resetBeatManager() {
+        hasFailed = false;
+        numMissedBeats = 0;
+        numHitBeats = 0;
+        myCurrBeat = 0;
+        hasLoadedFirstState = false;
+        currState = 1;
+        destroyBeatMap();
+    }
+
+    public int getNumStickoModeAttempts() {
+        return numStickoModeAttempts;
+    }
 
     void Awake() {
         if (Instance == null) {
@@ -111,8 +127,10 @@ public class BeatManager : MonoBehaviour {
     public IEnumerator<float> FinishAnim() {
 
         yield return Timing.WaitForSeconds(0.1f);
-        GameStateManager.Instance.loadGameState(currState, false);
-         yield return Timing.WaitForSeconds(0.9f);
+        
+        GameStateManager.Instance.loadGameState(currState, false,true);
+
+        yield return Timing.WaitForSeconds(0.9f);
         float  initVol = audioSource.volume;
         int numSteps = 40;
         for(int i=0;i<numSteps;i++) {
@@ -142,6 +160,12 @@ public class BeatManager : MonoBehaviour {
         audioSource.Stop();
         audioSource.volume = initVol;
         audioSource.pitch = initPitch;
+    }
+
+    public void destroyBeatMap() {
+        foreach(Transform hit in mapParent) {
+            Destroy(hit.gameObject);
+        }
     }
 
     public void constructBeatmap(Beatmap map) {
@@ -243,8 +267,9 @@ public class BeatManager : MonoBehaviour {
             }
             if (!hasLoadedFirstState) {
                 hasLoadedFirstState = true;
-                GameStateManager.Instance.loadGameState(currState, false);
+                GameStateManager.Instance.loadGameState(currState, false,true);
                 currState++;
+                
             }
             mapParent.gameObject.SetActive(true);
             if (myCurrBeat < myMap.getHits().Length) {
@@ -267,12 +292,14 @@ public class BeatManager : MonoBehaviour {
                             float noteType = currNote - Mathf.Floor(currNote);
                             float distToNextNote = myMap.getHits()[myCurrBeat + numHits] - myMap.getHits()[myCurrBeat];
                             if (noteType == 0.0f || distToNextNote != 0.5f) {
-                                GameStateManager.Instance.loadGameState(currState, false);
+                                
+                                GameStateManager.Instance.loadGameState(currState, false,true);
                                 currState++;
+                                
                             }
                         }
                         else {
-                            GameStateManager.Instance.loadGameState(currState, false);
+                            GameStateManager.Instance.loadGameState(currState, false,true);
                             currState++;
                         }
                     }
@@ -287,7 +314,7 @@ public class BeatManager : MonoBehaviour {
                     if (pressedAllHits && !PlayerInputManager.Instance.pressedWrongInput(concurrentHits)) {
 
                         ScoreManagerScript.Instance.UpdateScoreBeatHit(diff);
-                        Debug.Log("HIT!");
+                        //Debug.Log("HIT!");
                         if (nextHit >= sampledTime) {
                             aboves.Add(diff);
                         }
@@ -326,7 +353,7 @@ public class BeatManager : MonoBehaviour {
                             ScoreManagerScript.Instance.UpdateScoreBeatMiss();
                         }
 
-                        Debug.Log("LOAD STATE" + currState);
+                        //Debug.Log("LOAD STATE" + currState);
                     }
 
                     //Debug.Log("MISS! :(");
@@ -393,6 +420,7 @@ public class BeatManager : MonoBehaviour {
 
 
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
+        numStickoModeAttempts++;
         bar.SetActive(true);
         iconsParent.SetActive(true);
         beatmapAnimator.Play("BeatmapDropIn", -1, 0f);

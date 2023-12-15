@@ -16,14 +16,23 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void captureGameState() {
+    public void captureGameState(bool noInc = false) {
         isBusy = true;
-        clearGameState(currTurn);
+        
+        if (!noInc) {
+            clearGameState(currTurn);
+        }
+        
+        bool overwrite = false;
+        if (gameStates.Count > currTurn && currTurn >= 1) {
+            overwrite = true;
+        }
         GameObject newStateParent = new GameObject("GameState" + currTurn);
+        Debug.Log("CAPTURE STATE" + currTurn);
         newStateParent.transform.parent = transform;
         GameState newState = new GameState();
         newState.setPlayerState(PlayerBehaviorScript.Instance.GetPlayerState());
-        Debug.Log(PlayerBehaviorScript.Instance.GetPlayerState().getAction());
+        //Debug.Log(PlayerBehaviorScript.Instance.GetPlayerState().getAction());
         StateEntity[] entities = GameObject.FindObjectsOfType<StateEntity>(false);
         List<GameObject> savedObjects = new List<GameObject>();
         foreach (StateEntity entity in entities) {
@@ -43,8 +52,15 @@ public class GameStateManager : MonoBehaviour {
         }
         newState.setStateParent(newStateParent);
         newState.setGameObjects(savedObjects);
-        gameStates.Add(newState);
-        currTurn++;
+        if (overwrite) {
+            gameStates[currTurn] = (newState);
+        } else {
+            gameStates.Add(newState);
+        }
+        
+        if (!noInc) {
+            currTurn++;
+        }
         isBusy=false;
     }
 
@@ -58,7 +74,7 @@ public class GameStateManager : MonoBehaviour {
                 }
             }
         }
-        Debug.Log(cnt);
+        //Debug.Log(cnt);
         return cnt;
     }
 
@@ -81,7 +97,7 @@ public class GameStateManager : MonoBehaviour {
     protected bool isBusy;
 
 
-    public void loadGameState(int turn, bool clearAllAheadStates = true) {
+    public void loadGameState(int turn, bool clearAllAheadStates = true, bool dontUnload = false) {
         isBusy = true;
         if (currTurn == turn) {
             Debug.Log("Tried to load same state?");
@@ -96,21 +112,42 @@ public class GameStateManager : MonoBehaviour {
             PlayerBehaviorScript.Instance.LoadPlayerState(state.getPlayerState());
             List<GameObject> savedObjects = state.GetGameObjects();
             foreach (GameObject obj in savedObjects) {
-                obj.SetActive(true);
-                obj.GetComponent<StateEntity>().OnStateLoad();
+                if (dontUnload) {
+                    GameObject newCopy = Instantiate(obj);
+                    ProjectileBehaviorScript proj = obj.gameObject.GetComponent<ProjectileBehaviorScript>();
+                    if (proj != null) {
+                        proj.copyDir(newCopy.gameObject.GetComponent<ProjectileBehaviorScript>());
+                    }
+                    BaseEnemy enem = obj.gameObject.GetComponent<BaseEnemy>();
+                    if (enem != null) {
+                        enem.copyEnemy(newCopy.gameObject.GetComponent<BaseEnemy>());
+                    }
+                    newCopy.SetActive(true);
+                    newCopy.GetComponent<StateEntity>().OnStateLoad();
+                } else {
+                    obj.SetActive(true);
+                    obj.GetComponent<StateEntity>().OnStateLoad();
+                }
+                
             }
 
             if (clearAllAheadStates) {
                 for (int i = turn; i < gameStates.Count; i++) {
                     clearGameState(i);
                 }
-            }
+            } 
+            
             currTurn = turn;
+            if (dontUnload) {
+                //currTurn--;
+                //captureGameState(true);
+            }
             if (turn == 0) {
                 //captureGameState();
             }
 
         }
+        
         isBusy = false;
     }
 
