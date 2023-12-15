@@ -78,7 +78,7 @@ public class PlayerInputManager : MonoBehaviour {
         foreach(KeyCode key in inputMapping) {
             if (!currHits.Contains(key)) {
                 if (Input.GetKey(key)) {
-                    Debug.Log("MISSED" + key);
+                    //Debug.Log("MISSED" + key);
                 }
                 wrongInput = wrongInput || Input.GetKey(key);
             }
