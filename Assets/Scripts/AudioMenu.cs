@@ -9,4 +9,12 @@ public class AudioMenu : MonoBehaviour
     public void SetMusicVolume (float volume) {
         audioMixer.SetFloat("MusicParam", volume);
     }
+
+    public void SetSFXVolume(float volume) {
+        audioMixer.SetFloat("SFXParam", volume);
+    }
+
+    public void SetMasterVolume(float volume) {
+        audioMixer.SetFloat("MasterParam", volume);
+    }
 }
