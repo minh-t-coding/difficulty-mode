@@ -1647,7 +1647,7 @@ PrefabInstance:
     - target: {fileID: 4186359935930809333, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: currSong
       value: 
-      objectReference: {fileID: 11400000, guid: 0147083f46c90a54aa5337881d865069, type: 2}
+      objectReference: {fileID: 11400000, guid: 871feb45d6063824d8eee9b19e49dcf9, type: 2}
     - target: {fileID: 7264192816399962472, guid: d0d1f00aa341aa54e83030aec1443f92, type: 3}
       propertyPath: m_Pivot.x
       value: 0
