@@ -69,7 +69,7 @@ public class BaseEnemy : StateEntity
     }
 
     protected virtual void Update() {
-        transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, enemyDestination.position, enemySpeed * Time.deltaTime * SongTransitionerController.Instance.getBpmSpeedMultiplier());
 
         if (Vector3.Distance(transform.position, enemyDestination.position) <= 0.01f && !isAttacking) {
             isEnemyMoving = false;

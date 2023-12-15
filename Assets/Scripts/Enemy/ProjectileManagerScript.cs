@@ -42,9 +42,29 @@ public class ProjectileManagerScript : MonoBehaviour
         }
     }
 
+    // public bool ProjectileAttacked(Vector3 projectilePosition, Vector3 playerPos) {
+    //     Vector3 newDir = projectilePosition - playerPos;
+
+    //     foreach (Transform projectile in transform) {
+    //         if (projectile != null) {
+    //             ProjectileBehaviorScript projectileBehavior = projectile.GetComponent<ProjectileBehaviorScript>();
+
+    //             if (projectileBehavior.transform.position == projectilePosition) {
+    //                 // add reflect logic here
+    //                 // Debug.Log("projectile hit");
+    //                 Debug.Log(projectileBehavior);
+    //                 projectileBehavior.projectileReflected(newDir.normalized);
+    //                 return true;
+    //             }
+    //         }
+    //     }
+
+    //     return false;
+    // }
+
     public bool ProjectileAttacked(Vector3 projectilePosition, Vector3 playerPos) {
         Vector3 newDir = projectilePosition - playerPos;
-
+        bool hitFlag = false;
         foreach (Transform projectile in transform) {
             if (projectile != null) {
                 ProjectileBehaviorScript projectileBehavior = projectile.GetComponent<ProjectileBehaviorScript>();
@@ -53,13 +73,13 @@ public class ProjectileManagerScript : MonoBehaviour
                     // add reflect logic here
                     // Debug.Log("projectile hit");
                     Debug.Log(projectileBehavior);
-                    projectileBehavior.projectileReflected(newDir.normalized);
-                    return true;
+                    projectileBehavior.projectileReflected(newDir.normalized, hitFlag);
+                    hitFlag = true;
                 }
             }
         }
 
-        return false;
+        return hitFlag;
     }
 
     public bool getAreProjectilesInAction() {

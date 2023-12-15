@@ -57,7 +57,7 @@ public class ProjectileBehaviorScript : StateEntity {
 
     void Update() {
         isProjectileMoving = true;
-        transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime * SongTransitionerController.Instance.getBpmSpeedMultiplier());
 
         if (Vector3.Distance(transform.position, projectileDestination.position) <= Mathf.Epsilon) {
             isProjectileMoving = false;
@@ -90,10 +90,14 @@ public class ProjectileBehaviorScript : StateEntity {
         projectileDestination.position += projectileDistance * direction;
     }
 
-    public void projectileReflected(Vector3 newDir) {
-        setHitsEnemies(true);
-        this.setDirection(newDir);
-        projectileSpriteRenderer.sprite = deflectedProjectileSprite;
+    public void projectileReflected(Vector3 newDir, bool hitFlag) {
+        if (!hitFlag) {
+            setHitsEnemies(true);
+            this.setDirection(newDir);
+            projectileSpriteRenderer.sprite = deflectedProjectileSprite;
+        } else {
+            DestroyProjectile();
+        }
     }
 
     public bool getIsProjectileMoving() {

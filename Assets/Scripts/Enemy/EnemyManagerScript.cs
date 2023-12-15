@@ -110,7 +110,7 @@ public class EnemyManagerScript : MonoBehaviour {
 
         foreach(Transform enemy in enemies) {
             BaseEnemy enemyBehavior = enemy.GetComponent<BaseEnemy>();
-            if (!enemyBehavior.isInAggroRange()) {
+            if (enemyBehavior != null && !enemyBehavior.isInAggroRange()) {
                 continue;
             }
             if (enemyBehavior != null && enemyBehavior.isActiveAndEnabled) {
