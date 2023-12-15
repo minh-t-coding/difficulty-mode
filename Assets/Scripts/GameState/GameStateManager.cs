@@ -23,6 +23,7 @@ public class GameStateManager : MonoBehaviour {
         newStateParent.transform.parent = transform;
         GameState newState = new GameState();
         newState.setPlayerState(PlayerBehaviorScript.Instance.GetPlayerState());
+        Debug.Log(PlayerBehaviorScript.Instance.GetPlayerState().getAction());
         StateEntity[] entities = GameObject.FindObjectsOfType<StateEntity>(false);
         List<GameObject> savedObjects = new List<GameObject>();
         foreach (StateEntity entity in entities) {
@@ -45,6 +46,20 @@ public class GameStateManager : MonoBehaviour {
         gameStates.Add(newState);
         currTurn++;
         isBusy=false;
+    }
+
+    public int getNumDeadEnemiesInState(int i) {
+        int cnt = 0;
+        if (gameStates.Count > i && i >= 0) {
+            List<GameObject> savedObjects = gameStates[i].GetGameObjects();
+            foreach(GameObject g in savedObjects) {
+                if (g.name.Contains("EnemyDead")) {
+                    cnt++;
+                }
+            }
+        }
+        Debug.Log(cnt);
+        return cnt;
     }
 
     public void clearGameState(int turn) {
