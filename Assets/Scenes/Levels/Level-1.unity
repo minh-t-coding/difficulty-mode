@@ -341,6 +341,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 378849399}
     m_Modifications:
+    - target: {fileID: 3060700851797196216, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 378849400}
+    - target: {fileID: 3060700851797196216, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: restartStickoMode
+      objectReference: {fileID: 0}
     - target: {fileID: 4389530933860694658, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
       propertyPath: m_Name
       value: Death Menu
@@ -464,6 +472,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4389530933860694658, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
   m_PrefabInstance: {fileID: 49922520}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &49922523 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 61934616103852994, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
+  m_PrefabInstance: {fileID: 49922520}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &49922524 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3060700851797196216, guid: 118269b52e8250d4e96a832a1088abd4, type: 3}
+  m_PrefabInstance: {fileID: 49922520}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &131163688
 GameObject:
   m_ObjectHideFlags: 0
@@ -3731,6 +3761,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathMenuUI: {fileID: 49922522}
   winMenuUI: {fileID: 141114666}
+  stickoModeRestartButton: {fileID: 49922524}
+  attemptsRemanining: {fileID: 49922523}
+  stickoModeAttempts: 3
 --- !u!1001 &395804561
 PrefabInstance:
   m_ObjectHideFlags: 0
