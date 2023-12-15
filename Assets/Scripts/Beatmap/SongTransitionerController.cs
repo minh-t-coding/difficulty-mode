@@ -38,6 +38,12 @@ public class SongTransitionerController : MonoBehaviour {
 
     protected double nextEventTime;
 
+    public float getBpmSpeedMultiplier() {
+        float currBpm = currSong.getBpm();
+        float diff = currBpm - 77.5f;
+        return 1+diff/150f;
+    }
+
     void Awake() {
         if (Instance == null) {
             Instance = this;
