@@ -9,6 +9,7 @@ public class TutorialTipScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T)) {
             TipManagerScript.Instance.DequeueTip();
             this.gameObject.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 }
