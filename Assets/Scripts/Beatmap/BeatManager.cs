@@ -286,6 +286,13 @@ public class BeatManager : MonoBehaviour {
                         foreach(KeyCode key in concurrentHits) {
                             PlayerInputManager.Instance.setNeedsToLift(key);
                         }
+                        if (concurrentHits.Contains(KeyCode.Return) && !hasPlayedTick) {
+                            SoundManager.Instance.playSound("staff_swish");
+                            if ( GameStateManager.Instance.getNumDeadEnemiesInState(currState+1) > GameStateManager.Instance.getNumDeadEnemiesInState(currState)) {
+                                SoundManager.Instance.playSound("enemy_splat");
+                            }
+                            hasPlayedTick = true;
+                        }
                         hitNote = true;
                         numHitBeats++;
                     }
@@ -311,6 +318,13 @@ public class BeatManager : MonoBehaviour {
                 }
 
                 if (!hasPlayedTick && (unOffseted <= tolerance || sampledTime >= myMap.getHits()[myCurrBeat])) {
+                    
+                    if (concurrentHits.Contains(KeyCode.Return) && !hasPlayedTick) {
+                        SoundManager.Instance.playSound("staff_swish");
+                        if ( GameStateManager.Instance.getNumDeadEnemiesInState(currState+1) > GameStateManager.Instance.getNumDeadEnemiesInState(currState)) {
+                            SoundManager.Instance.playSound("enemy_splat");
+                        }
+                    }
                     hasPlayedTick = true;
                     //playTick( diff);
                 }

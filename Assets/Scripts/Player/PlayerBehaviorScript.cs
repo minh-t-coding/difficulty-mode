@@ -101,6 +101,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
                 if (hasDashed) {
                     ChangePlayerAnimationState(PLAYER_DASH);
                 } else {
+                    lastAction = PlayerState.PlayerAction.Move;
                     ChangePlayerAnimationState(PLAYER_MOVE);
                 }
             }
@@ -123,7 +124,10 @@ public class PlayerBehaviorScript : MonoBehaviour {
             GameStateManager.Instance.captureGameState();
         }
         lastAction = PlayerState.PlayerAction.NONE;
-        SoundManager.Instance.playSound("staff_swish");
+        if (!PlayerInputManager.Instance.getIsStickoMode()) {
+            SoundManager.Instance.playSound("staff_swish");
+        }
+        
         ChangePlayerAnimationState(PLAYER_ATTACK);
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);

@@ -174,8 +174,11 @@ public class BaseEnemy : StateEntity
                 dead.SetActive(true);
             }
             DestroyAssociates();
+            if (!PlayerInputManager.Instance.getIsStickoMode()) {
+                SoundManager.Instance.playSound("enemy_splat");
+            }
             Destroy(this.gameObject);
-            SoundManager.Instance.playSound("enemy_splat");
+            
         }
     }
     
