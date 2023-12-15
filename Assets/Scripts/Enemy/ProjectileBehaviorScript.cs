@@ -90,10 +90,14 @@ public class ProjectileBehaviorScript : StateEntity {
         projectileDestination.position += projectileDistance * direction;
     }
 
-    public void projectileReflected(Vector3 newDir) {
-        setHitsEnemies(true);
-        this.setDirection(newDir);
-        projectileSpriteRenderer.sprite = deflectedProjectileSprite;
+    public void projectileReflected(Vector3 newDir, bool hitFlag) {
+        if (!hitFlag) {
+            setHitsEnemies(true);
+            this.setDirection(newDir);
+            projectileSpriteRenderer.sprite = deflectedProjectileSprite;
+        } else {
+            DestroyProjectile();
+        }
     }
 
     public bool getIsProjectileMoving() {
