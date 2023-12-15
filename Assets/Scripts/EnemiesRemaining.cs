@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemiesRemainingScript : MonoBehaviour
 {
+    public static EnemiesRemainingScript Instance;
     [SerializeField] protected TextMeshProUGUI rangedEnemyCountText;
     [SerializeField] protected TextMeshProUGUI meleeEnemyCountText;
     [SerializeField] protected GameObject textParent;
@@ -11,9 +12,14 @@ public class EnemiesRemainingScript : MonoBehaviour
     [SerializeField] protected GameObject transitionBackground;
  
  
-    // Update is called once per frame
 
     protected bool clearedEnemies;
+
+    void Awake() {
+        if (Instance==null) {
+            Instance = this;
+        }
+    }
 
     void Start() {
         clearedEnemies = false;

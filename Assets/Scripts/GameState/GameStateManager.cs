@@ -16,17 +16,9 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void captureGameState(bool noInc = false) {
+    public void captureGameState() {
         isBusy = true;
-        
-        if (!noInc) {
-            clearGameState(currTurn);
-        }
-        
-        bool overwrite = false;
-        if (gameStates.Count > currTurn && currTurn >= 1) {
-            overwrite = true;
-        }
+        clearGameState(currTurn);
         GameObject newStateParent = new GameObject("GameState" + currTurn);
         Debug.Log("CAPTURE STATE" + currTurn);
         newStateParent.transform.parent = transform;
@@ -52,15 +44,9 @@ public class GameStateManager : MonoBehaviour {
         }
         newState.setStateParent(newStateParent);
         newState.setGameObjects(savedObjects);
-        if (overwrite) {
-            gameStates[currTurn] = (newState);
-        } else {
-            gameStates.Add(newState);
-        }
-        
-        if (!noInc) {
-            currTurn++;
-        }
+
+        gameStates.Add(newState);
+        currTurn++;
         isBusy=false;
     }
 
@@ -138,14 +124,6 @@ public class GameStateManager : MonoBehaviour {
             } 
             
             currTurn = turn;
-            if (dontUnload) {
-                //currTurn--;
-                //captureGameState(true);
-            }
-            if (turn == 0) {
-                //captureGameState();
-            }
-
         }
         
         isBusy = false;

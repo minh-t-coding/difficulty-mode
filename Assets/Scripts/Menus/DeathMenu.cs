@@ -49,6 +49,10 @@ public class DeathMenu : MonoBehaviour
         }
     }
 
+    public void restartStickoMode() {
+        EnemiesRemainingScript.Instance.startSickoMode();
+    }
+
     public void ShowDeathMenu() {
         renderDeathMenu();
         deathMenuUI.SetActive(true);
