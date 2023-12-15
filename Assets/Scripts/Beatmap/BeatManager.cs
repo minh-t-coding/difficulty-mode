@@ -28,6 +28,12 @@ public class BeatManager : MonoBehaviour {
 
     [SerializeField] private BeatmapIcon[] icons;
 
+    [SerializeField] private GameObject transitionStatic;
+    [SerializeField] private GameObject transitionAnimated;
+    [SerializeField] private GameObject transitionBackground;
+    [SerializeField] private Animator transitionStaticAnimator;
+    [SerializeField] private Animator transitionAnimator;
+    [SerializeField] private Animator beatmapAnimator;
 
     public static BeatManager Instance;
 
@@ -89,8 +95,17 @@ public class BeatManager : MonoBehaviour {
                 yield return Timing.WaitForSeconds(0f);
             }
             countdownTextBox.text = (4 - i).ToString();
+            if (i == 3) {
+                transitionStaticAnimator.Play("eyesOpen");
+                transitionAnimated.SetActive(true);
+                transitionAnimator.Play("openImpact");
+                transitionBackground.SetActive(false);
+            }
         }
         countdownTextBox.gameObject.SetActive(false);
+        transitionStatic.SetActive(false);
+        transitionAnimated.SetActive(false);
+        transitionBackground.SetActive(false);
     }
 
     public IEnumerator<float> FinishAnim() {
@@ -380,6 +395,7 @@ public class BeatManager : MonoBehaviour {
     public void triggerBeatmap(Beatmap map, SongObj song, AudioSource source, double startTime) {
         bar.SetActive(true);
         iconsParent.SetActive(true);
+        beatmapAnimator.Play("BeatmapDropIn", -1, 0f);
         hasFailed = false;
         PlayerInputManager.Instance.setIsStickoMode(true);
         audioSource = source;
