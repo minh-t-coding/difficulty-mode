@@ -271,6 +271,7 @@ public class BeatManager : MonoBehaviour {
 
                     if (pressedAllHits && !PlayerInputManager.Instance.pressedWrongInput(concurrentHits)) {
 
+                        ScoreManagerScript.Instance.UpdateScoreBeatHit(diff);
                         Debug.Log("HIT!");
                         if (nextHit >= sampledTime) {
                             aboves.Add(diff);
@@ -298,6 +299,10 @@ public class BeatManager : MonoBehaviour {
                             beatmapHits[myCurrBeat + i].CreateMissEffect();
                         }
                         numMissedBeats++;
+                        
+                        if (ScoreManagerScript.Instance != null) {
+                            ScoreManagerScript.Instance.UpdateScoreBeatMiss();
+                        }
 
                         Debug.Log("LOAD STATE" + currState);
                     }
