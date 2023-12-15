@@ -7,6 +7,8 @@ public class EnemiesRemainingScript : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI rangedEnemyCountText;
     [SerializeField] protected TextMeshProUGUI meleeEnemyCountText;
     [SerializeField] protected GameObject textParent;
+    [SerializeField] private GameObject transitionStatic;
+    [SerializeField] protected GameObject transitionBackground;
  
  
     // Update is called once per frame
@@ -42,6 +44,9 @@ public class EnemiesRemainingScript : MonoBehaviour
     }
 
     public void allEnemiesDead() {
+        transitionStatic.SetActive(true);
+        transitionBackground.SetActive(true);
+
         GameStateManager.Instance.captureGameState();
         textParent.SetActive(false);
         BeatmapGenerator.Instance.GenerateBeatmap();
