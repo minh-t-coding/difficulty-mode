@@ -57,7 +57,7 @@ public class ProjectileBehaviorScript : StateEntity {
 
     void Update() {
         isProjectileMoving = true;
-        transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, projectileDestination.position, projectileSpeed * Time.deltaTime * SongTransitionerController.Instance.getBpmSpeedMultiplier());
 
         if (Vector3.Distance(transform.position, projectileDestination.position) <= Mathf.Epsilon) {
             isProjectileMoving = false;

@@ -95,7 +95,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         }
         // Move Player to destination point after input window closes
         if (Time.time - lastInitialDirectionalInputTime >= multiInputWindow) {
-            transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, destination.position, currentSpeed * Time.deltaTime * SongTransitionerController.Instance.getBpmSpeedMultiplier());
 
             if (playerInAction) {
                 if (hasDashed) {
