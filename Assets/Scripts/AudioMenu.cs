@@ -14,7 +14,7 @@ public class AudioMenu : MonoBehaviour
         currSfxVol = 0f;
     }
     public void SetMusicVolume (float volume) {
-        audioMixer.SetFloat("MusicParam", volume);
+        audioMixer.SetFloat("MusicParam", Mathf.Log10(volume) * 20);
     }
 
     public void SetSFXVolume(float volume) {
@@ -22,8 +22,12 @@ public class AudioMenu : MonoBehaviour
             hasSfxVolChanged = true;
         }
         currSfxVol = volume;
-        audioMixer.SetFloat("SFXParam", volume);
+        audioMixer.SetFloat("SFXParam", Mathf.Log10(volume) * 20);
         
+    }
+
+    public void SetMasterVolume(float volume) {
+        audioMixer.SetFloat("MasterParam", Mathf.Log10(volume) * 20);
     }
 
     void Update() {
@@ -33,7 +37,5 @@ public class AudioMenu : MonoBehaviour
         }
     }
 
-    public void SetMasterVolume(float volume) {
-        audioMixer.SetFloat("MasterParam", volume);
-    }
+    
 }
