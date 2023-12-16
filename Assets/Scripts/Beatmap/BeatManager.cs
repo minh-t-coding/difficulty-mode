@@ -102,6 +102,9 @@ public class BeatManager : MonoBehaviour {
     }
 
     public IEnumerator<float> CountDownAnim() {
+        if (GlobalVolume.Instance!=null) {
+            GlobalVolume.Instance.toggleVignette(true);
+        }
         while (AudioSettings.dspTime < startTimeOfOutro) {
             yield return Timing.WaitForSeconds(0f);
         }
@@ -113,6 +116,9 @@ public class BeatManager : MonoBehaviour {
             countdownTextBox.text = (4 - i).ToString();
             if (i == 3) {
                 transitionStaticAnimator.Play("eyesOpen");
+                if (GlobalVolume.Instance!=null) {
+                    GlobalVolume.Instance.toggleVignette(false);
+                }
                 transitionAnimated.SetActive(true);
                 transitionAnimator.Play("openImpact");
                 transitionBackground.SetActive(false);
