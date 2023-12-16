@@ -25,6 +25,15 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
     }
 
     public override void EnemyMove() {
+        HashSet<GameObject> enemyMovepoints = EnemyManagerScript.Instance.getEnemyMovepoints();
+        HashSet<Vector3> movepointPositions = new HashSet<Vector3>();
+        HashSet<Vector3> turretPositions = TurretManagerScript.Instance.getTurretPositions();
+        foreach (GameObject movepoint in enemyMovepoints) {
+            if (movepoint.activeSelf) {
+                movepointPositions.Add(movepoint.transform.position);
+            }
+        }
+        
         // check if enemy is already in range
         Vector3 distanceFromPlayer = playerPosition.position - enemyDestination.position;
         if (distanceFromPlayer.magnitude < movementRange) {
@@ -43,7 +52,9 @@ public class MeleeEnemyBehaviorScript : BaseEnemy {
 
             // only alter path if there is no collision 
             
-            if (tileMap.IsCellEmpty(newPosition)) {
+            if (!turretPositions.Contains(newPosition) && 
+                !movepointPositions.Contains(newPosition) && 
+                tileMap.IsCellEmpty(newPosition)) {
                 Vector3 pathToPlayer = newPosition - enemyDestination.position;
                 Debug.Log(pathToPlayer);
                 enemyDestination.position = newPosition;
