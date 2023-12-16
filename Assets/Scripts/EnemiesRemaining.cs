@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class EnemiesRemainingScript : MonoBehaviour
 {
+    public static EnemiesRemainingScript Instance;
     [SerializeField] protected TextMeshProUGUI rangedEnemyCountText;
     [SerializeField] protected TextMeshProUGUI meleeEnemyCountText;
     [SerializeField] protected GameObject textParent;
     [SerializeField] private GameObject transitionStatic;
     [SerializeField] protected GameObject transitionBackground;
- 
- 
-    // Update is called once per frame
 
     protected bool clearedEnemies;
-    
+
+    void Awake() {
+        if (Instance==null) {
+            Instance = this;
+        }
+    }
+
     void Start() {
         clearedEnemies = false;
         textParent.SetActive(true);        
@@ -44,11 +48,16 @@ public class EnemiesRemainingScript : MonoBehaviour
     }
 
     public void allEnemiesDead() {
-        transitionStatic.SetActive(true);
-        transitionBackground.SetActive(true);
-
         GameStateManager.Instance.captureGameState();
         textParent.SetActive(false);
+        startSickoMode();
+    }
+
+    public void startSickoMode() {
+        DeathMenu.Instance.HideDeathMenu();
+        BeatManager.Instance.resetBeatManager();
+        transitionStatic.SetActive(true);
+        transitionBackground.SetActive(true);
         BeatmapGenerator.Instance.GenerateBeatmap();
         Beatmap beatmap = BeatmapGenerator.Instance.GetBeatmap();
         SongTransitionerController.Instance.startTransition(beatmap);

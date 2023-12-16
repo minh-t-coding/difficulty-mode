@@ -10,7 +10,6 @@ public class ProjectileBehaviorScript : StateEntity {
     protected Transform playerPosition;
     private Vector3 direction;
     private bool isProjectileMoving;
-    private GameObject projectileMovePoint;
     [SerializeField] protected SpriteRenderer projectileSpriteRenderer;
     [SerializeField] protected Sprite deflectedProjectileSprite;
 
@@ -51,7 +50,6 @@ public class ProjectileBehaviorScript : StateEntity {
     }
 
     public override void DestroyAssociates() { 
-
         Destroy(projectileDestination.gameObject);
     }
 
@@ -81,7 +79,7 @@ public class ProjectileBehaviorScript : StateEntity {
     }
 
     private void DestroyProjectile() {
-        Destroy(this.projectileMovePoint);
+        DestroyAssociates();
         Destroy(this.gameObject);
     }
 
