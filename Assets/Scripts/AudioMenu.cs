@@ -5,7 +5,10 @@ using UnityEngine.Audio;
 
 public class AudioMenu : MonoBehaviour
 {
+    
     public AudioMixer audioMixer;
+
+    [SerializeField] protected float gameStartVolume = 0.4f;
 
     protected float currSfxVol;
 
@@ -15,9 +18,9 @@ public class AudioMenu : MonoBehaviour
     }
 
     void Awake() {
-        audioMixer.SetFloat("MasterParam", Mathf.Log10(0.3f) * 20);
-        audioMixer.SetFloat("MusicParam", Mathf.Log10(0.3f) * 20);
-        audioMixer.SetFloat("SFXParam", Mathf.Log10(0.3f) * 20);
+        audioMixer.SetFloat("MasterParam", Mathf.Log10(gameStartVolume) * 20);
+        audioMixer.SetFloat("MusicParam", Mathf.Log10(gameStartVolume) * 20);
+        audioMixer.SetFloat("SFXParam", Mathf.Log10(gameStartVolume) * 20);
     }
     public void SetMusicVolume (float volume) {
         audioMixer.SetFloat("MusicParam", Mathf.Log10(volume) * 20);
