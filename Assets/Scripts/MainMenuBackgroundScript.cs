@@ -14,5 +14,6 @@ public class MainMenuBackgroundScript : MonoBehaviour
     public void makeMainMenuActive() {
         headphones.SetActive(false);
         mainMenu.SetActive(true);
+        PlayerPrefs.SetInt("hasSeenIntro", 1);
     }
 }
