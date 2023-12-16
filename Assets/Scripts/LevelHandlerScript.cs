@@ -20,6 +20,7 @@ public class LevelHandlerScript : MonoBehaviour {
     public void progressLevel() {
         if (SceneManager.GetActiveScene().buildIndex == 4) { // On the last level
             Debug.Log("YOU WIN THE GAME!");
+            SceneManager.LoadScene("Win-Screen");
         } else {
             // Move to next level
             SceneManager.LoadScene(nextSceneLoad);
