@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +35,8 @@ public class PlayerBehaviorScript : MonoBehaviour {
     // Tutorial variables
     // Variable for Tutorial tips
     private GameObject undoTip;
+    private GameObject predictoModeTip;
+    private GameObject stickoModeTip;
 
     // Animation state variables
     private string currentState;
@@ -78,6 +81,20 @@ public class PlayerBehaviorScript : MonoBehaviour {
             undoTip.SetActive(false);
         }
         
+        stickoModeTip = GameObject.Find("StickoModeTip");
+        if (stickoModeTip != null) {
+            TipManagerScript.Instance.addToAllTips("StickoModeTip", stickoModeTip);
+            stickoModeTip.SetActive(false);
+        }
+
+        predictoModeTip = GameObject.Find("PredictoModeTip");
+        if (predictoModeTip != null) {
+            TipManagerScript.Instance.addToAllTips("PredictoModeTip", predictoModeTip);
+            predictoModeTip.SetActive(false);
+
+            // add to tip queue
+            TipManagerScript.Instance.EnqueueTip(predictoModeTip);
+        }
     }
 
     void Start() {
@@ -114,6 +131,14 @@ public class PlayerBehaviorScript : MonoBehaviour {
             if (!ProjectileManagerScript.Instance.getAreProjectilesInAction() && !EnemyManagerScript.Instance.getAreEnemiesInAction()) {
                 processPlayerInput();
             }
+
+            Tuple<int, int> enemyCounts = EnemyManagerScript.Instance.getEnemyCounts();
+            if (enemyCounts.Item1 == 0 && enemyCounts.Item2 == 0) {
+                if (TipManagerScript.Instance.ShowStickoModeTooltip(stickoModeTip)) {
+                    stickoModeTip.SetActive(true);
+                    Time.timeScale = 0f;
+                }
+            }
         }
     }
 
@@ -132,7 +157,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
 
         EnemyManagerScript.Instance.EnemyAttacked(enemyPosition, playerAttackDamage);
         if (ProjectileManagerScript.Instance.ProjectileAttacked(enemyPosition,transform.position)) {
-            ChangePlayerAnimationState(PLAYER_DEFLECT);
+            ChangePlayerAnimationState(PLAYER_DEFLECT);            
         };
 
     }

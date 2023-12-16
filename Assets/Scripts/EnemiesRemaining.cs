@@ -14,10 +14,10 @@ public class EnemiesRemainingScript : MonoBehaviour
     // Update is called once per frame
 
     protected bool clearedEnemies;
-
+    
     void Start() {
         clearedEnemies = false;
-        textParent.SetActive(true);
+        textParent.SetActive(true);        
     }
 
     protected float waitFor = 0.3f;
@@ -36,7 +36,7 @@ public class EnemiesRemainingScript : MonoBehaviour
                 PlayerInputManager.Instance.setIsStickoMode(true);
             }
             currTime+=Time.deltaTime;
-            if (currTime > waitFor) {
+            if (currTime > waitFor) {    
                 clearedEnemies = true;
                 allEnemiesDead();
             }
