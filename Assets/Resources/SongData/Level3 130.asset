@@ -20,5 +20,5 @@ MonoBehaviour:
   loopingPart: {fileID: 8300000, guid: ca7fb13f775566945a774a6cea96274f, type: 3}
   loopingLength: 128
   loopingVolume: 0.6
-  outroPart: {fileID: 8300000, guid: 4db55ad701cada3448fc48f273609a11, type: 3}
+  outroPart: {fileID: 8300000, guid: 4fc27ad509641004d93c0c0c20989c83, type: 3}
   outroVolume: 0.8
