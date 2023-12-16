@@ -178,7 +178,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: bf25eb575eff8d745b1ae0d4437041c2, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 8df8fb83ccd8a4b4c87447e39ab98d9e, type: 2}
 --- !u!1 &7366762384577902150
 GameObject:
   m_ObjectHideFlags: 0
