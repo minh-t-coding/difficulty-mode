@@ -1,1 +1,1 @@
-# difficulty-mode
+# Sticko Mode

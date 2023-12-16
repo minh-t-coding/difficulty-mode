@@ -19677,8 +19677,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3461794471396766846, guid: 82c61dfed2d5d684b8dbdc0c33ce9411, type: 3}
-      propertyPath: playerAttackDamage
-      value: 10
+      propertyPath: dashTiming
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3461794471396766846, guid: 82c61dfed2d5d684b8dbdc0c33ce9411, type: 3}
+      propertyPath: attackTiming
+      value: 0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
