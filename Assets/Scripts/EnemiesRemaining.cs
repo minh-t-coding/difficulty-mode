@@ -10,8 +10,6 @@ public class EnemiesRemainingScript : MonoBehaviour
     [SerializeField] protected GameObject textParent;
     [SerializeField] private GameObject transitionStatic;
     [SerializeField] protected GameObject transitionBackground;
- 
- 
 
     protected bool clearedEnemies;
 
@@ -23,7 +21,7 @@ public class EnemiesRemainingScript : MonoBehaviour
 
     void Start() {
         clearedEnemies = false;
-        textParent.SetActive(true);
+        textParent.SetActive(true);        
     }
 
     protected float waitFor = 0.3f;
@@ -42,7 +40,7 @@ public class EnemiesRemainingScript : MonoBehaviour
                 PlayerInputManager.Instance.setIsStickoMode(true);
             }
             currTime+=Time.deltaTime;
-            if (currTime > waitFor) {
+            if (currTime > waitFor) {    
                 clearedEnemies = true;
                 allEnemiesDead();
             }

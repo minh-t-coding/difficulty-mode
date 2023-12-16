@@ -22,8 +22,9 @@ public class TipManagerScript : MonoBehaviour
     void Update() {
         if (tips.Count != 0) {
             GameObject currentTip = tips.Peek();
+            Debug.Log("Update called");
             // Only display the tip if player has not beaten tutorial
-            if (!seenTipNames.Contains(currentTip.name) && (PlayerPrefs.GetInt("levelAt") < 1)) {
+            if (!seenTipNames.Contains(currentTip.name) && !currentTip.name.Equals("StickoModeTip") && (PlayerPrefs.GetInt("levelAt") < 1)) {
                 currentTip.SetActive(true);
                 Time.timeScale = 0f;
             } else if (!seenTipNames.Contains(currentTip.name) && currentTip.name.Equals("UndoTip")) {
@@ -46,7 +47,16 @@ public class TipManagerScript : MonoBehaviour
         return null;
     }
 
+    public bool ShowStickoModeTooltip(GameObject tip) {
+        if (!seenTipNames.Contains("StickoModeTooltip") && (PlayerPrefs.GetInt("levelAt") < 1)) {
+            EnqueueTip(tip);
+            return true;
+        }
+        return false;
+    }
+
     public void EnqueueTip(GameObject newTip) {
+        Debug.Log(newTip);
         tips.Enqueue(newTip);
     }
 
