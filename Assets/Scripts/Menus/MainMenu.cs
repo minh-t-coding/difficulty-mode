@@ -4,12 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
-{
-    public void Awake() {
-        // make sure our time scale is unscaled
-        Time.timeScale = 1f;
-    }
-    
+{        
     public void PlayGame () {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
