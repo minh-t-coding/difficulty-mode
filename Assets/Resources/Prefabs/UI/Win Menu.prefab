@@ -211,7 +211,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: You WIn!
+  m_Text: You Win!
 --- !u!1 &5228532418101017388
 GameObject:
   m_ObjectHideFlags: 0
