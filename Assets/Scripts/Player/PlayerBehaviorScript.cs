@@ -16,6 +16,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
     [SerializeField] protected float dashTiming = 0.2f;
+    [SerializeField] protected float attackTiming = 0.1f;
     
     private float currentSpeed;
 
@@ -248,7 +249,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
         // Dash can only be performed once per action
         if (playerInAction && Time.time - lastInitialDirectionalInputTime < dashTiming && !hasDashed) {
             // Check if player has pressed the attack button and is not a diagonal input
-            if ( PlayerInputManager.Instance.getAttackInput() && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
+            if ( PlayerInputManager.Instance.getAttackInput() && (Time.time - lastInitialDirectionalInputTime < attackTiming) && !(Mathf.Abs(currActionDir.x) == 1f && Mathf.Abs(currActionDir.y) == 1f)) {
                 playerAttack(destination.position);
 
                 // undo motion
