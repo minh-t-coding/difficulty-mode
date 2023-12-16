@@ -16,7 +16,7 @@ public class PlayerBehaviorScript : MonoBehaviour {
     [SerializeField] protected float multiInputWindow = 0.05f;
     [SerializeField] protected float dashSpeed;
     [SerializeField] protected float dashTiming = 0.2f;
-    [SerializeField] protected float attackTiming = 0.1f;
+    [SerializeField] protected float attackTiming = 0.05f;
     
     private float currentSpeed;
 
